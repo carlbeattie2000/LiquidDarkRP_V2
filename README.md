@@ -1,6 +1,18 @@
 # DarkRP ![run-glualint](https://github.com/FPtje/DarkRP/workflows/run-glualint/badge.svg?branch=master)
 A roleplay gamemode for Garry's Mod.
 
+## What's different in this version?
+I have added multiple features as standard with this new version of DarkRP.
+- Upgradeable printers
+- Better HUD
+- Better F4 Menu
+- Gambling
+- Coin Flips
+- Banking
+- Shops
+- Auctions
+- Cases
+
 ## Getting DarkRP
 Please use either git or the workshop.
 Manually downloading DarkRP or using SVN is possible, but not recommended.
