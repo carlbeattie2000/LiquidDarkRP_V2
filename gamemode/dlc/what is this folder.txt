@@ -1,0 +1,2 @@
+This folder is for DLCs made for Liquid DarkRP.
+They are loaded automatically when the shared liquid darkrp file is loaded.

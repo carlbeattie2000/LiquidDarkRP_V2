@@ -1,0 +1,266 @@
+---------------------
+-- gm13_changelog.txt
+-- This file details the changes (since I started commiting to my private svn)
+-- that were made after the last commit on August 8, 2012. Past revision 10,
+-- please refer to the changelog provided by subversion as I will be using that
+-- to track future changes.
+---------------------
+
+
+Revision: 10
+Author: tgp1994
+Date: Tuesday, April 09, 2013 8:46:41 PM
+Message:
+- More Gmod 13 updates
+- Preparing files for push to public SVN
+
+entities/weapons/weapon_real_cs_pumpshotgun/shared.lua
+ - Removed possibility for nil reference if player leaves while shotgun shell is active
+gamemode/cl_vgui.lua
+ - Disabled admin tab to go along with DarkRP's move to the config system
+gamemode/data.lua
+ - Added table name prefix variable
+ - Implementing custom table framework
+gamemode/LiquidDRP/cl_qmenu.lua
+ - Updated tool menu just to get it working. Still need to add in the parameters frame.
+gamemode/LiquidDRP/sv_npcs.lua
+ - Moving NPC location storage from file to database (implementing custom table framework). NOTE: LDRP.SetNPCPos has not been tested in its current implementation, I'm making a STool that will act as a frontend for this function.
+entities/weapons/gmod_tool/stools/npcmanager.lua
+ - Beginning work on STool that will be a frontend for managing NPC locations.
+----
+Modified : /entities/effects/rg_shelleject_shotgun/init.lua
+Added : /entities/weapons/gmod_tool
+Added : /entities/weapons/gmod_tool/stools
+Added : /entities/weapons/gmod_tool/stools/npcmanager.lua
+Modified : /entities/weapons/weapon_real_cs_pumpshotgun/shared.lua
+Modified : /gamemode/LiquidDRP/cl_qmenu.lua
+Modified : /gamemode/LiquidDRP/sh_qmenu.lua
+Modified : /gamemode/LiquidDRP/sv_npcs.lua
+Modified : /gamemode/LiquidDRP/sv_qmenu.lua
+Modified : /gamemode/_MySQL.lua
+Modified : /gamemode/cl_vgui.lua
+Modified : /gamemode/data.lua
+Modified : /gamemode/dlc/cl_helpmenu.lua
+Modified : /gamemode/dlc/sv_hitman_loadafterdarkrp.lua
+Modified : /gamemode/util.lua
+
+Revision: 9
+Author: tgp1994
+Date: Wednesday, March 27, 2013 10:02:11 AM
+Message:
+Added in DarkRP versions of the drug, fadmin_jail, and fadmin_motd entities. Also included missing fadmin materials. Added in door_ram, stunstick, unarrest_stick, and weaponchecker weapons.
+----
+Modified : /gamemode/cl_vgui.lua
+Added : /content/materials
+Added : /content/materials/fadmin
+Added : /content/materials/fadmin/IconView.vmt
+Added : /content/materials/fadmin/IconView.vtf
+Added : /content/materials/fadmin/ListView.vmt
+Added : /content/materials/fadmin/ListView.vtf
+Added : /content/materials/fadmin/back.vmt
+Added : /content/materials/fadmin/back.vtf
+Added : /content/materials/fadmin/icons
+Added : /content/materials/fadmin/icons/MOTD.vmt
+Added : /content/materials/fadmin/icons/MOTD.vtf
+Added : /content/materials/fadmin/icons/Message.vmt
+Added : /content/materials/fadmin/icons/Message.vtf
+Added : /content/materials/fadmin/icons/PickUp.vmt
+Added : /content/materials/fadmin/icons/PickUp.vtf
+Added : /content/materials/fadmin/icons/RCON.vmt
+Added : /content/materials/fadmin/icons/RCON.vtf
+Added : /content/materials/fadmin/icons/ServerSetting.vmt
+Added : /content/materials/fadmin/icons/ServerSetting.vtf
+Added : /content/materials/fadmin/icons/access.vmt
+Added : /content/materials/fadmin/icons/access.vtf
+Added : /content/materials/fadmin/icons/ban.vmt
+Added : /content/materials/fadmin/icons/ban.vtf
+Added : /content/materials/fadmin/icons/changeteam.vmt
+Added : /content/materials/fadmin/icons/changeteam.vtf
+Added : /content/materials/fadmin/icons/chatmute.vmt
+Added : /content/materials/fadmin/icons/chatmute.vtf
+Added : /content/materials/fadmin/icons/cleanup.vmt
+Added : /content/materials/fadmin/icons/cleanup.vtf
+Added : /content/materials/fadmin/icons/cloak.vmt
+Added : /content/materials/fadmin/icons/cloak.vtf
+Added : /content/materials/fadmin/icons/disable.vmt
+Added : /content/materials/fadmin/icons/disable.vtf
+Added : /content/materials/fadmin/icons/freeze.vmt
+Added : /content/materials/fadmin/icons/freeze.vtf
+Added : /content/materials/fadmin/icons/god.vmt
+Added : /content/materials/fadmin/icons/god.vtf
+Added : /content/materials/fadmin/icons/ignite.vmt
+Added : /content/materials/fadmin/icons/ignite.vtf
+Added : /content/materials/fadmin/icons/jail.vmt
+Added : /content/materials/fadmin/icons/jail.vtf
+Added : /content/materials/fadmin/icons/kick.vmt
+Added : /content/materials/fadmin/icons/kick.vtf
+Added : /content/materials/fadmin/icons/noclip.vmt
+Added : /content/materials/fadmin/icons/noclip.vtf
+Added : /content/materials/fadmin/icons/ragdoll.vmt
+Added : /content/materials/fadmin/icons/ragdoll.vtf
+Added : /content/materials/fadmin/icons/slap.vmt
+Added : /content/materials/fadmin/icons/slap.vtf
+Added : /content/materials/fadmin/icons/slay.vmt
+Added : /content/materials/fadmin/icons/slay.vtf
+Added : /content/materials/fadmin/icons/spectate.vmt
+Added : /content/materials/fadmin/icons/spectate.vtf
+Added : /content/materials/fadmin/icons/teleport.vmt
+Added : /content/materials/fadmin/icons/teleport.vtf
+Added : /content/materials/fadmin/icons/voicemute.vmt
+Added : /content/materials/fadmin/icons/voicemute.vtf
+Added : /content/materials/fadmin/icons/weapon.vmt
+Added : /content/materials/fadmin/icons/weapon.vtf
+Modified : /entities/entities/drug/cl_init.lua
+Modified : /entities/entities/drug/init.lua
+Modified : /entities/entities/drug/shared.lua
+Modified : /entities/entities/fadmin_jail/cl_init.lua
+Modified : /entities/entities/fadmin_jail/init.lua
+Modified : /entities/entities/fadmin_motd/cl_init.lua
+Modified : /entities/entities/fadmin_motd/init.lua
+Added : /entities/weapons/door_ram
+Added : /entities/weapons/door_ram/shared.lua
+Added : /entities/weapons/stunstick
+Added : /entities/weapons/stunstick/shared.lua
+Added : /entities/weapons/unarrest_stick
+Added : /entities/weapons/unarrest_stick/shared.lua
+Added : /entities/weapons/weaponchecker
+Added : /entities/weapons/weaponchecker/shared.lua
+Modified : /gamemode/cl_init.lua
+Modified : /gamemode/main.lua
+Modified : /gamemode/sv_gamemode_functions.lua
+
+Revision: 8
+Author: tgp1994
+Date: Friday, March 22, 2013 10:59:47 PM
+Message:
+* Updated arrest_stick code to DarkRP svn
+* Attempted to fix broken arrest stick animations - looks like a GBug
+* Started adding in DarkRP Config system
+* [Started] replaces player speed cvar with config
+* LiquidRP actually depends on sandbox (which depends on base), derp
+* Added in weapon_cs_base2 (why was this deleted?)
+----
+Modified : /gamemode/cl_init.lua
+Modified : /gamemode/sv_gamemode_functions.lua
+Modified : /entities/weapons/arrest_stick/shared.lua
+Added : /entities/weapons/weapon_cs_base2
+Added : /entities/weapons/weapon_cs_base2/shared.lua
+Added : /gamemode/config.lua
+Modified : /gamemode/init.lua
+Modified : /gamemode/modules/sleep.lua
+Modified : /gamemode/player.lua
+Modified : /liquidrp.txt
+
+Revision: 7
+Author: tgp1994
+Date: Friday, March 22, 2013 3:28:10 PM
+Message:
+[gamemode/cl_vgui.lua]
+* Created help tab (to supplement semi-implemented help system)
+* Added support for adding tabs based off of tab API
+* Uncommented SetSkin commands (even though they don't seem to do squat. I'll probably figure out this skin thing later.)
+[gamemode/help.lua]
+* Updated to more recent DarkRP help system (thanks Falco <3)
+[gamemode/LiquidDRP/cl_dermaskin.lua]
+* Corrected inconsistency in theme settings file name
+* Modified PaintTooltip function; added in w and h parameters, and commented out DrawArrow() calls. DrawArrow is either being used incorrectly, or is broken in the current version of garry's mod. Not sure if garry is aware of the latter if it's true.
+[gamemode/modules/AFK.lua]
+* Updating help label API to current version
+[gamemode/modules/AFK/cl_afk.lua]
+* Removed calls to serverside help API functions (how did this file even work before?)
+* Updated overall file to more recent DarkRP function (props to Falco again)
+[gamemode/sh_commands.lua]
+* Help category enums are stored in this file, made one global since it was used as such (TODO: Move these enums into help.lua, consider making global HELP table)
+* Updated help API calls to latest version
+[gamemode/shared.lua]
+* Pretty much just formatting changes
+[gamemode/showteamtabs.lua]
+* Updated Money tab to more recent DarkRP version (because it pretty much wasn't working in its current implementation)
+* Changed scope of Disabled variable in an effort to get the skin tab functioning
+* Grammar Nazi on patrol
+[gamemode/dlc/cl_helpmenu.lua]
+* Created file: trying to make F4 menu modular. Expect more related changes in the future.
+----
+Modified : /gamemode/cl_vgui.lua
+Added : /gamemode/dlc/cl_helpmenu.lua
+Modified : /gamemode/LiquidDRP/cl_dermaskin.lua
+Modified : /gamemode/help.lua
+Modified : /gamemode/modules/AFK/cl_afk.lua
+Modified : /gamemode/modules/AFK.lua
+Modified : /gamemode/sh_commands.lua
+Modified : /gamemode/shared.lua
+Modified : /gamemode/showteamtabs.lua
+
+Revision: 6
+Author: tgp1994
+Date: Wednesday, March 20, 2013 11:50:12 PM
+Message:
+[gamemode/cl_vgui.lua]
+* Removed F4Menu think override - doesn't really seem to do anything.
+* Changed paths of a few silk icon materials to gmod 13 path
+[gamemode/dlc/cl_darkskin.lua]
+* Removed CurrentSkin property (looks like a last minute attempt to hide the blue theme :P)
+* Added Name property - used in showteamtabs.lua
+[gamemode/LiquidDRP/cl_dermaskin.lua]
+* Fixed icon path, added Name property to Default theme
+* Changed CurrentSkin to automatically default to the Dark Skin
+* Fixed a few gmod 13's
+[gamemode/showteamtabs.lua]
+* Now makes use of the Name theme property
+* Perparing to fix bug where you are unable to change themes after already changing the theme once.
+----
+Modified : /gamemode/cl_vgui.lua
+Modified : /gamemode/LiquidDRP/cl_dermaskin.lua
+Modified : /gamemode/showteamtabs.lua
+Modified : /gamemode/dlc/cl_darkskin.lua
+
+Revision: 5
+Author: tgp1994
+Date: Wednesday, March 20, 2013 7:36:15 PM
+Message:
+[-] Removed cl_helpvgui.lua, blank file.
+[gamemode/data.lua] CONNECTED_TO_MYSQL variable was probably not in the table.
+[gamemode/FAdmin_DarkRP.lua] Pooled fadmin network messages, from a patch on darkrp's github.
+[gamemode/server/fadmin_sql.lua] Removing extraneous prints.
+----
+Modified : /gamemode/data.lua
+Modified : /gamemode/FAdmin_DarkRP.lua
+Deleted : /gamemode/cl_helpvgui.lua
+Modified : /gamemode/server/fadmin_sql.lua
+
+Revision: 4
+Author: tgp1994
+Date: Wednesday, March 20, 2013 6:07:21 PM
+Message:
+Beginning integration of FAdmin
+----
+Modified : /gamemode/data.lua
+Modified : /gamemode/cl_init.lua
+Modified : /gamemode/init.lua
+Modified : /gamemode/FAdmin_DarkRP.lua
+Added : /gamemode/server
+Added : /gamemode/server/fadmin_sql.lua
+Modified : /gamemode/LiquidDRP/sh_liquiddrp.lua
+
+Revision: 3
+Author: tgp1994
+Date: Tuesday, March 19, 2013 1:01:56 PM
+Message:
+Removing local FAdmin copy in prep for external
+----
+Deleted : /gamemode/FAdmin
+
+Revision: 2
+Author: tgp1994
+Date: Tuesday, March 19, 2013 12:59:00 PM
+Message:
+Adding FAdmin as external
+----
+Modified : /
+
+Revision: 1
+Author: tgp1994
+Date: Tuesday, March 19, 2013 12:50:28 PM
+Message:
+Initial commit. About time.
+

@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$translucent" "1"
+	"$baseTexture" "katharsmodels/contraband/contraband_see"
+	"$envmap" "env_cubemap"
+	"$bumpmap" "katharsmodels/contraband/contraband_normal"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$model" 1
+}

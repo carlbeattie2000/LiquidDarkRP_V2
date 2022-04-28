@@ -1,0 +1,6 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/props/carrot"
+	"$surfaceprop" "BloodyFlesh"
+	"$model" 1
+}

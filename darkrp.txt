@@ -1,0 +1,14 @@
+"Gamemode"
+{
+	"base"			"sandbox"
+    "title"			"DarkRP"
+	"maps"			"^rp_"
+	"category"      "rp"
+	"menusystem"	"1"
+
+	"author_name"   "Rebellion/DarkRP/LiquidRP"
+
+	"icon"  ""
+	"info"  ""
+	"hide"  0
+}
