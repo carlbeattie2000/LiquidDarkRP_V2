@@ -1,5 +1,24 @@
 CreateClientConVar("rp_playermodel", "", true, true)
 
+local LDRP = {}
+
+function LDRP.InitClient()
+	timer.Simple(.3, function()
+		LocalPlayer().Inventory = {}
+		LocalPlayer().Skills = {}
+		LocalPlayer().MaxWeight = 0
+		LocalPlayer().Bank = {}
+		LocalPlayer().MaxBWeight = 0
+    LocalPlayer().InterestRate = {}
+    LocalPlayer().RobbingBank = false
+
+		print("Client has been initialized.")
+
+		RunConsoleCommand("_initme")
+	end)
+end
+hook.Add("InitPostEntity","Loads inventory and character",LDRP.InitClient)
+
 local function MayorOptns()
 	local MayCat = vgui.Create("DCollapsibleCategory")
 	function MayCat:Paint()
@@ -697,9 +716,6 @@ function EntitiesTab()
 	return EntitiesPanel
 end
 
--- REBELLION CUSTOM TABS
-local LDRP = {}
-
 -- Function copied from cl_stores.lua l:174
 
 function LDRP.OpenItemOptions(item,Type,nicename)
@@ -1168,6 +1184,7 @@ function BankTab()
 		if amount and amount > 0 then
 
 			RunConsoleCommand("_bnk", "money", amount)
+      RunConsoleCommand("_bnkupgrade", "balanceChanged", selectedOption)
 
 		else
 
@@ -1196,13 +1213,13 @@ function BankTab()
 
 	AccountUpgradeOptions:SetValue("Upgrade Account")
 
-	AccountUpgradeOptions:SetSortItems(false)
-
 	AccountUpgradeOptions:SetTextColor(Color(255, 255, 255, 255))
 
 	for k,v in pairs(AccountUpgradeOptionValues) do
 		AccountUpgradeOptions:AddChoice( k .. " " .. v )
 	end
+
+  AccountUpgradeOptions:SetSortItems(false)
 
 	function AccountUpgradeOptions:Paint()
 
@@ -1230,20 +1247,23 @@ function BankTab()
 	
 		local selectedOption = AccountUpgradeOptions:GetValue()
 
-		RunConsoleCommand("_bnk", "upgrade", selectedOption)
+		RunConsoleCommand("_bnkupgrade", "upgrade", selectedOption)
 
 	end
 
-	local IntrestRateAmount = vgui.Create("DPanel", MainBankBackground)
+	local InterestRateAmount = vgui.Create("DPanel", MainBankBackground)
 
-	IntrestRateAmount:SetPos(450, (h*.62)+40)
+	InterestRateAmount:SetPos(450, (h*.62)+40)
 
-	IntrestRateAmount:SetSize(150, 35)
+	InterestRateAmount:SetSize(150, 35)
 
-	function IntrestRateAmount:Paint()
-		print(LocalPlayer().IntrestRate["rate"])
+  PrintTable(LocalPlayer().InterestRate)
+
+	function InterestRateAmount:Paint()
+
 		draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), Color( 213, 100, 100, 255 ))
-		draw.SimpleText(LocalPlayer().IntrestRate["rate"] or 0 .. "%", "DermaDefault", 20, 20, Color(0, 0, 0, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+		draw.SimpleText("10" .. "%", "DermaDefault", 20, 20, Color(0, 0, 0, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 	end
 
@@ -1251,22 +1271,6 @@ function BankTab()
 
 	return MainBankBackground
 end
-
-
-local LDRP = {}
-
-function LDRP.InitClient()
-	timer.Simple(3, function()
-		LocalPlayer().Inventory = {}
-		LocalPlayer().Skills = {}
-		LocalPlayer().MaxWeight = 0
-		LocalPlayer().Bank = {}
-		LocalPlayer().MaxBWeight = 0
-		print("Client has been initialized.")
-		RunConsoleCommand("_initme")
-	end)
-end
-hook.Add("InitPostEntity","Loads inventory and character",LDRP.InitClient)
 
 function LDRP.SendItemInfo(um)
 	LocalPlayer().Inventory[tostring(um:ReadString())] = um:ReadFloat()

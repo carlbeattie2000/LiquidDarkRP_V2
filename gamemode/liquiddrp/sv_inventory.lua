@@ -63,7 +63,7 @@ function LDRP.InitializeSelf(ply,cmd,args)
 			end
 		end)
 	end)
-	
+
 	-- Skills:
 	if ply:LiquidFile("Character") then
 		ply.Character = von.deserialize(ply:LiquidFile("Character",true))
@@ -75,14 +75,16 @@ function LDRP.InitializeSelf(ply,cmd,args)
 	end
 
 	if !ply.Character.BankWeight then
+    print("No weight")
 		ply.Character.Bank = {["curcash"] = 0}
 		ply.Character.BankWeight = {["cur"] = 0,["allowed"] = 30}
 	end
 
-	if !ply.Character.IntrestRate then
-		print("INTREST RATE IniTED")
-		ply.Character.IntrestRate = {["rate"] = 0}
+	if !ply.Character.InterestRate then
+		ply.Character.InterestRate = {["cur"] = 0}
 	end
+
+  ply.RobbingBank = false
 	
 	timer.Simple(3,function()
 		if !ply:IsValid() then return end

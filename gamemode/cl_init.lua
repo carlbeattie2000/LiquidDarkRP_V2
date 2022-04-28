@@ -1127,7 +1127,6 @@ end
 net.Receive("DarkRP_InitializeVars", InitializeDarkRPVars)
 	
 function GM:InitPostEntity()
-
 	g_VoicePanelList = vgui.Create( "DPanel" )
 
     g_VoicePanelList:ParentToHUD()
@@ -1223,46 +1222,44 @@ function GM:InitPostEntity()
 
 end
 
-local LDRP = {}
+-- local LDRP = {}
 
-function LDRP.InitClient()
+-- function LDRP.InitClient()
 
-	timer.Simple(1, function() 
+-- 	timer.Simple(1, function() 
 		
-		LocalPlayer().Inventory = {}
+-- 		LocalPlayer().Inventory = {}
 
-		LocalPlayer().NewItemsLog = {}
+-- 		LocalPlayer().NewItemsLog = {}
 
-		LocalPlayer().Skills = {}
+-- 		LocalPlayer().Skills = {}
 
-		LocalPlayer().Bank = {}
+-- 		LocalPlayer().Bank = {}
 
-		LocalPlayer().IntrestRate = {}
+-- 		LocalPlayer().InterestRate = {}
 
-		print(LocalPlayer().Bank["curcash"], LocalPlayer().IntrestRate["rate"])
+-- 		print("Client has initialized")
 
-		print("Client has initialized")
+-- 		RunConsoleCommand("_initme")
 
-		RunConsoleCommand("_initme")
+-- 	end)
 
-	end)
+-- 	file.CreateDir("rebbelionrpi")
 
-	file.CreateDir("rebbelionrpi")
+-- 	local icons = file.Find("rebbelionrpi/*", "DATA")
 
-	local icons = file.Find("rebbelionrpi/*", "DATA")
+-- 	for k, v in pairs(icons) do
 
-	for k, v in pairs(icons) do
+-- 		if (file.Time(string.format("rebbelionrpi/%s", v), "DATA") <= (os.time() - 604800)) then
 
-		if (file.Time(string.format("rebbelionrpi/%s", v), "DATA") <= (os.time() - 604800)) then
+-- 			file.Delete(string.format("rebbelionrpi/%s", v))
+-- 		end
 
-			file.Delete(string.format("rebbelionrpi/%s", v))
-		end
+-- 	end
 
-	end
+-- end
 
-end
-
-hook.Add("InitPostEntity", "LoadCharacter", LDRP.InitClient)
+-- hook.Add("InitPostEntity", "LoadCharacter", LDRP.InitClient)
 
 function REBELLION.CalculateMaxInventoryWeight()
 

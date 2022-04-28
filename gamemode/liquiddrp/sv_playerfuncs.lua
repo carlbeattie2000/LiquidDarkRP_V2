@@ -120,17 +120,22 @@ function meta:CanBCarry(item,amount)
 	return ((self.Character.BankWeight.cur+(Tbl.weight*am)) <= self.Character.BankWeight.allowed) and self.Character.BankWeight.cur+(Tbl.weight*am)
 end
 
-function meta:GetIntrestRate()
+function meta:GetInterestRate()
 
-	print(self.Character.IntrestRate["rate"])
-
-	return self.Character.IntrestRate["rate"]
+	return self.Character.InterestRate["cur"]
 
 end
 
-function meta:SetIntrestRate(newRate)
+function meta:GetInterestRateType()
 
-	self.Character.IntrestRate["rate"] = newRate
+	return self.Character.InterestRate["rateType"]
+
+end
+
+function meta:SetInterestRate(rateType, newRate)
+
+  self.Character.InterestRate["rateType"] = rateType
+	self.Character.InterestRate["cur"] = newRate
 
 end
 

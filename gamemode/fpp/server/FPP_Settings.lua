@@ -263,9 +263,7 @@ function FPP.AddDefaultBlocked(types, classname)
 		return
 	end
 
-	print(FPP)
-
-	for k,v in pairs(types) do
+	for k,v in pairs(types) || {} do
 		FPP.Blocked[v][classname] = true
 	end
 end

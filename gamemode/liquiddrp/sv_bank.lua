@@ -70,7 +70,7 @@ function LDRP.BankCMD(ply,cmd,args)
 	local Item = args[2]
 
 
-	if !Type or !Item or (Type != "money" and Type != "upgrade" and !LDRP_SH.AllItems[Item]) or Item == "curcash" then return end
+	if !Type or !Item or (Type != "money" and !LDRP_SH.AllItems[Item]) or Item == "curcash" then return end
 	
 	if Type == "bank" then
 		if ply:HasItem(Item) and ply:CanBCarry(Item) then
@@ -114,30 +114,69 @@ function LDRP.BankCMD(ply,cmd,args)
 		else
 			ply:LiquidChat("BANK", Color(0,192,10), "Input an amount!")
 		end
-
-	elseif Type == "upgrade" then
-
-		if Item == "Upgrade Account" then
-
-			ply:LiquidChat("BANK", Color(0,192,10), "Select a option to upgrade!")
-
-			return
-
-		end
-
-		local selectedOption
-
-		selectedOption = LDRP.AccountUpgradeOptionValues[Item:gsub("[^A-za-z]", "")]
-
-		local playerBalance = ply:GetBMoney()
-
-		if playerBalance > selectedOption["min"] then
-			ply:LiquidChat("BANK", Color(0,192,10), "Account upgraded! $" .. numberFormat(playerBalance*selectedOption["rate"]) .. " per day" )
-
-			ply:SetIntrestRate(selectedOption["rate"])
-		end
-
-		
 	end
 end
 concommand.Add("_bnk",LDRP.BankCMD)
+
+function LDRP.BankUpgrade(ply, cmd, args)
+
+  local upgradeType = args[1]
+  local newLevel = args[2]
+
+  local playerBalance = ply:GetBMoney()
+
+  if upgradeType == "balanceChanged" then
+
+    local rateType = ply:GetInterestRateType()
+    
+    if playerBalance < LDRP.AccountUpgradeOptionValues[rateType]["min"] then
+    
+      local newSelectedType
+      local newInterestRate
+
+      for k, v in pairs(LDRP.AccountUpgradeOptionValues) do
+
+        if playerBalance > v["min"] then
+
+          newSelectedType = k
+
+          newInterestRate = v["rate"]
+
+        end
+        
+      end
+
+      if !newSelectedType || !newInterestRate then
+
+        ply:SetInterestRate("None", 0)
+
+        ply:LiquidChat("BANK", Color(0,192,10), "Account Upgrade Status has been removed!" )
+
+        return
+
+      end
+
+      ply:SetInterestRate(newSelectedType, newInterestRate)
+
+      ply:LiquidChat("BANK", Color(0,192,10), "Account down-graded! $" .. numberFormat(playerBalance*newInterestRate) .. " per day" )
+
+    end
+
+    return
+  end
+  
+  if newLevel == "Upgrade Account" then ply:LiquidChat("BANK", Color(0,192,10), "Select a option to upgrade!") return end
+
+  local selectedOptionName = newLevel:gsub("[^A-za-z]", "")
+
+  local selectedOption = LDRP.AccountUpgradeOptionValues[selectedOptionName]
+
+  if playerBalance >= selectedOption["min"] then
+    ply:LiquidChat("BANK", Color(0,192,10), "Account upgraded! $" .. numberFormat(playerBalance*selectedOption["rate"]) .. " per day" )
+
+		ply:SetInterestRate(selectedOptionName, selectedOption["rate"])
+  end
+
+end
+
+concommand.Add("_bnkupgrade", LDRP.BankUpgrade)
