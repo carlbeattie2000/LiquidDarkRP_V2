@@ -2,22 +2,24 @@ CreateClientConVar("rp_playermodel", "", true, true)
 
 local LDRP = {}
 
-function LDRP.InitClient()
-	timer.Simple(.3, function()
-		LocalPlayer().Inventory = {}
-		LocalPlayer().Skills = {}
-		LocalPlayer().MaxWeight = 0
-		LocalPlayer().Bank = {}
-		LocalPlayer().MaxBWeight = 0
-    LocalPlayer().InterestRate = {}
-    LocalPlayer().RobbingBank = false
+-- function LDRP.InitClient()
+-- 	timer.Simple(.3, function()
+-- 		LocalPlayer().Inventory = {}
+-- 		LocalPlayer().Skills = {}
+-- 		LocalPlayer().MaxWeight = 0
+-- 		LocalPlayer().Bank = {}
+-- 		LocalPlayer().MaxBWeight = 0
+--     LocalPlayer().InterestRate = {}
+--     LocalPlayer().RobbingBank = false
 
-		print("Client has been initialized.")
+-- 		print("Client has been initialized.")
 
-		RunConsoleCommand("_initme")
-	end)
-end
-hook.Add("InitPostEntity","Loads inventory and character",LDRP.InitClient)
+-- 		RunConsoleCommand("_initme")
+-- 	end)
+-- end
+-- hook.Add("InitPostEntity","Loads inventory and character",LDRP.InitClient)
+
+if SERVER then print("server") else print("client") end
 
 local function MayorOptns()
 	local MayCat = vgui.Create("DCollapsibleCategory")
@@ -787,6 +789,8 @@ function BankTab()
 
 	local MainBankBackground = vgui.Create("DPanel")
 
+  if !LocalPlayer().Bank || !LocalPlayer().InterestRate["cur"] || !LocalPlayer().InterestRate["lastcollected"] then return end
+
 	local w = 740
 
 	local h = 500
@@ -1095,7 +1099,7 @@ function BankTab()
 		if (!self:IsDown()) then
 			function self:Paint()
 				draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), Color(213, 100, 100, 255))
-				draw.SimpleText("Deposit", "Default", self:GetWide() / 2, self:GetTall() / 2, Color( 0, 0, 0, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+				draw.SimpleText("Deposit", "Default", self:GetWide() / 2, self:GetTall() / 2, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 			end
 		else
 			function self:Paint()
@@ -1161,7 +1165,7 @@ function BankTab()
 
 				draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), Color(213, 100, 100, 255))
 
-				draw.SimpleText("Withdraw", "Default", self:GetWide() / 2, self:GetTall() / 2, Color( 0, 0, 0, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+				draw.SimpleText("Withdraw", "Default", self:GetWide() / 2, self:GetTall() / 2, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 			end
 
@@ -1209,7 +1213,7 @@ function BankTab()
 
 	AccountUpgradeOptions:SetPos(20, (h*.70)+80)
 
-	AccountUpgradeOptions:SetSize(314, 30)
+	AccountUpgradeOptions:SetSize(314, 35)
 
 	AccountUpgradeOptions:SetValue("Upgrade Account")
 
@@ -1231,7 +1235,7 @@ function BankTab()
 
 	AccountUpgradeButton:SetPos(340, (h*.70)+80)
 
-	AccountUpgradeButton:SetSize(100, 30)
+	AccountUpgradeButton:SetSize(100, 35)
 
 	AccountUpgradeButton:SetText("")
 
@@ -1251,21 +1255,51 @@ function BankTab()
 
 	end
 
+  -- Collect Interest
+
 	local InterestRateAmount = vgui.Create("DPanel", MainBankBackground)
 
-	InterestRateAmount:SetPos(450, (h*.62)+40)
+	InterestRateAmount:SetPos(450, (h*.70)+80)
 
-	InterestRateAmount:SetSize(150, 35)
-
-  PrintTable(LocalPlayer().InterestRate)
+	InterestRateAmount:SetSize(100, 35)
 
 	function InterestRateAmount:Paint()
 
 		draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), Color( 213, 100, 100, 255 ))
 
-		draw.SimpleText("10" .. "%", "DermaDefault", 20, 20, Color(0, 0, 0, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+		draw.SimpleText(LocalPlayer().InterestRate["cur"] * 100 .. "%", "DermaDefault", 100/2, 35/2, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 	end
+
+  local InterestRateCollectionButton = vgui.Create("DButton", MainBankBackground)
+
+  InterestRateCollectionButton:SetPos(560, (h*.70)+80)
+
+  InterestRateCollectionButton:SetSize(160, 35)
+
+  InterestRateCollectionButton:SetText("")
+
+  function InterestRateCollectionButton:Paint()
+  
+    draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), Color(213, 100, 100, 255))
+
+    if os.time() > LocalPlayer().InterestRate["lastcollected"] + LDRP_SH.InterestCollectionDelay then
+
+      draw.SimpleText("Collect $" .. REBELLION.numberFormat(math.Round(LocalPlayer().Bank["curcash"] * LocalPlayer().InterestRate["cur"])), "DermaDefault", 160/2, 35/2, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+    else
+
+    draw.SimpleText("Collect Again Tommrow", "DermaDefault", 160/2, 35/2, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+    end
+  
+  end
+
+  InterestRateCollectionButton.DoClick = function()
+  
+    RunConsoleCommand("_collectInterest")
+  
+  end
 
 
 

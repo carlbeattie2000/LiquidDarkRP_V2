@@ -84,6 +84,16 @@ function meta:SendBItem(item,am)
 	umsg.End()
 end
 
+function meta:SendInterestInfo(item)
+
+  util.AddNetworkString( "sendBankInterestRateInfo" )
+
+  net.Start( "sendBankInterestRateInfo" )
+    net.WriteTable( item )
+  net.Send(self)
+
+end
+
 function meta:AddBMoney(amount)
 	local Add = (self.Character.Bank["curcash"] or 0)+amount
 	self.Character.Bank["curcash"] = Add
@@ -132,10 +142,26 @@ function meta:GetInterestRateType()
 
 end
 
+function meta:GetTimeLastCollectedInterest()
+
+  return self.Character.InterestRate["lastcollected"]
+
+end
+
 function meta:SetInterestRate(rateType, newRate)
 
   self.Character.InterestRate["rateType"] = rateType
 	self.Character.InterestRate["cur"] = newRate
+
+  self:SendInterestInfo(self.Character.InterestRate)
+
+end
+
+function meta:SetTimeLastCollectedInterest(time)
+
+  self.Character.InterestRate["lastcollected"] = time
+
+  self:SendInterestInfo(self.Character.InterestRate)
 
 end
 

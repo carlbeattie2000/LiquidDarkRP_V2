@@ -468,7 +468,7 @@ function GM:PlayerInitialSpawn(ply)
 	ply.DarkRPVars = ply.DarkRPVars or {}
 	ply:NewData()
 	ply.SID = ply:UserID()
-	
+
 	for k,v in pairs(ents.GetAll()) do
 		if IsValid(v) and v.deleteSteamID == ply:SteamID() and v.dt then
 			v.SID = ply.SID

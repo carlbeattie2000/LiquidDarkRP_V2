@@ -21,31 +21,31 @@ end
 LDRP.AccountUpgradeOptionValues = {
 	["Basic"] = {
 		["min"] = 50000,
-		["rate"] = 5
+		["rate"] = 0.015
 	},
 	["Bronze"] = {
 		["min"] = 500000,
-		["rate"] = 0.35
+		["rate"] = 0.02
 	},
 	["Silver"] = {
 		["min"] = 1000000,
-		["rate"] = 0.04
+		["rate"] = 0.035
 	},
 	["Gold"] = {
 		["min"] = 5000000,
-		["rate"] = 0.05
+		["rate"] = 0.045
 	},
 	["Platinum"] = {
 		["min"] = 10000000,
-		["rate"] = 0.065
+		["rate"] = 0.05
 	},
 	["Diamond"] = {
 		["min"] = 50000000,
-		["rate"] = 0.07
+		["rate"] = 0.06
 	},
 	["Nuclear"] =  {
 		["min"] = 100000000,
-		["rate"] = 0.075
+		["rate"] = 0.065
 	}
 }
 
@@ -146,6 +146,8 @@ function LDRP.BankUpgrade(ply, cmd, args)
         
       end
 
+      print(newSelectedType)
+
       if !newSelectedType || !newInterestRate then
 
         ply:SetInterestRate("None", 0)
@@ -172,7 +174,7 @@ function LDRP.BankUpgrade(ply, cmd, args)
   local selectedOption = LDRP.AccountUpgradeOptionValues[selectedOptionName]
 
   if playerBalance >= selectedOption["min"] then
-    ply:LiquidChat("BANK", Color(0,192,10), "Account upgraded! $" .. numberFormat(playerBalance*selectedOption["rate"]) .. " per day" )
+    ply:LiquidChat("BANK", Color(0,192,10), "Account upgraded! $" .. numberFormat(math.Round(playerBalance*selectedOption["rate"])) .. " per day" )
 
 		ply:SetInterestRate(selectedOptionName, selectedOption["rate"])
   end
@@ -180,3 +182,35 @@ function LDRP.BankUpgrade(ply, cmd, args)
 end
 
 concommand.Add("_bnkupgrade", LDRP.BankUpgrade)
+
+function LDRP.CollectInterest(ply, cmd, args)
+
+  -- Compare the time last collected, to the time the player is attempting to collect.
+
+  local nextTimeAloudToCollect = ply:GetTimeLastCollectedInterest() + LDRP_SH.InterestCollectionDelay
+
+  if os.time() > nextTimeAloudToCollect then
+
+    local upgradeType = ply:GetInterestRateType()
+    
+    local validInterestRate = LDRP.AccountUpgradeOptionValues[upgradeType]["rate"]
+
+    local amountToCollect = ply:GetBMoney() *  validInterestRate
+
+    ply:AddBMoney(amountToCollect)
+
+    ply:LiquidChat( "BANK", Color(0,192,10), "You collected your interest of $" .. numberFormat(math.Round(amountToCollect)) )
+
+    ply:SetTimeLastCollectedInterest(os.time())
+
+  else
+
+    ply:LiquidChat( "BANK", Color(0,192,10), "You can collect your interest again tommrow" )
+
+  end
+
+
+
+end
+
+concommand.Add("_collectInterest", LDRP.CollectInterest)

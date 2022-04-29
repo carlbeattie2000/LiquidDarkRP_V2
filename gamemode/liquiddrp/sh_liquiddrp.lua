@@ -25,6 +25,9 @@ LDRP_SH.NotifyNewVIPs = true -- Notify all players when a VIP is added
 
 LDRP_SH.ChangeJobFuncs = {}
 
+-- LDRP_SH.InterestCollectionDelay = 3600*24
+LDRP_SH.InterestCollectionDelay = 60*5
+
 -- TO ADD VIPS YOU MUST BE AN ADMIN AND TYPE ldrp_addvip targetsname
 
 LDRP_SH.Printers = {}

@@ -1222,44 +1222,38 @@ function GM:InitPostEntity()
 
 end
 
--- local LDRP = {}
+local LDRP = {}
 
--- function LDRP.InitClient()
+function LDRP.InitClient()
 
--- 	timer.Simple(1, function() 
+	timer.Simple(1, function() 
 		
--- 		LocalPlayer().Inventory = {}
+		LocalPlayer().Inventory = {}
 
--- 		LocalPlayer().NewItemsLog = {}
+		LocalPlayer().NewItemsLog = {}
 
--- 		LocalPlayer().Skills = {}
+		LocalPlayer().Skills = {}
 
--- 		LocalPlayer().Bank = {}
+		LocalPlayer().Bank = {}
 
--- 		LocalPlayer().InterestRate = {}
+		LocalPlayer().InterestRate = {}
 
--- 		print("Client has initialized")
+		print("Client has initialized")
 
--- 		RunConsoleCommand("_initme")
+		RunConsoleCommand("_initme")
 
--- 	end)
+	end)
+end
 
--- 	file.CreateDir("rebbelionrpi")
+hook.Add("InitPostEntity", "LoadCharacter", LDRP.InitClient)
 
--- 	local icons = file.Find("rebbelionrpi/*", "DATA")
+function loadInterstData()
 
--- 	for k, v in pairs(icons) do
+  LocalPlayer().InterestRate = net.ReadTable()
+  
+end
 
--- 		if (file.Time(string.format("rebbelionrpi/%s", v), "DATA") <= (os.time() - 604800)) then
-
--- 			file.Delete(string.format("rebbelionrpi/%s", v))
--- 		end
-
--- 	end
-
--- end
-
--- hook.Add("InitPostEntity", "LoadCharacter", LDRP.InitClient)
+net.Receive("sendBankInterestRateInfo", loadInterstData)
 
 function REBELLION.CalculateMaxInventoryWeight()
 

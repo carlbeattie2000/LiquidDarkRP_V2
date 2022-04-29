@@ -61,6 +61,8 @@ function LDRP.InitializeSelf(ply,cmd,args)
 			for k,v in pairs(ply.Character.Bank) do
 				ply:SendBItem(k,v)
 			end
+
+      ply:SendInterestInfo(ply.Character.InterestRate)
 		end)
 	end)
 
@@ -75,16 +77,16 @@ function LDRP.InitializeSelf(ply,cmd,args)
 	end
 
 	if !ply.Character.BankWeight then
-    print("No weight")
 		ply.Character.Bank = {["curcash"] = 0}
 		ply.Character.BankWeight = {["cur"] = 0,["allowed"] = 30}
+    ply.Character.InterestRate = {["cur"] = 0}
 	end
 
-	if !ply.Character.InterestRate then
-		ply.Character.InterestRate = {["cur"] = 0}
-	end
+  if !ply.Character.InterestRate["lastcollected"] then
 
-  ply.RobbingBank = false
+    ply.Character.InterestRate["lastcollected"] = os.time()
+    
+  end
 	
 	timer.Simple(3,function()
 		if !ply:IsValid() then return end
