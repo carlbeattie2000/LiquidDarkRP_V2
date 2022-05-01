@@ -1764,6 +1764,88 @@ function ChangeSubTabRequest(subTabName)
 
 end
 
+function requestStringMenu(msgText, onsubmit)
+
+  local frame = vgui.Create("DFrame")
+
+  frame:SetSize(300, 120)
+
+  frame:Center()
+
+  frame:SetTitle(msgText)
+
+  frame:SetSizable(false)
+
+  frame:SetDraggable(false)
+
+  frame:ShowCloseButton(false)
+
+  frame:SetBackgroundBlur(true)
+
+  function frame:Paint()
+
+    draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), Color(213, 100, 100, 255))
+  
+  end
+
+  frame:MakePopup()
+
+  local textEntry = vgui.Create("DTextEntry", frame)
+
+  textEntry:SetPos(5, 40)
+
+  textEntry:SetSize(290, 20)
+
+  local btnContainer = vgui.Create("DPanel", frame)
+
+  btnContainer:SetSize(300, 60)
+
+  btnContainer:Dock(BOTTOM)
+
+  local btnOk = vgui.Create("DButton", btnContainer)
+
+  btnOk:SetSize(60, 20)
+
+  btnOk:SetPos((btnContainer:GetWide() / 2) - 30 - 40, 20)
+
+  btnOk:SetText("Ok")
+
+  btnOk.DoClick = function()
+
+    onsubmit(textEntry:GetValue())
+
+    frame:Close()
+  
+  end
+
+  function btnOk:Paint()
+
+    draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), Color(0, 0, 0, 255))
+  
+  end
+
+  local btnClose = vgui.Create("DButton", btnContainer)
+
+  btnClose:SetSize(60, 20)
+
+  btnClose:SetPos((btnContainer:GetWide() / 2) - 30 + 40, 20)
+
+  btnClose:SetText("Cancel")
+
+  btnClose.DoClick = function()
+  
+    frame:Close()
+  
+  end
+
+  function btnClose:Paint()
+
+    draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), Color(0, 0, 0, 255))
+  
+  end
+
+end
+
 -- Data
 
 local TAB_CONFIG = TAB_CONFIG || {}
@@ -1773,7 +1855,8 @@ TAB_CONFIG.playerActions = {
 		["nicename"] = "Sell all Doors",
 	},
 	[2] = {
-		["nicename"] = "Drop Money"
+		["nicename"] = LANGUAGE.drop_money,
+    ["onclick"] = dropMoney
 	},
 	[3] = {
 		["nicename"] = "Send a Trade Request"
@@ -1785,6 +1868,17 @@ TAB_CONFIG.playerActions = {
 		["nicename"] = "Send Coin Flip Request"
 	}
 }
+
+-- Player actions on click functions
+function dropMoney()
+
+  requestStringMenu("Drop money", function(t)
+
+    LocalPlayer():ConCommand("darkrp /dropmoney " .. tostring(t))
+  
+  end)
+  
+end
 
 TAB_CONFIG.gameplayFeatures = {
 	[1] = {
