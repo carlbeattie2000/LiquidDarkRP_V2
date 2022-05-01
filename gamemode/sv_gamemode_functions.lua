@@ -150,10 +150,47 @@ function GM:ShowSpare1(ply)
 	umsg.End()
 end
 
+-- F4 Menu --
+util.AddNetworkString("OpenF4Menu")
+
+util.AddNetworkString("F4MainContentChange")
+
 function GM:ShowSpare2(ply)
-	umsg.Start("ChangeJobVGUI", ply)
-	umsg.End()
+  net.Start( "OpenF4Menu" )
+
+  net.Send( ply )
+
 end
+
+-- Handle changing the main content, like bank vault, that isn't a main tab
+
+function F4ContentExternalChange(ply, cmd, args)
+
+  net.Start( "F4MainContentChange" )
+
+  net.WriteString( args[1] )
+
+  net.Send( ply )
+
+end
+
+concommand.Add( "_f4contentchange", F4ContentExternalChange )
+
+-- Allow F4 menu to be opened onto any tab,
+
+function F4OpenContentWindow(ply, cmd, args)
+
+  net.Start( "OpenF4Menu" )
+
+  net.WriteString (args[1] )
+
+  net.Send( ply )
+
+end
+
+concommand.Add( "_f4opencontentwindow", F4OpenContentWindow )
+
+-- F4 MENU --
 
 function GM:OnNPCKilled(victim, ent, weapon)
 	-- If something killed the npc

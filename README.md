@@ -16,6 +16,6 @@ Old Reference:
 ![old_f4_ref](https://i.ibb.co/h199mtJ/old.jpg "Old Ref")
 
 Current Reference: 
-![current_f4_ref](https://i.ibb.co/HxNbWT1/new.jpg "Current Ref")]
+![current_f4_ref](https://i.ibb.co/HxNbWT1/new.jpg "Current Ref")
 
 [Join the discord](https://discord.gg/sfWkywmK6d)
