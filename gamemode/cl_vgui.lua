@@ -1,3 +1,6 @@
+include("showteamtabs.lua")
+include("menu_content_tabs.lua")
+
 local VoteVGUI = {}
 local QuestionVGUI = {}
 local PanelNum = 0
@@ -245,92 +248,391 @@ local function DoLetter(msg)
 end
 usermessage.Hook("DoLetter", DoLetter)
 
-local F4Menu  
-local F4MenuTabs
-local F4Tabs
-local hasReleasedF4 = false
-local function ChangeJobVGUI()
-	if not F4Menu or not F4Menu:IsValid() then
-		F4Menu = vgui.Create("DFrame")
-		F4Menu:SetSize(770, 580)
-		F4Menu:Center()
-		F4Menu:SetVisible( true )
-		F4Menu:MakePopup( )
-		F4Menu:SetTitle("Options menu")
-		F4Tabs = {MoneyTab(), JobsTab(), EntitiesTab(), InventoryTab(), SkillsTab(), BankTab()}
-		
-		--[[if LocalPlayer():IsAdmin() then
-			table.insert(F4Tabs, RPAdminTab())
-		end]]
-		--[[if LocalPlayer():IsSuperAdmin() then
-			table.insert(F4Tabs, RPLicenseWeaponsTab())
-		end]]
-		F4Menu:SetSkin("LiquidDRP2")
-	else
-		F4Menu:SetVisible(true)
-		F4Menu:SetSkin("LiquidDRP2")
-	end
-	
-	hasReleasedF4 = false
-	--[[function F4Menu:Think()
-		if input.IsKeyDown(KEY_F4) and hasReleasedF4 then
-			self:Close()
-		elseif not input.IsKeyDown(KEY_F4) then
-			hasReleasedF4 = true
-		end
-		if (!self.Dragging) then return end 
-		local x = gui.MouseX() - self.Dragging[1] 
-		local y = gui.MouseY() - self.Dragging[2] 
-		x = math.Clamp( x, 0, ScrW() - self:GetWide() ) 
-		y = math.Clamp( y, 0, ScrH() - self:GetTall() ) 
-		self:SetPos( x, y )
-	end]]
-	
-	if not F4MenuTabs or not F4MenuTabs:IsValid() then
-		F4MenuTabs = vgui.Create( "DPropertySheet", F4Menu)
-		F4MenuTabs:SetPos(5, 25)
-		F4MenuTabs:Dock( FILL )
-		--The tabs: Look in showteamtabs.lua for more info
-		F4MenuTabs:AddSheet("Money/Commands", F4Tabs[1], "icon16/money.png", false, false)
-		F4MenuTabs:AddSheet("Jobs", F4Tabs[2], "icon16/group.png", false, false)
-		F4MenuTabs:AddSheet("Shop", F4Tabs[3], "icon16/brick_add.png", false, false)
-		F4MenuTabs:AddSheet("Inventory", F4Tabs[4], "icon16/box.png", false, false)
-		F4MenuTabs:AddSheet("Skills", F4Tabs[5], "icon16/application_view_detail.png", false, false)
-		F4MenuTabs:AddSheet("Bank", F4Tabs[6], "icon16/money_dollar.png", false, false)
-		
-		--Disabling admin menu: Settings are moving to config.lua (but consider re-adding the admin tab)
-		--[[if LocalPlayer():IsAdmin() or LocalPlayer().DarkRPVars.Privadmin then
-			print("Adminifing")
-			PrintTable(F4Tabs)
-			F4MenuTabs:AddSheet("Admin", F4Tabs[7], "icon16/wrench.png", false, false)
-		end]]
-		--[[if LocalPlayer():IsSuperAdmin() then
-			F4MenuTabs:AddSheet("License weapons", F4Tabs[7], "gui/silkicons/wrench", false, false)
-		end]]--
+MENU_CONFIG = MENU_CONFIG || {}
+
+MENU_CONFIG.height = ScrH()*0.75
+
+MENU_CONFIG.width = ScrW()*0.8
+
+MENU_CONFIG.primaryColor = Color(213, 100, 100, 255)
+
+MENU_CONFIG.tabButtons = {
+	[1] = {
+		["name"] = "Dashboard",
+		["descritpion"] = "Player actions and info",
+		["loadtab"] = TabsDashboard
+	},
+	[2] = {
+		["name"] = "Jobs",
+		["descritpion"] = "Choose your carrer",
+		["loadtab"] = TabsJobs
+	},
+	[3] = {
+		["name"] = "Store",
+		["descritpion"] = "Buy items",
+		["loadtab"] = TabsStore
+	},
+	[4] = {
+		["name"] = "Inventory",
+		["descritpion"] = "Keep your items secure",
+		["loadtab"] = TabsInventory
+	},
+	[5] = {
+		["name"] = "Skills",
+		["descritpion"] = "Level up",
+		["loadtab"] = TabsSkills
+	},
+	[6] = {
+		["name"] = "Crafting",
+		["descritpion"] = "Craft new items",
+		["loadtab"] = TabsCrafting
+	}		
+}
+
+MENU_CONFIG.mainWindowContent = {
+	[1] = {
+		["name"] = "Bank",
+		["loadtab"] = F4Bank
+	},
+	[2] = {
+		["name"] = "BankVault",
+		["loadtab"] = F4BankVault
+	},
+	[3] = {
+		["name"] = "OreProcessing",
+		["loadtab"] = F4OreProcessing
+	},
+	[4] = {
+		["name"] = "Achievements",
+		["loadtab"] = F4Achivements
+	},
+	[5] = {
+		["name"] = "CharacterBoosters",
+		["loadtab"] = F4CharacterBoosters
+	},
+	[6] = {
+		["name"] = "ViewCases",
+		["loadtab"] = F4ViewCases,
+	},
+	[7] = {
+		["name"] = "PlayerStores",
+		["loadtab"] = F4PlayerStores
+	},
+	[8] = {
+		["name"] = "Rewards",
+		["loadtab"] = F4PlayerRewards
+	},
+	[9] = {
+		["name"] = "UpgradeSkills",
+		["loadtab"] = TabsSkills,
+		["isTab"] = true,
+		["tabIndex"] = 5
+	},
+	[10] = {
+		["name"] = "StockMarket",
+		["loadtab"] = F4StockMarket
+	}
+}
+
+function createBtn(target, x, y, w, h, text, onclick, paint)
+	local button = vgui.Create("DButton", target)
+
+	button:SetPos(x, y)
+
+	button:SetSize(w, h)
+
+	button:SetText(text)
+
+	if onclick then
+
+		button.DoClick = onclick
+
 	end
 
-	for _, panel in pairs(F4Tabs) do
-		if panel.Update then
-			panel:Update()
-		elseif panel.Panel and panel.Panel.Update then
-			panel.Panel:Update()
-		end
-		
-		if panel.Panel then
-			panel.Panel:SetSkin("LiquidDRP2")
-		else
-			panel:SetSkin("LiquidDRP2")
-		end
+	if paint then
+
+		paint(button)
+
 	end
-
- 	function F4Menu:Close()
-		F4Menu:SetVisible(false)
-		F4Menu:SetSkin("LiquidDRP2")
-	end 
-
-	F4Menu:SetSkin("LiquidDRP2")
 end
-usermessage.Hook("ChangeJobVGUI", ChangeJobVGUI)
+
+function maxStringLength(str, max)
+
+	local length = 0
+
+	local newString = ""
+
+	for i = 1, #str do
+
+		if length > max then break end
+
+		length = length + 1
+
+		newString = newString .. str[i]
+
+	end
+
+	return newString
+
+end
+
+function tableLength(table)
+
+	local i = 0
+
+	for k in pairs(table) do i = i + 1 end
+
+	return i
+
+end
+
+function findByValue(table, key, value)
+
+	for i = 1, tableLength(table) do
+
+		if table[i][key] == value then
+
+			return table[i]
+
+		end
+
+	end
+
+end
+
+net.Receive("OpenF4Menu", function()
+
+  local menu = vgui.Create("DFrame")
+
+	menu:SetSize(MENU_CONFIG.width, MENU_CONFIG.height)
+
+	menu:Center()
+
+	menu:MakePopup()
+
+	menu:SetTitle("")
+
+	menu:SetDraggable(false)
+
+	menu:ShowCloseButton(false)
+
+	function menu:Paint()
+
+		draw.RoundedBox(0, 0, 0, self:GetWide(), self:GetTall(), Color( 44, 44, 44, 255 ))
+
+		draw.SimpleTextOutlined("Rebellion RP", "HUDNumber", 110, 25, Color( 0, 0, 0, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, MENU_CONFIG.primaryColor)
+
+	end
+
+	-- Menu close button
+
+	createBtn(menu, MENU_CONFIG.width-50, 10, 30, 30, "", function() menu:Close() end, function (btn)
+
+		function btn:Paint()
+
+			-- draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), MENU_CONFIG.primaryColor)
+			draw.SimpleText("X", "Trebuchet24", self:GetWide()/2, self:GetTall()/2, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+		end
+
+	end)
+
+	-- Tab selection buttons panel
+
+	local tabSelectionPanel = vgui.Create("DPanel", menu)
+
+	tabSelectionPanel:SetPos(10, 50)
+
+	tabSelectionPanel:SetSize(MENU_CONFIG.width*.25, MENU_CONFIG.height-60)
+
+	function tabSelectionPanel:Paint()
+
+		draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), Color( 66, 66, 66, 255 ))
+
+	end
+
+	local tabSelectionPanelWidth = tabSelectionPanel:GetWide()
+
+	local tabSelectionPanelHeight = tabSelectionPanel:GetTall()
+
+	-- Main window panel
+
+	local mainWindowPanel = vgui.Create("DPanel", menu)
+
+	mainWindowPanel:SetPos((MENU_CONFIG.width*.25) + 20, 50)
+
+	mainWindowPanel:SetSize(MENU_CONFIG.width*.75-40, MENU_CONFIG.height-60)
+
+	function mainWindowPanel:Paint()
+
+		draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), Color(33, 33, 33, 255))
+
+	end
+
+	-- Shitty method to handle main page content
+	-- If the console command method was called, reterive the string sent
+	local InitContentRequested = net.ReadString()
+
+	local selectedTab
+	local selectedTabIndex
+
+	if InitContentRequested && InitContentRequested ~= "" then
+
+		-- Here we load a sub tab straight into the main window
+
+		local foundResult = findByValue(MENU_CONFIG.mainWindowContent, "name", InitContentRequested)
+
+		selectedTab = foundResult["loadtab"](mainWindowPanel)
+
+		selectedTabIndex = -1
+
+	else
+		-- F4 key was pressed, so we open onto home tab
+
+    PrintTable(MENU_CONFIG.tabButtons[1])
+
+		selectedTab = MENU_CONFIG.tabButtons[1]["loadtab"](mainWindowPanel)
+
+		selectedTabIndex = 1
+
+	end
+
+	-- When a button from within the F4 menu is clicked, to chaneg the sub tab
+
+	net.Receive("F4MainContentChange", function()
+	
+		local F4ContentName = net.ReadString()
+
+		local foundResult = findByValue(MENU_CONFIG.mainWindowContent, "name", F4ContentName)
+
+		selectedTab:Remove()
+
+		selectedTab = foundResult["loadtab"](mainWindowPanel)
+
+		if foundResult["isTab"] then
+
+			selectedTabIndex = foundResult["tabIndex"]
+
+		else
+
+			selectedTabIndex = -1
+
+		end
+
+
+	end)
+
+	-- Render tab selection buttons
+
+	---- User Profile Information
+
+	local userProfileDetails = vgui.Create("DPanel", tabSelectionPanel)
+
+	userProfileDetails:SetPos(5, 10)
+
+	userProfileDetails:SetSize(tabSelectionPanelWidth-10, tabSelectionPanelHeight*0.13)
+
+	-- EXAMPLE VARS -- REPLACE WITH DARKRP VARS
+	local expJob = "Citizen"
+
+	local expCash = CUR .. REBELLION.format_num(LocalPlayer():getDarkRPVar("money"))
+	-- EXAMPLE VARS -- REPLACE WITH DARKRP VARS
+
+	function userProfileDetails:Paint()
+
+		draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), MENU_CONFIG.primaryColor)
+
+		draw.SimpleText(maxStringLength(LocalPlayer():Nick(), 20), "Trebuchet24", 80, 20, Color( 255, 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+		draw.SimpleText(maxStringLength(expJob, 20), "Trebuchet24", 80, 40, Color( 100, 255, 100, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+		draw.SimpleText(expCash, "Trebuchet18", 80, 60, Color( 255, 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+	end
+
+	------ Avatar
+
+	local playerAvatar = vgui.Create("AvatarImage", userProfileDetails)
+
+	playerAvatar:SetPos(4, (userProfileDetails:GetTall() / 2) - (64/2))
+
+	playerAvatar:SetSize(64, 64)
+
+	playerAvatar:SetPlayer(LocalPlayer(), 64)
+
+	-- Split profile from buttons
+
+	local profileDetailsSpliter = vgui.Create("DPanel", tabSelectionPanel)
+
+	profileDetailsSpliter:SetPos(5, 15 + userProfileDetails:GetTall())
+
+	profileDetailsSpliter:SetSize(tabSelectionPanelWidth - 10, 2)
+
+	function profileDetailsSpliter:Paint()
+
+		draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), MENU_CONFIG.primaryColor)
+
+	end
+
+	local tabSelectionPanelButtonsList = vgui.Create("DGrid", tabSelectionPanel)
+
+	tabSelectionPanelButtonsList:SetPos(0, 25 + userProfileDetails:GetTall())
+
+	tabSelectionPanelButtonsList:SetSize(tabSelectionPanelWidth, tabSelectionPanelHeight*0.83)
+
+	tabSelectionPanelButtonsList:SetCols(1)
+
+	tabSelectionPanelButtonsList:SetColWide(tabSelectionPanelWidth)
+
+	tabSelectionPanelButtonsList:SetRowHeight(tabSelectionPanelHeight*0.13)
+
+	for i = 1, tableLength(MENU_CONFIG.tabButtons) do
+
+		local v = MENU_CONFIG.tabButtons[i]
+
+		local but = vgui.Create("DButton")
+
+		but:SetText( "" )
+
+		but:SetSize( tabSelectionPanelButtonsList:GetWide(), tabSelectionPanelButtonsList:GetRowHeight() )
+
+		but.DoClick = function()
+
+			selectedTab:Remove()
+
+			print("Loading....", mainWindowPanel)
+
+			selectedTab = v["loadtab"](mainWindowPanel)
+
+			selectedTabIndex = i
+
+		end
+
+		function but:Think()
+
+			function but:Paint()
+
+				if self:IsHovered() or selectedTabIndex == i then
+
+					draw.RoundedBox(0, 0, 0, self:GetWide(), self:GetTall(), Color( 213, 100, 100, 200 ))
+					draw.SimpleText(v["descritpion"], "Trebuchet18", 10, self:GetTall()/2+15, Color( 200, 200, 200, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+				else
+
+					draw.RoundedBox(0, 0, 0, self:GetWide(), self:GetTall(), Color( 0, 0, 0, 0 ))
+					draw.SimpleText(v["descritpion"], "Trebuchet18", 10, self:GetTall()/2+15, Color( 140, 140, 140, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+				end
+
+				draw.SimpleText(v["name"], "Trebuchet24", 10, self:GetTall()/2-10, Color( 255, 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+			end
+
+		end
+
+		tabSelectionPanelButtonsList:AddItem(but)
+
+	end
+
+end)
 
 local KeyFrameVisible = false
 local function KeysMenu(um)

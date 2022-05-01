@@ -153,9 +153,8 @@ end
 -- F4 Menu --
 util.AddNetworkString("OpenF4Menu")
 
-util.AddNetworkString("F4MainContentChange")
-
 function GM:ShowSpare2(ply)
+
   net.Start( "OpenF4Menu" )
 
   net.Send( ply )
@@ -165,6 +164,8 @@ end
 -- Handle changing the main content, like bank vault, that isn't a main tab
 
 function F4ContentExternalChange(ply, cmd, args)
+
+  util.AddNetworkString("F4MainContentChange")
 
   net.Start( "F4MainContentChange" )
 
