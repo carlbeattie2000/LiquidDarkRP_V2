@@ -1853,6 +1853,7 @@ local TAB_CONFIG = TAB_CONFIG || {}
 TAB_CONFIG.playerActions = {
 	[1] = {
 		["nicename"] = "Sell all Doors",
+    ["onclick"] = sellAllDoors
 	},
 	[2] = {
 		["nicename"] = LANGUAGE.drop_money,
@@ -1878,6 +1879,12 @@ function dropMoney()
   
   end)
   
+end
+
+function sellAllDoors()
+
+  LocalPlayer():ConCommand("say /unownalldoors")
+
 end
 
 TAB_CONFIG.gameplayFeatures = {
