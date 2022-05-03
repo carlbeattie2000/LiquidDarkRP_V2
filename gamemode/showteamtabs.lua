@@ -1689,24 +1689,24 @@
 -- 	return AdminPanel
 -- end
 
--- -- Fonts
--- surface.CreateFont("DashboardBtnFont", {
--- 	font = "Trebuchet18",
--- 	extended = false,
--- 	size = 19,
--- 	blursize = 0,
--- 	scanlines = 0,
--- 	antialias = 0,
--- 	underline = false,
--- 	italic = false,
--- 	strikeout = false,
--- 	symbol = false,
--- 	rotary = false,
--- 	shadow = false,
--- 	additive = true,
--- 	outline = false,
--- 	weight = 600
--- })
+-- Fonts
+surface.CreateFont("DashboardBtnFont", {
+	font = "Trebuchet18",
+	extended = false,
+	size = 19,
+	blursize = 0,
+	scanlines = 0,
+	antialias = 0,
+	underline = false,
+	italic = false,
+	strikeout = false,
+	symbol = false,
+	rotary = false,
+	shadow = false,
+	additive = true,
+	outline = false,
+	weight = 600
+})
 
 -- Helpers
 function formatSeconds(seconds)
@@ -1848,28 +1848,6 @@ end
 
 -- Data
 
-local TAB_CONFIG = TAB_CONFIG || {}
-
-TAB_CONFIG.playerActions = {
-	[1] = {
-		["nicename"] = "Sell all Doors",
-    ["onclick"] = sellAllDoors
-	},
-	[2] = {
-		["nicename"] = LANGUAGE.drop_money,
-    ["onclick"] = dropMoney
-	},
-	[3] = {
-		["nicename"] = "Send a Trade Request"
-	},
-	[4] = {
-		["nicename"] = "Place a Hit"
-	},
-	[5] = {
-		["nicename"] = "Send Coin Flip Request"
-	}
-}
-
 -- Player actions on click functions
 function dropMoney()
 
@@ -1886,6 +1864,110 @@ function sellAllDoors()
   LocalPlayer():ConCommand("say /unownalldoors")
 
 end
+
+function sendTradeRequest()
+
+  local selectPlayerFrame = vgui.Create("DFrame")
+
+  selectPlayerFrame:SetSize(300, 120)
+
+  selectPlayerFrame:Center()
+
+  selectPlayerFrame:SetSizable(false)
+
+  selectPlayerFrame:SetDraggable(false)
+
+  selectPlayerFrame:ShowCloseButton(false)
+
+  selectPlayerFrame:SetBackgroundBlur(true)
+  
+  selectPlayerFrame:SetTitle("Select player for trade")
+
+  function selectPlayerFrame:Paint()
+  
+    draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), Color(213, 100, 100, 255))
+  
+  end
+
+  selectPlayerFrame:MakePopup()
+
+  local players = {}
+
+  local playersSelect = vgui.Create("DComboBox", selectPlayerFrame)
+
+  playersSelect:Dock(TOP)
+
+  playersSelect:SetValue("Select Player")
+
+  for i, v in ipairs( player.GetAll() ) do
+
+    playersSelect:AddChoice(v:Nick())
+    players[i] = v
+
+  end
+
+  local closeBtn = vgui.Create("DButton", selectPlayerFrame)
+
+  closeBtn:SetText("Close")
+
+  closeBtn:Dock(BOTTOM)
+
+  closeBtn.DoClick = function() selectPlayerFrame:Close() end
+
+  function closeBtn:Paint()
+
+    draw.RoundedBox(1, 5, 0, selectPlayerFrame:GetWide() - 5, 45, Color(0, 0, 0, 255))
+  
+  end
+
+  local sendBtn = vgui.Create("DButton", selectPlayerFrame)
+
+  sendBtn:SetText("Send Trade")
+
+  sendBtn:SetPos(5, 65)
+
+  sendBtn:SetSize(selectPlayerFrame:GetWide(), 20)
+
+  function sendBtn:Paint()
+
+    draw.RoundedBox(1, 5, 0, selectPlayerFrame:GetWide() - 10, 20, Color(0, 0, 0, 255))
+  
+  end
+
+  sendBtn.DoClick = function()
+  
+  -- RunConsoleCommand("__trd","start")
+
+    local plyName = playersSelect:GetValue()
+
+    RunConsoleCommand("__trd", "f4_send", plyName)
+  
+  end
+
+end
+
+local TAB_CONFIG = TAB_CONFIG || {}
+
+TAB_CONFIG.playerActions = {
+	[1] = {
+		["nicename"] = "Sell all Doors",
+    ["onclick"] = sellAllDoors
+	},
+	[2] = {
+		["nicename"] = LANGUAGE.drop_money,
+    ["onclick"] = dropMoney
+	},
+	[3] = {
+		["nicename"] = "Send a Trade Request",
+    ["onclick"] = sendTradeRequest
+	},
+	[4] = {
+		["nicename"] = "Place a Hit"
+	},
+	[5] = {
+		["nicename"] = "Send Coin Flip Request"
+	}
+}
 
 TAB_CONFIG.gameplayFeatures = {
 	[1] = {
@@ -2346,3 +2428,5 @@ function TabsCrafting(parent)
 	return craftingPanel
 
 end
+
+print("Show team tabs loaded!!!!!!!")

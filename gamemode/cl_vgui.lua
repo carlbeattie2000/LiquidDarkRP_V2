@@ -1,6 +1,9 @@
 include("showteamtabs.lua")
 include("menu_content_tabs.lua")
 
+AddCSLuaFile("showteamtabs.lua")
+AddCSLuaFile("menu_content_tabs.lua")
+
 local VoteVGUI = {}
 local QuestionVGUI = {}
 local PanelNum = 0

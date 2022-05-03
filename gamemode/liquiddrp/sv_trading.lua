@@ -139,6 +139,49 @@ function LDRP.TradingCMD(ply,cmd,args)
 				umsg.String("PlY" .. Chat)
 			umsg.End()
 		end
+  elseif args[1] == "f4_send" then
+    local tradeWithPlayerName = args[2]
+
+    local playersConnected = player.GetAll()
+
+    local playerEntity = nil
+
+    for i, v in ipairs(playersConnected) do
+    
+      if (v:Nick() == tradeWithPlayerName) then
+
+        playerEntity = v
+
+      end
+    
+    end
+
+    ply.TradedWith = nil
+
+    local Trade = playerEntity
+
+    if (Trade && Trade:IsValid() && Trade:IsPlayer()) then
+
+      ply:LiquidChat("TRADING", Color(0, 192, 10), "Sent a trade request to " .. Trade:GetName())
+
+      Trade:LiquidChat("TRADING", Color(0, 192, 10), ply:GetName() .. " has created a trade request. Type /accept in chat to accept.")
+
+      ply.TradedWith = Trade
+
+      Trade.TradeRequest = ply
+    
+    end
+    -- ply.TradedWith = nil
+		-- local Trade = ply:GetEyeTrace().Entity
+		-- if Trade and Trade:IsValid() and Trade:IsPlayer() and Trade:GetPos():Distance(ply:GetPos()) < 200 then
+		-- 	ply:LiquidChat("TRADING", Color(0,192,10), "Sent a trade request to " .. Trade:GetName())
+		-- 	Trade:LiquidChat("TRADING", Color(0,192,10), ply:GetName() .. " has created a trade request. Type '/accept' in chat to accept.")
+			
+		-- 	ply.TradedWith = Trade
+		-- 	Trade.TradeRequest = ply
+		-- else
+		-- 	ply:LiquidChat("TRADING", Color(0,192,10), "Get closer to a player to trade with them.")
+		-- end
 	end
 end
 concommand.Add("__trd",LDRP.TradingCMD)

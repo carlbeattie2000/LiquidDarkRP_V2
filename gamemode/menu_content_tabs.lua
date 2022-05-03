@@ -160,3 +160,5 @@ function F4StockMarket(parent)
 	return stockMarket
 
 end
+
+print("menu tabs loaded!!!!!!!")
