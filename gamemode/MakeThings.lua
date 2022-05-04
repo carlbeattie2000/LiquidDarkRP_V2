@@ -11,12 +11,12 @@ local function checkValid(tbl, requiredItems)
 end
 
 RPExtraTeams = {}
-function AddExtraTeam(Name, colorOrTable, model, Description, Weapons, command, maximum_amount_of_this_class, Salary, admin, Vote, Haslicense, NeedToChangeFrom, CustomCheck)
+function AddExtraTeam(Name, colorOrTable, model, Description, Weapons, command, maximum_amount_of_this_class, Salary, category, admin, Vote, Haslicense, NeedToChangeFrom, CustomCheck)
 	local tableSyntaxUsed = colorOrTable.r == nil -- the color is not a color table.
 
 	local CustomTeam = tableSyntaxUsed and colorOrTable or
 		{color = colorOrTable, model = model, description = Description, weapons = Weapons, command = command,
-			max = maximum_amount_of_this_class, salary = Salary, admin = admin or 0, vote = tobool(Vote), hasLicense = Haslicense,
+			max = maximum_amount_of_this_class, salary = Salary, category = category, admin = admin or 0, vote = tobool(Vote), hasLicense = Haslicense,
 			NeedToChangeFrom = NeedToChangeFrom, customCheck = CustomCheck
 		}
 	CustomTeam.name = Name

@@ -1,4 +1,4 @@
--- CreateClientConVar("rp_playermodel", "", true, true)
+CreateClientConVar("rp_playermodel", "", true, true)
 
 -- local LDRP = {}
 
@@ -2250,90 +2250,310 @@ function TabsDashboard(parent)
 
 end
 
-
--- Example Jobs, will be loaded from gamemode
-local jobRules = {
-	[1] = {
-		["name"] = "Raid/Mug",
-		["content"] = "Yes"
-	},
-	[2] = {
-		["name"] = "Print",
-		["content"] = "Yes"
-	},
-	[3] = {
-		["name"] = "Raid/Mug",
-		["content"] = "No"
-	},
-	[4] = {
-		["name"] = "Print",
-		["content"] = "No"
-	}
-}
-local playerJobs = {
-	[1] = {
-		["nicename"] = "Citizen",
-		["descritpion"] = "You are a unemployed citizen of Rebellion City, you earn no salary.",
-		["rules"] = {
-			[1] = jobRules[1],
-			[2] = jobRules[2]
-		},
-		["models"] = {
-			{"models/humans/groupap/mapert_06.mdl"},
-			{"models/humans/groupap/mapert_02.mdl"},
-			{""}
-		},
-		["category"] = "citizens",
-		["salary"] = 0
-	},
-	[2] = {
-		["nicename"] = "Patrol Officer",
-		["descritpion"] = "Patrol the city of Rebellion, prevent illegal activity, enforce laws, and response to calls for help.",
-		["rules"] = {
-			[1] = jobRules[3],
-			[2] = jobRules[4]
-		},
-		["models"] = {
-			{"models/player/nypd/male_02.mdl"},
-			{"models/player/nypd/male_04.mdl"},
-			{"models/player/nypd/male_05.mdl"},
-			{"models/player/nypd/male_07.mdl"},
-			{"models/player/nypd/male_08.mdl"},
-			{"models/player/nypd/male_09.mdl"}
-		},
-		["category"] = "police",
-		["salary"] = 80
-	},
-	[3] = {
-		["nicename"] = "Theif",
-		["descritpion"] = "Steal from you fellow citzens to make a living, you are not unemployed so earn no salary. Break into homes, and steal that sweet cash from money printers. Just don't get caught...",
-		["rules"] = {
-			[1] = jobRules[1],
-			[2] = jobRules[2]
-		},
-		["models"] = {
-			{"models/player/arctic.mdl"},
-		},
-		["category"] = "criminal",
-		["salary"] = 0
-	}
-}
-
 function TabsJobs(parent)
 
 	local parentWidth = parent:GetWide()
-
 	local parentHeight = parent:GetTall()
+
+	local jobsPanelWidth = parentWidth-10
+	local jobsPanelHeight = parentHeight-10
+
+	local selectedModelPreview
+	local pickExtraModel
+	local jobWeapons
+	local jobDescription
 
 	local jobsPanel = vgui.Create("DPanel", parent)
 
-	jobsPanel:SetSize(parentWidth-10, parentHeight-10)
+	jobsPanel:SetSize(jobsPanelWidth, jobsPanelHeight)
 
 	jobsPanel:SetPos(5, 5)
 
 	function jobsPanel:Paint()
 
 		draw.RoundedBox(0, 0, 0, self:GetWide(), self:GetTall(), Color(0, 0, 0, 0))
+
+	end
+
+	selectedModel = {
+		["model_p"] = RPExtraTeams[1]["model"][1],
+		["job_name"] = RPExtraTeams[1]["name"],
+		["salary"] = RPExtraTeams[1]["salary"],
+		["description"] = RPExtraTeams[1]["description"],
+		["command"] = RPExtraTeams[1]["command"],
+		["all_models"] = RPExtraTeams[1]["model"],
+		["weapons"] = RPExtraTeams[1]["weapons"]
+	}
+
+	-- Select Job Panel
+
+	local selectJobPanel = vgui.Create("DPanel", jobsPanel)
+
+	-- 3/4 of the width 5 for gap
+	selectJobPanel:SetPos(0, 0)
+	selectJobPanel:SetSize(jobsPanelWidth / 1.5 - 5, jobsPanelHeight)
+
+	local selectJobsScroll = vgui.Create("DScrollPanel", selectJobPanel)
+
+	selectJobsScroll:SetSize(selectJobPanel:GetWide(), selectJobPanel:GetTall())
+
+	local categoriesPanel = vgui.Create("DCategoryList", selectJobPanel)
+	categoriesPanel:SetSize(jobsPanelWidth, jobsPanelHeight)
+
+	function categoriesPanel:Paint()
+
+		draw.RoundedBox(0, 0, 0, self:GetWide(), self:GetTall(), Color(0, 0, 0, 0))
+
+	end
+
+	local categories = {}
+	for k, v in ipairs(RPExtraTeams) do
+
+
+		if v["category"] != nil && !categories[v["category"]] then
+
+			local jobCat = categoriesPanel:Add(v["category"])
+			jobCat:SetTall(300)
+
+			function jobCat:Paint()
+
+				draw.RoundedBox(0, 0, 0, self:GetWide(), self:GetTall(), Color(0, 0, 0, 0))
+
+			end
+
+			local jobCatList = vgui.Create("DIconLayout")
+
+			jobCatList:Dock(FILL)
+			jobCatList:DockMargin(0, 20, 0, 0)
+			jobCatList:DockPadding(0, 0, 0, 20)
+			jobCatList:SetSpaceY(10)
+			jobCatList:SetSpaceX(10)
+
+			categories[v["category"]] = {
+				["categorySection"] = jobCat,
+				["categoryJobsList"] = jobCatList
+			}
+
+		end
+
+		if categories[v["category"]] == nil then continue end
+
+		local model = v["model"]
+
+		if (type(v["model"]) == "table") then model = v["model"][1] end
+
+		local icon = categories[v["category"]]["categoryJobsList"]:Add( "SpawnIcon" )
+
+		icon:SetSize(64, 64)
+
+		icon:SetModel( model )
+
+		icon:SetTooltip( v["name"] )
+
+		icon.DoClick = function()
+
+			selectedModel["model_p"] = model
+			selectedModel["job_name"] = v["name"]
+			selectedModel["salary"] = v["salary"]
+			selectedModel["description"] = v["description"]
+			selectedModel["command"] = v["command"]
+			selectedModel["weapons"] = v["weapons"]
+
+			selectedModelPreview:SetModel( model )
+
+			pickExtraModel:Clear()
+
+			jobWeapons:UpdateJobWeapons()
+
+			jobDescription:UpdateDescription()
+
+			if (type(v["model"]) == "table") then
+
+				selectedModel["all_models"] = v["model"]
+
+				pickExtraModel:BuildItems()
+
+			else
+
+				selectedModel["all_models"] = {}
+
+			end
+
+		end
+
+		categories[v["category"]]["categorySection"]:SetContents(categories[v["category"]]["categoryJobsList"])
+	end
+
+	-- -- Show Model Panel
+
+	local viewSelectedJobModel = vgui.Create( "DPanel", jobsPanel )
+
+	viewSelectedJobModel:SetPos( jobsPanelWidth / 1.5, 0 )
+	viewSelectedJobModel:SetSize( jobsPanelWidth / 3, jobsPanelHeight )
+
+	local selectedJobNamePanel = vgui.Create("DPanel", viewSelectedJobModel)
+
+	selectedJobNamePanel:SetSize(viewSelectedJobModel:GetWide(), viewSelectedJobModel:GetTall())
+
+	function selectedJobNamePanel:Paint()
+
+		draw.RoundedBox(0, 0, 0, self:GetWide(), self:GetTall(), Color(100, 100, 100, 20))
+
+	end
+
+	local jobName = vgui.Create("DPanel", selectedJobNamePanel)
+
+	jobName:Dock(TOP)
+
+	function jobName:Paint()
+
+		draw.SimpleText(selectedModel["job_name"], "Trebuchet24", self:GetWide() / 2, self:GetTall() / 2, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+	end
+
+	selectedModelPreview = vgui.Create("DModelPanel", selectedJobNamePanel)
+
+	selectedModelPreview:Dock( TOP )
+	selectedModelPreview:SetSize(150, 150)
+	selectedModelPreview:SetModel( selectedModel["model_p"] )
+	selectedModelPreview:SetAnimated(true)
+	selectedModelPreview:SetCamPos(Vector(130, 10, 36))
+	selectedModelPreview:SetFOV(60)
+
+	function selectedModelPreview:LayoutEntity( Entity ) return end
+
+	if (type(selectedModel["all_models"]) == "table") then
+
+		pickExtraModel = vgui.Create("DHorizontalScroller", selectedJobNamePanel)
+
+		pickExtraModel:Dock( TOP )
+
+		pickExtraModel:DockMargin(10, 20, 10, 20)
+
+		pickExtraModel:SetSize(48, 48)
+
+		pickExtraModel:SetOverlap( -10 )
+
+		function pickExtraModel.btnLeft:Paint() draw.RoundedBox(0, 0, 0, 0, 0, Color(0, 0, 0, 0)) end
+
+		function pickExtraModel.btnRight:Paint() draw.RoundedBox(0, 0, 0, 0, 0, Color(0, 0, 0, 0)) end
+
+		function pickExtraModel:BuildItems()
+
+			for i, v in ipairs(selectedModel["all_models"]) do 
+
+				local icon = vgui.Create("SpawnIcon")
+
+				icon:SetSize(48, 48)
+
+				icon:SetModel( v )
+
+				icon.DoClick = function()
+
+					selectedModel["model_p"] = v
+
+					selectedModelPreview:SetModel( v )
+
+				end
+
+				self:AddPanel(icon)
+
+			end
+
+		end
+
+		pickExtraModel:BuildItems()
+
+	end
+
+	jobWeapons = vgui.Create("DScrollPanel", selectedJobNamePanel)
+
+	jobWeapons:Dock( TOP )
+
+	jobWeapons:SetSize(selectedJobNamePanel:GetWide(), 110)
+
+	jobWeapons:DockMargin(10, 0, 10, 20)
+
+	function jobWeapons:UpdateJobWeapons()
+
+		self:Clear()
+
+		for i, v in ipairs(selectedModel["weapons"]) do
+
+			local weaponName = jobWeapons:Add( "DLabel" )
+
+			weaponName:SetText(v)
+
+			weaponName:SetFont("Trebuchet18")
+
+			weaponName:Dock( TOP )
+
+			weaponName:SizeToContents()
+
+		end
+
+		if #selectedModel["weapons"] == 0 then
+
+			local weaponName = jobWeapons:Add( "DLabel" )
+
+			weaponName:SetText("No Weapons")
+
+			weaponName:SetFont("Trebuchet18")
+
+			weaponName:Dock( TOP )
+
+			weaponName:SizeToContents()
+
+		end
+
+	end
+
+	jobWeapons:UpdateJobWeapons()
+
+	jobDescription = vgui.Create("RichText", selectedJobNamePanel)
+
+	jobDescription:Dock( TOP )
+
+	jobDescription:DockMargin(10, 0, 20, 10)
+
+	jobDescription:SetMultiline(true)
+
+	jobDescription:SetSize(selectedJobNamePanel:GetWide(), 140)
+
+	function jobDescription:UpdateDescription()
+
+		self:SetText(selectedModel["description"])
+
+	end
+
+	jobDescription:UpdateDescription()
+
+	local becomeJob = vgui.Create("DButton", selectedJobNamePanel)
+
+	becomeJob:SetText("Become Job")
+
+	becomeJob:SetTextColor(Color(255, 255, 255, 255))
+
+	becomeJob:SetFont("Trebuchet24")
+
+	becomeJob:Dock( TOP )
+
+	becomeJob:DockMargin(10, 20, 10, 0)
+
+	becomeJob:SetSize(selectedJobNamePanel:GetWide(), 40)
+
+	function becomeJob:Paint()
+
+		draw.RoundedBox(3, 0, 0, self:GetWide(), self:GetTall(), Color(213, 100, 100 ,255))
+
+	end
+
+	becomeJob.DoClick = function()
+
+		RunConsoleCommand("rp_playermodel", selectedModel["model_p"])
+		RunConsoleCommand("_rp_ChosenModel", selectedModel["model_p"])
+
+		LocalPlayer():ConCommand("say /" .. selectedModel["command"])
 
 	end
 

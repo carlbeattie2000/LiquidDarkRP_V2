@@ -279,12 +279,13 @@ GM.Config.DisabledModules = {
 	["events"] = false,
 	["hungermod"] = true,
 	["playerscale"] = false,
-	["sleep"] = false
+	["sleep"] = true
 }
 
 -- These are the default laws, they're unchangeable in-game.
 GM.Config.DefaultLaws = {
 	"Do not attack other citizens except in self-defence.",
 	"Do not steal or break in to peoples homes.",
-	"Money printers/drugs are illegal."
+	"Money printers/drugs are illegal.",
+  "Owing a firearm without license is illegal."
 }
