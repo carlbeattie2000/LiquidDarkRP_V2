@@ -2579,6 +2579,77 @@ function TabsStore(parent)
 
 	end
 
+	local itemsCategorized = categorizeStoreItems()
+
+	local storeItemsCategorizedPanel = vgui.Create("DCategoryList", storePanel)
+
+	storeItemsCategorizedPanel:SetSize( storePanel:GetWide(), storePanel:GetTall() )
+
+	function storeItemsCategorizedPanel:Paint(w, h)
+
+		draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 0))
+
+	end
+
+	function storeItemsCategorizedPanel:RefreshCategories()
+
+		for k, v in pairs(itemsCategorized) do
+
+			local category = self:Add( k )
+
+			local itemsDisplayPanel = vgui.Create("DPanelList")
+
+			itemsDisplayPanel:SetAutoSize(true)
+			itemsDisplayPanel:SetSpacing(10)
+			itemsDisplayPanel:SetPadding(5)
+			itemsDisplayPanel:EnableHorizontal(true)
+			itemsDisplayPanel:EnableVerticalScrollbar(true)
+			itemsDisplayPanel:SetSize(self:GetWide(), 350)
+
+			function itemsDisplayPanel:Paint(w, h)
+
+				draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 0))
+
+			end
+
+			for i = 1, #v do
+
+				local icon
+
+				if (type(v[i]["allowed"]) == "table") then
+
+					if (v.noship || !table.HasValue(v[i]["allowed"], LocalPlayer():Team())) then
+
+						continue
+
+					end
+
+				end
+
+				if (v[i]["shipmodel"]) then
+
+					icon = CreateIcon(nil, v[i]["shipmodel"], 70, 70, function() LocalPlayer():ConCommand("say ".."/buyshipment "..v[i].name) end, Vector(40,40,40))
+					icon:SetTooltip(v[i]["name"] .. " shipment \n" .. CUR .. v[i]["price"])
+
+				else
+					print(v[i]["cmd"], v[i]["name"])
+					icon = CreateIcon(nil, v[i]["model"], 70, 70, function() LocalPlayer():ConCommand("say "..v[i]["cmd"]) end, Vector(20,20,20))
+					icon:SetTooltip(v[i]["name"] .. "\n" .. CUR .. v[i]["price"])
+
+				end
+
+				itemsDisplayPanel:AddItem( icon )
+
+			end
+
+			category:SetContents(itemsDisplayPanel)
+
+		end
+
+	end
+
+	storeItemsCategorizedPanel:RefreshCategories()
+
 	return storePanel
 
 end

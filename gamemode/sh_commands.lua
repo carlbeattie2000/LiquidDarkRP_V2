@@ -163,7 +163,7 @@ function GM:AddEntityCommands(tblEnt)
 		end
 
 		local max = tonumber(tblEnt.max or 3)
-
+		
 		if ply["max"..cmdname] and tonumber(ply["max"..cmdname]) >= tonumber(max) then
 			GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.limit, tblEnt.cmd))
 			return ""

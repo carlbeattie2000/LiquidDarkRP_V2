@@ -45,9 +45,8 @@ function AddDoorGroup(name, ...)
 	RPExtraTeamDoors[name] = {...}
 end
 
-CustomVehicles = {}
 CustomShipments = {}
-function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shipment, Sold_seperately, price_seperately, noshipment, classes, shipmodel)
+function AddCustomShipment(name, model, entity, price, category, Amount_of_guns_in_one_shipment, Sold_seperately, price_seperately, noshipment, classes, shipmodel)
 	if not name or not model or not entity or not price or not Amount_of_guns_in_one_shipment or (Sold_seperately and not price_seperately) then
 		local text = "One of the custom shipments is wrongly made! Attempt to give name of the wrongly made shipment!(if it's nil then I failed):\n" .. tostring(name)
 		print(text)
@@ -70,7 +69,7 @@ function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shi
 	end
 	local price = tonumber(price)
 	local shipmentmodel = shipmodel or "models/Items/item_item_crate.mdl"
-	table.insert(CustomShipments, {name = name, model = model, entity = entity, price = price, weight = 5, amount = Amount_of_guns_in_one_shipment, seperate = Sold_seperately, pricesep = price_seperately, noship = noshipment, allowed = AllowedClasses, shipmodel = shipmentmodel})
+	table.insert(CustomShipments, {name = name, model = model, entity = entity, price = price, category = category, weight = 5, amount = Amount_of_guns_in_one_shipment, seperate = Sold_seperately, pricesep = price_seperately, noship = noshipment, allowed = AllowedClasses, shipmodel = shipmentmodel})
 	util.PrecacheModel(model)
 end
 /*---------------------------------------------------------------------------
@@ -88,11 +87,11 @@ end
 
 
 DarkRPEntities = {}
-function AddEntity(name, entity, model, price, max, command, classes, CustomCheck)
+function AddEntity(name, entity, model, price, category, max, command, classes, CustomCheck)
 	local tableSyntaxUsed = type(entity) == "table"
 
 	local tblEnt = tableSyntaxUsed and entity or
-		{ent = entity, model = model, price = price, max = max,
+		{ent = entity, model = model, price = price, category = category, max = max,
 		cmd = command, allowed = classes, customCheck = CustomCheck}
 	tblEnt.name = name
 
@@ -144,4 +143,33 @@ function GM:AddAmmoType(ammoType, name, model, price, amountGiven, customCheck)
 		amountGiven = amountGiven,
 		customCheck = customCheck
 	})
+end
+
+local combinedItems = {
+	DarkRPEntities,
+	CustomShipments
+}
+
+function categorizeStoreItems()
+
+	DarkStoreItemsCategorized = {}
+
+	for i = 1, #combinedItems do
+
+		for ent_i = 1, #combinedItems[i] do
+
+			if (combinedItems[i][ent_i]["category"] != nil && !DarkStoreItemsCategorized[combinedItems[i][ent_i]["category"]]) then
+
+				DarkStoreItemsCategorized[combinedItems[i][ent_i]["category"]] = {}
+
+			end
+
+			table.insert(DarkStoreItemsCategorized[combinedItems[i][ent_i]["category"]], combinedItems[i][ent_i])
+
+		end
+
+	end
+
+	return DarkStoreItemsCategorized
+
 end
