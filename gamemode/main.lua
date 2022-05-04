@@ -654,6 +654,71 @@ for k,v in pairs(DarkRPEntities) do
 	AddChatCommand(v.cmd, buythis)
 end
 
+local function BuyShipment(ply, args)
+	if args == "" then return "" end
+
+	local trace = {}
+	trace.start = ply:EyePos()
+	trace.endpos = trace.start + ply:GetAimVector() * 85
+	trace.filter = ply
+
+	local tr = util.TraceLine(trace)
+
+	if RPArrestedPlayers[ply:SteamID()] then return "" end
+	
+	local found = false
+	local foundKey
+	for k,v in pairs(CustomShipments) do
+		if string.lower(args) == string.lower(v.name) and not v.noship then
+			found = v
+			foundKey = k
+			local canbecome = false
+			for a,b in pairs(v.allowed) do
+				if ply:Team() == b then
+					canbecome = true
+				end
+			end
+			if not canbecome then
+				Notify(ply, 1, 4, string.format(LANGUAGE.incorrect_job, "/buyshipment"))
+				return "" 
+			end
+		end
+	end
+	
+	if not found then
+		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/buyshipment", args))
+		return ""
+	end
+	
+	local cost = found.price
+	
+	if not ply:CanAfford(cost) then
+		Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, "shipment"))
+		return ""
+	end
+	
+	ply:AddMoney(-cost)
+	Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, CUR .. tostring(cost)))
+	local crate = ents.Create("spawned_shipment")
+	crate.SID = ply.SID
+	crate.dt.owning_ent = ply
+	crate:SetContents(foundKey, found.amount, found.weight)
+	
+	crate:SetPos(Vector(tr.HitPos.x, tr.HitPos.y, tr.HitPos.z))
+	crate.nodupe = true
+	crate:Spawn()
+	if found.shipmodel then
+		crate:SetModel(found.shipmodel)
+		crate:PhysicsInit(SOLID_VPHYSICS)
+		crate:SetMoveType(MOVETYPE_VPHYSICS)
+		crate:SetSolid(SOLID_VPHYSICS)
+	end
+	local phys = crate:GetPhysicsObject()
+	if phys and phys:IsValid() then phys:Wake() end
+	return ""
+end
+AddChatCommand("/buyshipment", BuyShipment)
+
 /*---------------------------------------------------------
  Jobs
  ---------------------------------------------------------*/

@@ -1,25 +1,23 @@
 CreateClientConVar("rp_playermodel", "", true, true)
 
--- local LDRP = {}
+local LDRP = {}
 
--- -- function LDRP.InitClient()
--- -- 	timer.Simple(.3, function()
--- -- 		LocalPlayer().Inventory = {}
--- -- 		LocalPlayer().Skills = {}
--- -- 		LocalPlayer().MaxWeight = 0
--- -- 		LocalPlayer().Bank = {}
--- -- 		LocalPlayer().MaxBWeight = 0
--- --     LocalPlayer().InterestRate = {}
--- --     LocalPlayer().RobbingBank = false
+function LDRP.InitClient()
+	timer.Simple(.3, function()
+		LocalPlayer().Inventory = {}
+		LocalPlayer().Skills = {}
+		LocalPlayer().MaxWeight = 0
+		LocalPlayer().Bank = {}
+		LocalPlayer().MaxBWeight = 0
+	    LocalPlayer().InterestRate = {}
+	    LocalPlayer().RobbingBank = false
 
--- -- 		print("Client has been initialized.")
+		print("Client has been initialized.")
 
--- -- 		RunConsoleCommand("_initme")
--- -- 	end)
--- -- end
--- -- hook.Add("InitPostEntity","Loads inventory and character",LDRP.InitClient)
-
--- if SERVER then print("server") else print("client") end
+		RunConsoleCommand("_initme")
+	end)
+end
+hook.Add("InitPostEntity","Loads inventory and character",LDRP.InitClient)
 
 -- local function MayorOptns()
 -- 	local MayCat = vgui.Create("DCollapsibleCategory")
@@ -1306,87 +1304,87 @@ CreateClientConVar("rp_playermodel", "", true, true)
 -- 	return MainBankBackground
 -- end
 
--- function LDRP.SendItemInfo(um)
--- 	LocalPlayer().Inventory[tostring(um:ReadString())] = um:ReadFloat()
--- end
--- usermessage.Hook("SendItem",LDRP.SendItemInfo)
+function LDRP.SendItemInfo(um)
+	LocalPlayer().Inventory[tostring(um:ReadString())] = um:ReadFloat()
+end
+usermessage.Hook("SendItem",LDRP.SendItemInfo)
 
--- function LDRP.SendMaxWeight(um)
--- 	LocalPlayer().MaxWeight = um:ReadFloat()
--- end
--- usermessage.Hook("SendWeight",LDRP.SendMaxWeight)
+function LDRP.SendMaxWeight(um)
+	LocalPlayer().MaxWeight = um:ReadFloat()
+end
+usermessage.Hook("SendWeight",LDRP.SendMaxWeight)
 
--- function LDRP.ReceiveSkill(um)
--- 	local Skill = um:ReadString()
--- 	LocalPlayer().Skills[Skill] = {}
--- 	LocalPlayer().Skills[Skill].exp = um:ReadFloat()
--- 	LocalPlayer().Skills[Skill].lvl = um:ReadFloat()
--- end
--- usermessage.Hook("SendSkill",LDRP.ReceiveSkill)
+function LDRP.ReceiveSkill(um)
+	local Skill = um:ReadString()
+	LocalPlayer().Skills[Skill] = {}
+	LocalPlayer().Skills[Skill].exp = um:ReadFloat()
+	LocalPlayer().Skills[Skill].lvl = um:ReadFloat()
+end
+usermessage.Hook("SendSkill",LDRP.ReceiveSkill)
 
--- function LDRP.ReceiveEXP( len )
--- 	local skill = net.ReadString()
--- 	local exp = net.ReadFloat()
--- 	LocalPlayer().Skills[skill].exp = exp
--- end
--- net.Receive( "SendEXP", LDRP.ReceiveEXP )
+function LDRP.ReceiveEXP( len )
+	local skill = net.ReadString()
+	local exp = net.ReadFloat()
+	LocalPlayer().Skills[skill].exp = exp
+end
+net.Receive( "SendEXP", LDRP.ReceiveEXP )
 
--- function LDRP.OpenItemOptions(item)
--- 	if LocalPlayer().Inventory[item] then
--- 		local WepNames = LDRP_SH.NicerWepNames
--- 		local OptionsMenu = vgui.Create("DFrame")
--- 		OptionsMenu:SetSize(200, 140)
--- 		OptionsMenu:SetPos(-200, ScrH()*.5-80)
--- 		OptionsMenu:MakePopup()
--- 		OptionsMenu:MoveTo(ScrW()*.5-100,ScrH()*.5-80,.3)
--- 		local Tbl = LDRP_SH.AllItems[item]
+function LDRP.OpenItemOptions(item)
+	if LocalPlayer().Inventory[item] then
+		local WepNames = LDRP_SH.NicerWepNames
+		local OptionsMenu = vgui.Create("DFrame")
+		OptionsMenu:SetSize(200, 140)
+		OptionsMenu:SetPos(-200, ScrH()*.5-80)
+		OptionsMenu:MakePopup()
+		OptionsMenu:MoveTo(ScrW()*.5-100,ScrH()*.5-80,.3)
+		local Tbl = LDRP_SH.AllItems[item]
 		
--- 		OptionsMenu.Paint = function()
--- 			draw.RoundedBox(6,0,0,200,140,Color(50,50,50,180))
--- 			local name = WepNames[Tbl.nicename] or Tbl.nicename
--- 			draw.SimpleTextOutlined(name .. " - " .. LocalPlayer().Inventory[item] .. " left","Trebuchet20",100,14,Color(255,255,255,200),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER, 2, Color(0,0,0,200) )
--- 		end
--- 		OptionsMenu:SetTitle("")
--- 		OptionsMenu.MakeClose = function()
--- 			OptionsMenu:MoveTo(ScrW(),ScrH()*.5-80,.3)
--- 			timer.Simple(.3,function()
--- 				if OptionsMenu:IsValid() then OptionsMenu:Close() end
--- 			end)
--- 		end
+		OptionsMenu.Paint = function()
+			draw.RoundedBox(6,0,0,200,140,Color(50,50,50,180))
+			local name = WepNames[Tbl.nicename] or Tbl.nicename
+			draw.SimpleTextOutlined(name .. " - " .. LocalPlayer().Inventory[item] .. " left","Trebuchet20",100,14,Color(255,255,255,200),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER, 2, Color(0,0,0,200) )
+		end
+		OptionsMenu:SetTitle("")
+		OptionsMenu.MakeClose = function()
+			OptionsMenu:MoveTo(ScrW(),ScrH()*.5-80,.3)
+			timer.Simple(.3,function()
+				if OptionsMenu:IsValid() then OptionsMenu:Close() end
+			end)
+		end
 		
--- 		local UseButton = vgui.Create("DButton",OptionsMenu)
--- 		UseButton:SetPos(4,30)
--- 		UseButton:SetSize(192,32)
--- 		UseButton:SetText(Tbl.usename or "Use")
--- 		if Tbl.cuse then
--- 			UseButton.DoClick = function()
--- 				RunConsoleCommand("_inven","use",item)
--- 				OptionsMenu.MakeClose()
--- 			end
--- 		else
--- 			UseButton:SetDisabled(true)
--- 		end
+		local UseButton = vgui.Create("DButton",OptionsMenu)
+		UseButton:SetPos(4,30)
+		UseButton:SetSize(192,32)
+		UseButton:SetText(Tbl.usename or "Use")
+		if Tbl.cuse then
+			UseButton.DoClick = function()
+				RunConsoleCommand("_inven","use",item)
+				OptionsMenu.MakeClose()
+			end
+		else
+			UseButton:SetDisabled(true)
+		end
 		
--- 		local DropButton = vgui.Create("DButton",OptionsMenu)
--- 		DropButton:SetPos(4,66)
--- 		DropButton:SetSize(192,32)
--- 		DropButton:SetText("Drop")
--- 		DropButton.DoClick = function()
--- 			RunConsoleCommand("_inven","drop",item)
--- 			OptionsMenu.MakeClose()
--- 		end
+		local DropButton = vgui.Create("DButton",OptionsMenu)
+		DropButton:SetPos(4,66)
+		DropButton:SetSize(192,32)
+		DropButton:SetText("Drop")
+		DropButton.DoClick = function()
+			RunConsoleCommand("_inven","drop",item)
+			OptionsMenu.MakeClose()
+		end
 
--- 		local RemoveButton = vgui.Create("DButton",OptionsMenu)
--- 		RemoveButton:SetPos(4,102)
--- 		RemoveButton:SetSize(192,32)
--- 		RemoveButton:SetText("Remove")
--- 		RemoveButton.DoClick = function()
--- 			RunConsoleCommand("_inven","delete",item)
--- 			OptionsMenu.MakeClose()
--- 		end
+		local RemoveButton = vgui.Create("DButton",OptionsMenu)
+		RemoveButton:SetPos(4,102)
+		RemoveButton:SetSize(192,32)
+		RemoveButton:SetText("Remove")
+		RemoveButton.DoClick = function()
+			RunConsoleCommand("_inven","delete",item)
+			OptionsMenu.MakeClose()
+		end
 		
--- 	end
--- end
+	end
+end
 
 -- function InventoryTab()
 -- 	local Inv = {}
@@ -2656,6 +2654,9 @@ end
 
 function TabsInventory(parent)
 
+	local Inv = {}
+	local WepNames = LDRP_SH.NicerWepNames
+
 	local parentWidth = parent:GetWide()
 
 	local parentHeight = parent:GetTall()
@@ -2668,9 +2669,24 @@ function TabsInventory(parent)
 
 	function inventoryPanel:Paint()
 
+		local InvWeight = 0
+
+		for k, v in pairs(LocalPlayer().Inventory) do
+
+			if v >= 1 then
+
+				InvWeight = InvWeight + (LDRP_SH.AllItems[k].weight*v)
+
+			end
+
+		end
+
 		draw.RoundedBox(0, 0, 0, self:GetWide(), self:GetTall(), Color(0, 0, 0, 0))
 
+		draw.SimpleText("Weight: "..InvWeight.."/"..LocalPlayer().MaxWeight, "Trebuchet18", self:GetWide() / 2, self:GetTall() - 5, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
 	end
+
+
 
 	return inventoryPanel
 
