@@ -2661,6 +2661,8 @@ function TabsInventory(parent)
 
 	local parentHeight = parent:GetTall()
 
+	if IsValid(inventoryPanel) then inventoryPanel:Remove() end
+
 	local inventoryPanel = vgui.Create("DPanel", parent)
 
 	inventoryPanel:SetSize(parentWidth-10, parentHeight-10)
@@ -2686,11 +2688,123 @@ function TabsInventory(parent)
 		draw.SimpleText("Weight: "..InvWeight.."/"..LocalPlayer().MaxWeight, "Trebuchet18", self:GetWide() / 2, self:GetTall() - 5, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
 	end
 
+	local inventoryItemsList = vgui.Create("DPanelList", inventoryPanel)
 
+	inventoryItemsList:SetAutoSize(true)
+	inventoryItemsList:SetSpacing(10)
+	inventoryItemsList:SetPadding(5)
+	inventoryItemsList:EnableHorizontal(true)
+	inventoryItemsList:EnableVerticalScrollbar(true)
+	inventoryItemsList:SetSize(inventoryPanel:GetWide(), inventoryPanel:GetTall())
+
+	local curIcons = {}
+
+	function inventoryItemsList:Paint()
+
+		draw.RoundedBox(0, 0, 0, self:GetWide(), self:GetTall(), Color(0, 0, 0, 0))
+
+	end
+
+	function inventoryItemsList:RefreshItems()
+
+		self:CleanList()
+
+		for k, v in pairs(LocalPlayer().Inventory) do
+			
+			local check = curIcons[k]
+
+			if check then
+
+				if check.am != v or v <= 0 then
+
+					local ItemTbl = LDRP_SH.AllItems[k]
+
+					if !ItemTbl then continue end
+
+					if v <=  0 then
+
+						inventoryItemsList.Remove(check.vgui)
+
+						curIcons[k] = nil
+
+					else
+
+						check.vgui:SetToolTip(ItemTbl.nicename .. "\n" .. ItemTbl.descr .. "\nAmount: " .. v .. "\nWeight: " .. ItemTbl.weight)
+
+						curIcons[k].am = v
+
+					end
+
+				end
+
+			elseif v > 0 then
+
+				local ItemTbl = LDRP_SH.AllItems[k]
+
+				if !ItemTbl then continue end
+
+				local ItemIcon = CreateIcon(nil, ItemTbl.mdl, 78, 78, function() LDRP.OpenItemOptions(k) end)
+
+				curIcons[k] = {["vgui"] = ItemIcon, ["am"] = v}
+
+				local namez = WepNames[ItemTbl.nicename] or ItemTbl.nicename
+
+				ItemIcon:SetToolTip(namez .. "\n" .. ItemTbl.descr .. "\nAmount: " .. v .. "\nWeight: " .. ItemTbl.weight)
+
+				inventoryItemsList:AddItem( ItemIcon )
+
+			end
+
+		end	
+
+	end
+
+	inventoryItemsList.Think = function()
+		
+		inventoryItemsList:RefreshItems()
+
+	end
 
 	return inventoryPanel
 
 end
+
+-- function Inv.BackGround.Update() -- This is probably a horrible way to do this, but look at half of the DarkRP code and see how much shittier that is instead of complaining about my code
+-- -- 		for k,v in pairs(LocalPlayer().Inventory) do
+-- -- 			local Check = CurIcons[k]
+-- -- 			if Check then
+-- -- 				if Check.am != v or v <= 0 then
+-- -- 					local ItemTbl = LDRP_SH.AllItems[k]
+-- -- 					if !ItemTbl then continue end
+-- -- 					if v <= 0 then
+-- -- 						Inv.ItemList:RemoveItem(Check.vgui)
+-- -- 						CurIcons[k] = nil
+-- -- 					else
+-- -- 						Check.vgui:SetToolTip(ItemTbl.nicename .. "\n" .. ItemTbl.descr .. "\nAmount: " .. v .. "\nWeight: " .. ItemTbl.weight)
+-- -- 						CurIcons[k].am = v
+-- -- 					end
+-- -- 				end
+-- -- 			elseif v > 0 then
+-- -- 				local ItemTbl = LDRP_SH.AllItems[k]
+-- -- 				if !ItemTbl then continue end
+-- -- 				local ItemIcon = CreateIcon(Inv.ItemList,ItemTbl.mdl,78,78,function() LDRP.OpenItemOptions(k) end)
+-- -- 				CurIcons[k] = {["vgui"] = ItemIcon,["am"] = v}
+-- -- 				local Namez = WepNames[ItemTbl.nicename] or ItemTbl.nicename
+-- -- 				ItemIcon:SetToolTip(Namez .. "\n" .. ItemTbl.descr .. "\nAmount: " .. v .. "\nWeight: " .. ItemTbl.weight)
+		
+				
+-- -- 				Inv.ItemList:AddItem(ItemIcon)
+-- -- 			end
+-- -- 			timer.Simple(.00001,function()
+-- -- 				Inv.ItemList:Rebuild()
+-- -- 			end)
+-- -- 		end
+-- -- 	end
+	
+	
+-- -- 	Inv.ItemList.Think = function()
+-- -- 		Inv.BackGround:Update()
+-- -- 	end
 
 function TabsSkills(parent)
 
