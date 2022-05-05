@@ -7,7 +7,7 @@ LDRP_SH = {}
 
 local LDRP = {}
 
-LDRP_SH.UsePaycheckLady = true
+LDRP_SH.UsePaycheckLady = false
 
 LDRP_SH.ShowTutorial = false
 
@@ -110,9 +110,11 @@ LDRP.AddNewItem("Carrot Seed","Grow some carrots! Level up growing.","models/kat
 LDRP.AddNewItem("Melon","Eat it for 10 HP","models/props_junk/watermelon01.mdl",.15,Color(255,255,255,255),"",nil,function(ply) ply:ChatPrint("MMMMM!! MELONS!!!!") ply:EmitSound("LiquidDRP/eating.wav") ply:SetHealth(math.Clamp(ply:Health()+14, 1, 100)) end,"Eat")
 LDRP.AddNewItem("Melon Seed","With the right amount of care, it turns into tasty, juicy goodness.","models/katharsmodels/contraband/zak_wiet/zak_seed.mdl",.1,Color(255,255,255,255),"",nil)
 
-LDRP.AddNewItem("Ruby","Ruby. Worth 6x more than stone.","models/props_junk/rock001a.mdl",.5,Color(255,0,0,200),"models/debug/debugwhite")
-LDRP.AddNewItem("Gold","Some gold, worth 4x more than stone.","models/props_junk/rock001a.mdl",.5,Color(255,255,0,255),"")
+LDRP.AddNewItem("Ruby","Ruby Ore","models/props_junk/rock001a.mdl",.5,Color(255,0,0,200),"models/debug/debugwhite")
+LDRP.AddNewItem("Gold","Gold Ore","models/props_junk/rock001a.mdl",.5,Color(255,255,0,255),"")
 LDRP.AddNewItem("Stone","Some rocks that were mined.","models/props_junk/rock001a.mdl",.4,Color(255,255,255,255),"")
+LDRP.AddNewItem("Diamond","Diamond Ore","models/props_junk/rock001a.mdl",.5,Color(185,242,255,255),"models/debug/debugwhite")
+
 
 LDRP.AddNewItem("Pistol Ammo","Some ammo for a pistol.","models/Items/357ammo.mdl",.5,Color(255,255,255,255),"",nil,function(ply) ply:GiveAmmo(50, "pistol") end,"Equip")
 LDRP.AddNewItem("Rifle Ammo","Some ammo for a rifle.","models/Items/BoxSRounds.mdl",.5,Color(255,255,255,255),"",nil,function(ply) ply:GiveAmmo(80, "smg1") end,"Equip")
@@ -244,6 +246,7 @@ end
 LDRP.AddMiningRock("Stone","models/props_wasteland/rockcliff01J.mdl","",Color(255,255,255,255),2,1,40,2,30,5,"stone",1)
 LDRP.AddMiningRock("Gold","models/props_wasteland/rockcliff01J.mdl","",Color(255,255,0,255),4,2,30,3,9,5,"gold",1)
 LDRP.AddMiningRock("Ruby","models/props_wasteland/rockcliff01J.mdl","models/shiny",Color(255,0,0,200),6,2,50,4,9,5,"ruby",1)
+LDRP.AddMiningRock("Diamond","models/props_wasteland/rockcliff01J.mdl","models/shiny",Color(185,242,255,255),6,2,50,4,9,5,"diamond",1)
 
 --[[ Player Skills ]]--
 LDRP_SH.AllSkills = {}
@@ -330,6 +333,7 @@ function LDRP.AddNPC(name,mdl,Team,descrpt,buttons)
 		usermessage.Hook(usermsg,NPCUMSG)
 	end
 end
+
 LDRP.AddNPC("Paycheck Lady","models/humans/group01/female_01.mdl",nil,"Hello, I hand out paychecks to people.",
 {
 	["Can I pick my paycheck up?"] = function() RunConsoleCommand("_pcg") end,
@@ -355,35 +359,14 @@ LDRP.AddNPC("Drug Dealer","models/gman.mdl",{TEAM_DRUGDEALER},"Yo man, need some
 	["I'd like to sell my shrooms. ($" .. LDRP_SH.ShroomWorth .. " per bag)"] = function() RunConsoleCommand("_dd","sell","shrooms") end
 })
 
-LDRP.AddNPC("Secret NPC","models/humans/group01/female_06.mdl",nil,"Hey, I am a secret.",
-{
-	["Wow!"] = function() LocalPlayer():ChatPrint("I honestly don't care about secrets, but let's make him feel good!") end
-})
-
 LDRP.AddNPC("Bail NPC","models/police.mdl",nil,"Hello. I can bail you out of jail for $500",
 {
 	["Fuck yeah man!"] = function() RunConsoleCommand("_bmo") end,
 	["No thanks, I like jail"] = function() LocalPlayer():ChatPrint("Fuck that dipshit. What a shitty cop") end
 })
 
-LDRP.AddNPC("Tutorial Lady","models/humans/group01/female_07.mdl",nil,"Hey! Would you like to repeat the tutorial?",
-{
-	["Yes, that'd be nice."] = function()
-		if !LDRP_SH.ShowTutorial then
-			LocalPlayer():ChatPrint("Sorry, but the tutorial is disabled :(")
-		else
-			RunConsoleCommand("_repetut")
-		end end,
-	["No, thanks though."] = function() end
-})
-
 LDRP_SH.CarrotBuyPrice = 28
 LDRP_SH.CarrotSeedPrice = 50
-
-LDRP.AddNPC("Rules","models/humans/group01/male_06.mdl",nil,"Would you like to read the rules?",{
-	["Yes please"] = function() RunConsoleCommand("rules") end,
-	["Nah I'd rather minge"] = function() end
-})
 
 function LDRP.AddCustomNPC(name,mdl,usermsg)
 	LDRP_SH.AllNPCs[name] = {}
@@ -425,8 +408,8 @@ function LDRP.CreateStore(name,model,Saying,Sells,Buys)
 		usermessage.Hook(usermsg,NPCUMSG)
 	end
 end
-LDRP.CreateStore("General_Store","models/humans/group01/male_09.mdl","Welcome to the General Store!",{["Carrot Seed"] = LDRP_SH.CarrotSeedPrice,["Melon Seed"] = 75,["Pistol Ammo"] = 100,["Rifle Ammo"] = 140,["Shotgun Ammo"] = 140},{["Carrot"] = LDRP_SH.CarrotBuyPrice,["Melon"] = 50})
-LDRP.CreateStore("Miner","models/Characters/Hostage_02.mdl","I'm too lazy to mine rocks. Do it for me.",{["Pickaxe"] = 120,["hammer"] = 200},{["Stone"] = 12,["Gold"] = 36,["Ruby"] = 55})
+LDRP.CreateStore("General Store","models/humans/group01/male_09.mdl","Welcome to the General Store!",{["Carrot Seed"] = LDRP_SH.CarrotSeedPrice,["Melon Seed"] = 75,["Pistol Ammo"] = 100,["Rifle Ammo"] = 140,["Shotgun Ammo"] = 140},{["Carrot"] = LDRP_SH.CarrotBuyPrice,["Melon"] = 50})
+LDRP.CreateStore("Miner","models/Characters/Hostage_02.mdl","I'm too lazy to mine rocks. Do it for me.",{["Pickaxe"] = 120,["hammer"] = 200},{["Stone"] = 40,["Gold"] = 60,["Ruby"] = 100, ["diamond"] = 150})
 
 LDRP_SH.CraftItems = {}
 function LDRP.CreateCraftItem(Name,Icon,CraftTime,LevelNeeded,ExpGive,Recipe,Results,VIPOnly)
