@@ -2769,43 +2769,6 @@ function TabsInventory(parent)
 
 end
 
--- function Inv.BackGround.Update() -- This is probably a horrible way to do this, but look at half of the DarkRP code and see how much shittier that is instead of complaining about my code
--- -- 		for k,v in pairs(LocalPlayer().Inventory) do
--- -- 			local Check = CurIcons[k]
--- -- 			if Check then
--- -- 				if Check.am != v or v <= 0 then
--- -- 					local ItemTbl = LDRP_SH.AllItems[k]
--- -- 					if !ItemTbl then continue end
--- -- 					if v <= 0 then
--- -- 						Inv.ItemList:RemoveItem(Check.vgui)
--- -- 						CurIcons[k] = nil
--- -- 					else
--- -- 						Check.vgui:SetToolTip(ItemTbl.nicename .. "\n" .. ItemTbl.descr .. "\nAmount: " .. v .. "\nWeight: " .. ItemTbl.weight)
--- -- 						CurIcons[k].am = v
--- -- 					end
--- -- 				end
--- -- 			elseif v > 0 then
--- -- 				local ItemTbl = LDRP_SH.AllItems[k]
--- -- 				if !ItemTbl then continue end
--- -- 				local ItemIcon = CreateIcon(Inv.ItemList,ItemTbl.mdl,78,78,function() LDRP.OpenItemOptions(k) end)
--- -- 				CurIcons[k] = {["vgui"] = ItemIcon,["am"] = v}
--- -- 				local Namez = WepNames[ItemTbl.nicename] or ItemTbl.nicename
--- -- 				ItemIcon:SetToolTip(Namez .. "\n" .. ItemTbl.descr .. "\nAmount: " .. v .. "\nWeight: " .. ItemTbl.weight)
-		
-				
--- -- 				Inv.ItemList:AddItem(ItemIcon)
--- -- 			end
--- -- 			timer.Simple(.00001,function()
--- -- 				Inv.ItemList:Rebuild()
--- -- 			end)
--- -- 		end
--- -- 	end
-	
-	
--- -- 	Inv.ItemList.Think = function()
--- -- 		Inv.BackGround:Update()
--- -- 	end
-
 function TabsSkills(parent)
 
 	local parentWidth = parent:GetWide()
@@ -2824,9 +2787,118 @@ function TabsSkills(parent)
 
 	end
 
+	local colW = skillsPanel:GetWide() / 2
+	local colH = skillsPanel:GetTall() / 4
+	local colA = 2
+
+	local skillsScrollContainer = vgui.Create("DScrollPanel", skillsPanel)
+
+	skillsScrollContainer:SetSize(skillsPanel:GetWide(), skillsPanel:GetTall())
+
+	local skillsGrid = vgui.Create("DGrid", skillsScrollContainer)
+
+	skillsGrid:SetSize(skillsScrollContainer:GetWide(), skillsScrollContainer:GetTall())
+
+	skillsGrid:SetColWide(colW)
+	skillsGrid:SetRowHeight(colH)
+	skillsGrid:SetCols(colA)
+
+	function skillsGrid:RefreshItems()
+
+		-- there is probably a better way to do this
+		for k, v in pairs(self:GetItems()) do
+
+			self:RemoveItem(v)
+
+		end
+
+		for k, v in SortedPairs( LocalPlayer().Skills ) do
+
+			local skillSelected = LDRP_SH.AllSkills[k]
+
+			local skillDisplay = vgui.Create("DPanel")
+			skillDisplay:SetSize(colW, colH)
+
+			function skillDisplay:Paint()
+
+				local expNeed = LDRP_SH.AllSkills[k].exptbl[v["lvl"]]
+
+				draw.RoundedBox(10, 0, 0, self:GetWide()-5, self:GetTall()-5, Color(213, 100, 100, 200))
+				draw.SimpleTextOutlined(k, "Trebuchet20", 5, 5, Color( 255, 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, Color( 0, 0, 0, 255 ))
+				draw.SimpleTextOutlined("Level: "..v["lvl"], "Trebuchet20", self:GetWide() - 70, 5, Color( 255, 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, Color( 0, 0, 0, 255 ))
+				draw.SimpleTextOutlined(skillSelected["descrpt"], "Trebuchet20", 5, self:GetTall() - 40, Color( 255, 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, Color( 0, 0, 0, 255 ))
+
+				draw.RoundedBox(5, 80, 60, 350, 25, Color(100, 100, 100, 255))
+				if (v["exp"] > 0) then
+					draw.RoundedBox(5,80,60,348*math.Clamp(v["exp"]/expNeed,.02,1),25,Color(0,220,0,170))
+				end
+				draw.SimpleTextOutlined(v["exp"].."/"..expNeed, "Trebuchet20", 500 / 2, 145 / 2, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0, 255 ))
+			end
+
+			local skillIcon = vgui.Create("SpawnIcon", skillDisplay)
+
+			skillIcon:SetPos(5, 40)
+			skillIcon:SetSize(70, 70)
+			skillIcon:SetModel(skillSelected["mdl"])
+			skillIcon:SetTooltip()	
+
+			function skillIcon:PaintOver() return end
+			function skillIcon:OnCursorEntered() return end
+
+			if v["exp"] == LDRP_SH.AllSkills[k].exptbl[v["lvl"]] then
+
+				local upgradeBtn = vgui.Create("DButton", skillDisplay)
+
+				upgradeBtn:SetText("")
+				upgradeBtn:SetSize(80, 30)
+				upgradeBtn:SetPos(skillDisplay:GetWide() - 95, skillDisplay:GetTall() - 40)
+
+				function upgradeBtn:Paint()
+
+					draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), Color(0, 0, 0, 200))
+					draw.SimpleText("Upgrade", "Trebuchet18", self:GetWide() / 2, self:GetTall() / 2, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+				end
+
+				upgradeBtn:SetTooltip()
+
+				if skillSelected.pricetbl[v["lvl"]+1] then
+					upgradeBtn:SetToolTip("Buy level " .. v["lvl"]+1 .. " for $" ..skillSelected.pricetbl[v["lvl"]+1])
+				else
+					upgradeBtn:SetToolTip("Your level is maxxed out!")
+				end
+
+				upgradeBtn.DoClick = function()
+
+					RunConsoleCommand("_buysk", k)
+
+				end
+
+			end
+
+			skillsGrid:AddItem(skillDisplay)
+
+		end
+
+	end
+
+	skillsGrid:RefreshItems()
+
 	return skillsPanel
 
 end
+
+-- 		SkillBuy.DoClick = function()
+-- 			local currentExp = LocalPlayer().Skills[k].exp
+
+-- 			if currentExp < sk.exptbl[v.lvl] then --v.exp contains old information, have to get it fresh from the skills table.
+-- 				LocalPlayer():ChatPrint("You need more experience!")
+-- 				chat.PlaySound()
+-- 			else
+-- 				RunConsoleCommand("_buysk",k)
+-- 			end
+-- 		end
+-- 	end
 
 function TabsCrafting(parent)
 
@@ -2843,6 +2915,8 @@ function TabsCrafting(parent)
 	function craftingPanel:Paint()
 
 		draw.RoundedBox(0, 0, 0, self:GetWide(), self:GetTall(), Color(0, 0, 0, 0))
+
+		draw.SimpleText("Tab In Development", "Trebuchet24", self:GetWide() / 2 + 40, self:GetTall() / 2, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 	end
 

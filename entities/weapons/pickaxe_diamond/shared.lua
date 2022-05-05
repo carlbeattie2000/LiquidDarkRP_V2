@@ -112,6 +112,8 @@ function SWEP:PrimaryAttack()
 			else
 				ply:LiquidChat("Mining", Color(100,100,100), "Failed to mine rock.")
 			end
+
+			self:PrimaryAttack()
 		end
 	end)
 
