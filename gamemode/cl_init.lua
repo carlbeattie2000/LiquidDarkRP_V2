@@ -447,7 +447,7 @@ if UseFadmin then
 	-- DarkRP plugin for FAdmin. It's this simple to make a plugin. If FAdmin isn't installed, this code won't bother anyone
 	include("fadmin_darkrp.lua")
 	
-	--hook.Add("PostGamemodeLoaded", "FAdmin_DarkRP", function()
+	hook.Add("PostGamemodeLoaded", "FAdmin_DarkRP", function()
 
 		if not FAdmin or not FAdmin.StartHooks then return end
 
@@ -551,7 +551,7 @@ if UseFadmin then
 		
 		end
 	
-	--end)
+	end)
 
 end
 
