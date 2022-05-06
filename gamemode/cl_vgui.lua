@@ -535,7 +535,7 @@ net.Receive("OpenF4Menu", function()
 	userProfileDetails:SetSize(tabSelectionPanelWidth-10, tabSelectionPanelHeight*0.13)
 
 	-- EXAMPLE VARS -- REPLACE WITH DARKRP VARS
-	local expJob = "Citizen"
+	local expJob = team.GetName(LocalPlayer():Team())
 
 	local expCash = CUR .. REBELLION.format_num(LocalPlayer():getDarkRPVar("money"))
 	-- EXAMPLE VARS -- REPLACE WITH DARKRP VARS
@@ -546,7 +546,7 @@ net.Receive("OpenF4Menu", function()
 
 		draw.SimpleText(maxStringLength(LocalPlayer():Nick(), 20), "Trebuchet24", 80, 20, Color( 255, 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
-		draw.SimpleText(maxStringLength(expJob, 20), "Trebuchet24", 80, 40, Color( 100, 255, 100, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+		draw.SimpleText(maxStringLength(expJob, 20), "Trebuchet20", 80, 40, Color( 100, 255, 100, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
 		draw.SimpleText(expCash, "Trebuchet18", 80, 60, Color( 255, 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
