@@ -7,8 +7,18 @@ function F4Bank(parent)
 	bankWindow:SetPos(20, 20)
 
 	function bankWindow:Paint()
-
 		draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), Color(200, 200, 200, 255))
+	end
+
+	local icon = vgui.Create("DPanel", bankWindow)
+
+	icon:SetSize(30,30)
+
+	function icon:Paint()
+
+		surface.SetDrawColor(100, 100, 100, 255)
+		surface.SetMaterial(R_F4_MATS.bankingIcon)
+		surface.DrawTexturedRect(0, 0, self:GetWide(), self:GetTall())
 
 	end
 

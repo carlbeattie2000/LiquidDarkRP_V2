@@ -92,3 +92,6 @@ resource.AddFile( "materials/scope/scope_normal.vmt" )
 
 --FAdmin resources
 AddDir("materials/fadmin")
+
+-- F4 Icons
+AddDir("materials/r_images")

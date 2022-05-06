@@ -94,6 +94,20 @@ function REBELLION.numberFormat(amount)
 	return formatted
 end
 
+R_F4_MATS = {}
+
+R_F4_MATS.dashboardIcon = Material("r_images/icons/dashboard_icon.png", "noclamp smooth")
+R_F4_MATS.jobsIcon = Material("r_images/icons/jobs_icon.png", "noclamp smooth")
+R_F4_MATS.storeIcon = Material("r_images/icons/store_icon.png", "noclamp smooth")
+R_F4_MATS.inventoryIcon = Material("r_images/icons/inventory_icon.png", "noclamp smooth")
+R_F4_MATS.skillsIcon = Material("r_images/icons/skill_icon.png", "noclamp smooth")
+R_F4_MATS.craftingIcon = Material("r_images/icons/crafting_icon.png", "noclamp smooth")
+
+-- Sub tabs
+R_F4_MATS.bankingIcon = Material("r_images/icons/bank_icon.png", "noclamp smooth")
+-- R_F4_MATS.bankVaultIcon = Material("", "noclamp smooth")
+-- R_F4_MATS.coinFlipIcon = Material("", "noclamp smooth")
+
 LDRP_DLC = {}
 LDRP_DLC.Find = file.Find(GM.FolderName .. "/gamemode/dlc/*.lua", "LUA")
 LDRP_DLC.CL = {}
