@@ -108,6 +108,19 @@ R_F4_MATS.bankingIcon = Material("r_images/icons/bank_icon.png", "noclamp smooth
 -- R_F4_MATS.bankVaultIcon = Material("", "noclamp smooth")
 -- R_F4_MATS.coinFlipIcon = Material("", "noclamp smooth")
 
+R_CASES_ICONS = {}
+
+R_CASES_ICONS.boosterCaseIcon = Material("r_images/cases/booster_case.png")
+R_CASES_ICONS.moneyCaseIcon = Material("r_images/cases/money_case.png")
+R_CASES_ICONS.weaponCaseIcon = Material("r_images/cases/weapon_case.png")
+
+R_CASES = {}
+
+R_CASES.moneyCaseItems = {{["type"] = "money", ["item"] = "1000"}, {["type"] = "money", ["item"] = "20000"}, {["type"] = "money", ["item"] = "75000"}, {["type"] = "money", ["item"] = "100000"}, {["type"] = "money", ["item"] = "1000000"}, {["type"] = "money", ["item"] = "4000000"}, {["type"] = "money", ["item"] = "8000000"}}
+R_CASES.boosterCaseItems = {{["type"] = "ent", ["item"] = "uranium_printer"}, {["type"] = "ent", ["item"] = "theif_outfit"}, {["type"] = "ent", ["item"] = "tux_outfit"}, {["type"] = "money", ["item"] = "750000"}, {["type"] = "money", ["item"] = "1000000"}, {["type"] = "money", ["item"] = "2500000"}, {["type"] = "money", ["item"] = "5000000"}}
+R_CASES.weaponCaseItems = {{["type"] = "weapon", ["item"] = "example_weapon"}}
+
+
 LDRP_DLC = {}
 LDRP_DLC.Find = file.Find(GM.FolderName .. "/gamemode/dlc/*.lua", "LUA")
 LDRP_DLC.CL = {}
