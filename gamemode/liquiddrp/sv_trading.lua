@@ -171,18 +171,9 @@ function LDRP.TradingCMD(ply,cmd,args)
       Trade.TradeRequest = ply
     
     end
-    -- ply.TradedWith = nil
-		-- local Trade = ply:GetEyeTrace().Entity
-		-- if Trade and Trade:IsValid() and Trade:IsPlayer() and Trade:GetPos():Distance(ply:GetPos()) < 200 then
-		-- 	ply:LiquidChat("TRADING", Color(0,192,10), "Sent a trade request to " .. Trade:GetName())
-		-- 	Trade:LiquidChat("TRADING", Color(0,192,10), ply:GetName() .. " has created a trade request. Type '/accept' in chat to accept.")
-			
-		-- 	ply.TradedWith = Trade
-		-- 	Trade.TradeRequest = ply
-		-- else
-		-- 	ply:LiquidChat("TRADING", Color(0,192,10), "Get closer to a player to trade with them.")
-		-- end
+
 	end
+  
 end
 concommand.Add("__trd",LDRP.TradingCMD)
 

@@ -193,6 +193,56 @@ concommand.Add( "_f4opencontentwindow", F4OpenContentWindow )
 
 -- F4 MENU --
 
+-- Add item to players inventory
+
+function addItemToPlayersInventory(ply, cmd, args)
+
+	if !ply:IsAdmin() then return end
+
+	if !args[1] || !args[2] || !args[3] || type(tonumber(args[3])) != "number" then 
+
+		ply:ChatPrint("addinvitem [plynick] [itemtoadd] [itemamount]") 
+
+		return
+
+	end
+
+	local plyNick = string.lower(args[1])
+
+	local itemName = args[2]
+
+	local itemAmount = tonumber(args[3])
+
+	local playersOnServer = player.GetAll()
+
+	local foundMatchingPlayer = nil
+
+	for k, v in pairs(playersOnServer) do
+
+		if string.lower(v:Nick()) == plyNick then
+
+			foundMatchingPlayer = v
+
+		end
+
+	end
+
+	if !foundMatchingPlayer then 
+
+		ply:ChatPrint("No player found!")
+
+		return
+
+	end
+
+	ply:ChatPrint("Attempting to add item to players inventory")
+
+	foundMatchingPlayer:AddItem(itemName, itemAmount)
+
+end
+
+concommand.Add("addinvitem", addItemToPlayersInventory)
+
 function GM:OnNPCKilled(victim, ent, weapon)
 	-- If something killed the npc
 	if ent then

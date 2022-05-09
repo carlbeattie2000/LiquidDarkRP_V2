@@ -19,7 +19,7 @@ LDRP_SH.ReplaceSkybox = false -- Should the gamemode replace the skybox with a m
 
 LDRP_SH.SkyMat = "sky33" -- The skybox replacement mat, DO NOT EDIT IF YOU DON'T KNOW WHAT YOU ARE DOING
 
-LDRP_SH.StackChecks = true -- If this is true, checks at the lady will stack.
+LDRP_SH.StackChecks = false -- If this is true, checks at the lady will stack.
 
 LDRP_SH.NotifyNewVIPs = true -- Notify all players when a VIP is added
 
@@ -143,6 +143,32 @@ end,"Eat","models/props_junk/PopCan01a.mdl")
 
 LDRP.AddNewItem("Mushroom Spore","Plant this to grow some mushrooms","models/props_swamp/shroom_ref_01.mdl",.1,Color(255,255,255,255),"",nil,nil,nil,"models/props_junk/PopCan01a.mdl")
 
+LDRP_SH.AllCases = {}
+
+local key = 1
+
+function LDRP.AddNewCase(name, description, model, weight, clr, mat, realent, usename, fakemdl, id, bg, items )
+
+  LDRP.AddNewItem(name, description, model, weight, clr, mat, realent, usefunc, usename, fakemdl)
+
+  LDRP_SH.AllCases[name] = {
+    ["nicename"] = name,
+    ["icon"] = mat,
+    ["prize_items"] = items,
+    ["bg_clr"] = bg,
+    ["id"] = id,
+    ["key"] = ket
+  }
+  
+  key = key + 1
+
+end
+
+LDRP.AddNewCase("Booster Case", "Open the case to claim your booster item!", "icon", .05, Color(213, 100, 100, 150), "models/shiny", nil, nil, "Open Case", nil, 1)
+
+LDRP.AddNewCase("Money Case", "Open the case to claim your cash prize!", "icon", .05, Color(213, 100, 100, 150), "models/shiny", nil, nil, "Open Case", nil, 1)
+
+LDRP.AddNewCase("Weapon Case", "Open the case to claim your weapon!", "icon", .05, Color(213, 100, 100, 150), "models/shiny", nil, nil, "Open Case", nil, 1)
 
 LDRP_SH.NicerWepNames = {}
 function LDRP.AddWeapon(class,nicename,description,model,weight)
