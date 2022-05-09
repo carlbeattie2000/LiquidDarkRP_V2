@@ -2624,14 +2624,16 @@ function TabsStore(parent)
 
 				end
 
+				PrintTable(v[i])
+
 				if (v[i]["shipmodel"]) then
 
-					icon = CreateIcon(nil, v[i]["shipmodel"], 70, 70, function() LocalPlayer():ConCommand("say ".."/buyshipment "..v[i].name) end, Vector(40,40,40))
+					icon = CreateIcon(nil, v[i]["shipmodel"], 70, 70, nil, nil, function() LocalPlayer():ConCommand("say ".."/buyshipment "..v[i].name) end, Vector(40,40,40))
 					icon:SetTooltip(v[i]["name"] .. " shipment \n" .. CUR .. v[i]["price"])
 
 				else
-					print(v[i]["cmd"], v[i]["name"])
-					icon = CreateIcon(nil, v[i]["model"], 70, 70, function() LocalPlayer():ConCommand("say "..v[i]["cmd"]) end, Vector(20,20,20))
+
+					icon = CreateIcon(nil, v[i]["model"], 70, 70, v[i]["mat"], v[i]["clr"], function() LocalPlayer():ConCommand("say "..v[i]["cmd"]) end, Vector(20,20,20))
 					icon:SetTooltip(v[i]["name"] .. "\n" .. CUR .. v[i]["price"])
 
 				end
@@ -2743,7 +2745,7 @@ function TabsInventory(parent)
 
 				if !ItemTbl then continue end
 
-				local ItemIcon = CreateIcon(nil, ItemTbl.mdl, 78, 78, function() LDRP.OpenItemOptions(k) end)
+				local ItemIcon = CreateIcon(nil, ItemTbl.mdl, 78, 78, ItemTbl.mat, ItemTbl.clr, function() LDRP.OpenItemOptions(k) end)
 
 				curIcons[k] = {["vgui"] = ItemIcon, ["am"] = v}
 

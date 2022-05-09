@@ -116,14 +116,14 @@ function LDRP_SH.OpenStoreMenu(name,model,saying,selltable,buytable)
 	
 	for k,v in pairs(selltable) do
 		local Lower = string.lower(k)
-		local ItemIcon = CreateIcon(nil,LDRP_SH.AllItems[Lower].mdl,76,76,function() LDRP.ConfirmVender("buy",Lower,v) end)
+		local ItemIcon = CreateIcon(nil,LDRP_SH.AllItems[Lower].mdl,76,76, LDRP_SH.AllItems[Lower].mat, LDRP_SH.AllItems[Lower].clr, function() LDRP.ConfirmVender("buy",Lower,v) end)
 		ItemIcon:SetToolTip(k .. "\nSell Price: $" .. v)
 		Store.SellingList:AddItem(ItemIcon)
 	end
 	
 	for k,v in pairs(buytable) do
 		local Lower = string.lower(k)
-		local ItemIcon = CreateIcon(nil,LDRP_SH.AllItems[Lower].mdl,76,76,function() LDRP.ConfirmVender("sell",string.lower(Lower),v) end)
+		local ItemIcon = CreateIcon(nil,LDRP_SH.AllItems[Lower].mdl,76,76, LDRP_SH.AllItems[Lower].mat, LDRP_SH.AllItems[Lower].clr, function() LDRP.ConfirmVender("sell",string.lower(Lower),v) end)
 		ItemIcon:SetToolTip(k .. "\nBuy Price: $" .. v)
 		Store.BuyingList:AddItem(ItemIcon)
 	end
@@ -271,7 +271,7 @@ function LDRP.BankMenu(ply,cmd,args)
 			elseif v > 0 then
 				local ItemTbl = LDRP_SH.AllItems[k]
 				if !ItemTbl then continue end
-				local ItemIcon = CreateIcon(BankItemsList,ItemTbl.mdl,79,79,function() LDRP.OpenItemOptions(k,"takeout","Take Out") end)
+				local ItemIcon = CreateIcon(BankItemsList,ItemTbl.mdl,79,79, LDRP_SH.AllItems[Lower].mat, LDRP_SH.AllItems[Lower].clr, function() LDRP.OpenItemOptions(k,"takeout","Take Out") end)
 				CurIcons[k] = {["vgui"] = ItemIcon,["am"] = v}
 				local Namez = WepNames[ItemTbl.nicename] or ItemTbl.nicename
 				ItemIcon:SetToolTip(Namez .. "\n" .. ItemTbl.descr .. "\nAmount: " .. v .. "\nWeight: " .. ItemTbl.weight)
@@ -323,7 +323,7 @@ function LDRP.BankMenu(ply,cmd,args)
 			elseif v > 0 then
 				local ItemTbl = LDRP_SH.AllItems[k]
 				if !ItemTbl then continue end
-				local ItemIcon = CreateIcon(InvItemsList,ItemTbl.mdl,79,79,function() LDRP.OpenItemOptions(k,"bank","Put in bank") end)
+				local ItemIcon = CreateIcon(InvItemsList,ItemTbl.mdl,79,79, LDRP_SH.AllItems[Lower].mat, LDRP_SH.AllItems[Lower].clr, function() LDRP.OpenItemOptions(k,"bank","Put in bank") end)
 				CurIcons2[k] = {["vgui"] = ItemIcon,["am"] = v}
 				local Namez = WepNames[ItemTbl.nicename] or ItemTbl.nicename
 				ItemIcon:SetToolTip(Namez .. "\n" .. ItemTbl.descr .. "\nAmount: " .. v .. "\nWeight: " .. ItemTbl.weight)

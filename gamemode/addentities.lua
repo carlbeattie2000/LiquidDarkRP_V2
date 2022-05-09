@@ -5,9 +5,9 @@ AddCustomShipment("Mac10", "models/weapons/w_smg_mac10.mdl", "weapon_real_cs_mac
 AddCustomShipment("PumpShotgun", "models/weapons/w_shot_m3super90.mdl", "weapon_real_cs_pumpshotgun", 1750, "Weapons", 10, false, nil, false, {TEAM_GUN}) 
 AddCustomShipment("SniperRifle", "models/weapons/w_snip_g3sg1.mdl", "ls_sniper", 3750, "Weapons", 10, false, nil, false, {TEAM_GUN}) 
 
-AddEntity("Money printer", "money_printer", "models/props_c17/consolebox01a.mdl", 1500, "Other", 2, "/buymoneyprinter")
-AddEntity("Money printer cooler", "cooler", "models/nukeftw/faggotbox.mdl", 300, "Other", 2, "/buycooler")
-AddEntity("Pot", "pot", "models/nater/weedplant_pot_dirt.mdl", 100, "Other", 7, "/buypot")
+AddEntity("Money printer", "money_printer", "models/props_c17/consolebox01a.mdl", nil, nil, 1500, "Other", 2, "/buymoneyprinter")
+AddEntity("Money printer cooler", "cooler", "models/nukeftw/faggotbox.mdl", nil, nil, 300, "Other", 2, "/buycooler")
+AddEntity("Pot", "pot", "models/nater/weedplant_pot_dirt.mdl", nil, nil, 100, "Other", 7, "/buypot")
 
 /*
 Add those lines under your custom shipments. At the bottom of this file or in data/CustomShipments.txt

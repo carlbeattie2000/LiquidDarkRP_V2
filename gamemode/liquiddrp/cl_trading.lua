@@ -110,7 +110,7 @@ function LDRP.TradingMenu(tradingwith)
 	TM.Inventory:SetSpacing(4)
 	local CurIcons = {}
 	
-	local MoneyIcon = CreateIcon(TM.Inventory,"models/props/cs_assault/money.mdl",76,76,function() LDRP.OpenItemOptions("cash","cash") end)
+	local MoneyIcon = CreateIcon(TM.Inventory,"models/props/cs_assault/money.mdl",76,76, nil, nil, function() LDRP.OpenItemOptions("cash","cash") end)
 	MoneyIcon:SetToolTip("Your money (click for menu) $" .. LocalPlayer().DarkRPVars.money)
 	TM.Inventory:AddItem(MoneyIcon)
 	
@@ -132,7 +132,7 @@ function LDRP.TradingMenu(tradingwith)
 			elseif v > 0 then
 				local ItemTbl = LDRP_SH.AllItems[k]
 				if !ItemTbl then continue end
-				local ItemIcon = CreateIcon(TM.Inventory,ItemTbl.mdl,76,76,function() LDRP.OpenItemOptions(k,"addtrade") end)
+				local ItemIcon = CreateIcon(TM.Inventory,ItemTbl.mdl,76,76, ItemTbl.mat, ItemTbl.clr, function() LDRP.OpenItemOptions(k,"addtrade") end)
 				CurIcons[k] = {["vgui"] = ItemIcon,["am"] = v}
 				local Namez = WepNames[ItemTbl.nicename] or ItemTbl.nicename
 				ItemIcon:SetToolTip(Namez .. "\n" .. ItemTbl.descr .. "\nAmount: " .. v .. "\nWeight: " .. ItemTbl.weight)
@@ -202,7 +202,7 @@ function LDRP.TradingMenu(tradingwith)
 		end
 		
 		if Chk and LocalPlayer().Trading["cashh"] and LocalPlayer().Trading["cashh"] >= 1 then
-			MoneyIconTrade = CreateIcon(TM.MyTrade,"models/props/cs_assault/money.mdl",76,76,function() LDRP.OpenItemOptions("cash","cash") end)
+			MoneyIconTrade = CreateIcon(TM.MyTrade,"models/props/cs_assault/money.mdl",76,76, nil, nil, function() LDRP.OpenItemOptions("cash","cash") end)
 			MoneyIconTrade:SetToolTip(LocalPlayer():Name() .. " is trading $" .. FreshCash)
 			TM.ChatBox:AddChat(LocalPlayer():Name() .. " is now trading $" .. FreshCash,Color(200,0,0,255))
 			TM.MyTrade:AddItem(MoneyIconTrade)
@@ -239,7 +239,7 @@ function LDRP.TradingMenu(tradingwith)
 			elseif v > 0 then
 				local ItemTbl = LDRP_SH.AllItems[k]
 				if !ItemTbl then continue end
-				local ItemIcon = CreateIcon(TM.MyTrade,ItemTbl.mdl,76,76,function() LDRP.OpenItemOptions(k,"removetrade") end)
+				local ItemIcon = CreateIcon(TM.MyTrade,ItemTbl.mdl,76,76, ItemTbl.mat, ItemTbl.clr, function() LDRP.OpenItemOptions(k,"removetrade") end)
 				CurIcons2[k] = {["vgui"] = ItemIcon,["am"] = v}
 				local Namez = WepNames[ItemTbl.nicename] or ItemTbl.nicename
 				ItemIcon:SetToolTip(Namez .. "\n" .. ItemTbl.descr .. "\nTrading amount: " .. v .. "\nTotal Weight: " .. (ItemTbl.weight*v))
@@ -286,7 +286,7 @@ function LDRP.TradingMenu(tradingwith)
 		end
 		
 		if Chk and FreshCash2 and FreshCash2 >= 1 then
-			MoneyIconTheir = CreateIcon(TM.TheirTrade,"models/props/cs_assault/money.mdl",76,76,function() end)
+			MoneyIconTheir = CreateIcon(TM.TheirTrade,"models/props/cs_assault/money.mdl",76,76, nil, nil, function() end)
 			MoneyIconTheir:SetToolTip(tradingwith:GetName() .. " is trading $" .. FreshCash2)
 			TM.ChatBox:AddChat(tradingwith:Name() .. " is now trading $" .. FreshCash2,Color(200,0,0,255))
 			TM.TheirTrade:AddItem(MoneyIconTheir)
@@ -325,7 +325,7 @@ function LDRP.TradingMenu(tradingwith)
 				RunConsoleCommand("__trd","decline")
 				local ItemTbl = LDRP_SH.AllItems[k]
 				if !ItemTbl then continue end
-				local ItemIcon = CreateIcon(TM.TheirTrade,ItemTbl.mdl,76,76,function() end)
+				local ItemIcon = CreateIcon(TM.TheirTrade,ItemTbl.mdl,76,76, ItemTbl.mat, ItemTbl.clr, function() end)
 				CurIcons3[k] = {["vgui"] = ItemIcon,["am"] = v}
 				local Namez = WepNames[ItemTbl.nicename] or ItemTbl.nicename
 				ItemIcon:SetToolTip(Namez .. "\n" .. ItemTbl.descr .. "\nTrading amount: " .. v .. "\nTotal Weight: " .. (ItemTbl.weight*v))

@@ -87,11 +87,11 @@ end
 
 
 DarkRPEntities = {}
-function AddEntity(name, entity, model, price, category, max, command, classes, CustomCheck)
+function AddEntity(name, entity, model, mat, clr, price, category, max, command, classes, CustomCheck)
 	local tableSyntaxUsed = type(entity) == "table"
 
 	local tblEnt = tableSyntaxUsed and entity or
-		{ent = entity, model = model, price = price, category = category, max = max,
+		{ent = entity, model = model, mat = mat, clr = clr, price = price, category = category, max = max,
 		cmd = command, allowed = classes, customCheck = CustomCheck}
 	tblEnt.name = name
 

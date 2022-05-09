@@ -159,7 +159,7 @@ local function IcoClrMod(r,g,b,a)
 	return Color(MC(Clrs.r+r),MC(Clrs.g+g),MC(Clrs.b+b),MC(Clrs.a+a))
 end
 
-function CreateIcon(panel,model,sizex,sizey,clickfunc,campos,lookat) -- Liquid DarkRP CreateIcon
+function CreateIcon(panel,model,sizex,sizey,mat,clr,clickfunc,campos,lookat) -- Liquid DarkRP CreateIcon
 	local BG = vgui.Create("DPanel")
 	if panel then BG:SetParent(panel) end
 	BG:SetSize( sizex, sizey )
@@ -172,6 +172,19 @@ function CreateIcon(panel,model,sizex,sizey,clickfunc,campos,lookat) -- Liquid D
 	
 	local icon = vgui.Create( "DModelPanel", BG )
 	icon:SetModel(model)
+
+	if mat then
+
+		icon.Entity:SetMaterial(mat)
+
+	end
+
+	if clr then
+
+		icon:SetColor(clr)
+
+	end
+
 	icon:SetSize( sizex-8,sizey-8 )
 	icon:SetPos(4,4)
 
