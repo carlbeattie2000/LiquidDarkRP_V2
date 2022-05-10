@@ -207,13 +207,16 @@ LDRP.AddWeapon("weapon_real_cs_knife","Knife","I'LL CUT YOU UP!","models/weapons
 
 
 LDRP.AddWeapon("ls_sniper","Sniper","A sniper","models/weapons/w_snip_g3sg1.mdl",1)
-LDRP.AddWeapon("pickaxe","Pickaxe","Pickaxe. Mine rocks.","models/weapons/w_stone_pickaxe.mdl",.65)
 
+LDRP.AddWeapon("pickaxe","Pickaxe","Pickaxe. Mine rocks.","models/weapons/w_stone_pickaxe.mdl",.65)
 LDRP.AddWeapon("pickaxe1","Pickaxe upgrade 1","Pickaxe with better success.","models/weapons/w_stone_pickaxe.mdl",.75)
 LDRP.AddWeapon("pickaxevip","Pickaxe upgrade 2","Pickaxe with much better success. (and it weighs less!)","models/weapons/w_stone_pickaxe.mdl",.65)
-LDRP.AddWeapon("pickaxe_diamond","Diamond Pickaxe","Pickaxe with much better success. (and it's strong!)","models/weapons/w_stone_pickaxe.mdl",.65)
-
+LDRP.AddWeapon("pickaxediamond","Diamond Pickaxe","Pickaxe with much better success. (and it's strong!)","models/weapons/w_stone_pickaxe.mdl",1)
+LDRP.AddWeapon("pickaxenuclear","Nuclear Pickaxe","Strongest Pickaxe Created.","models/weapons/w_stone_pickaxe.mdl",2.5)
 LDRP.AddWeapon("hammer","Crafting Hammer","Craft stuff with this.","models/weapons/w_sledgehammer.mdl",.7)
+
+LDRP.AddWeapon("lockpick", "Lockpick", "Break into bases with this Basic lockpick", "models/weapons/w_crowbar.mdl", 1)
+LDRP.AddWeapon("lockpickdiamond", "Diamond Lockpick", "Break into bases with this Diamond lockpick", "models/weapons/w_crowbar.mdl", 1)
 
 --[[
 LDRP.AddNewItem("Meth Stove","","models/props_junk/garbage_glassbottle001a.mdl",1,Color(255,255,255,255),"",nil)
@@ -269,10 +272,10 @@ function LDRP.AddMiningRock(name,model,mat,color,spawnchance,levelneeded,expgive
 	LDRP_SH.Rocks[name].minechance = minechance
 	LDRP_SH.Rocks[name].requireswep = requireswep
 end
-LDRP.AddMiningRock("Stone","models/props_wasteland/rockcliff01J.mdl","",Color(255,255,255,255),2,1,40,2,30,5,"stone",1)
-LDRP.AddMiningRock("Gold","models/props_wasteland/rockcliff01J.mdl","",Color(255,255,0,255),4,2,30,3,9,5,"gold",1)
-LDRP.AddMiningRock("Ruby","models/props_wasteland/rockcliff01J.mdl","models/shiny",Color(255,0,0,200),6,2,50,4,9,5,"ruby",1)
-LDRP.AddMiningRock("Diamond","models/props_wasteland/rockcliff01J.mdl","models/shiny",Color(185,242,255,255),6,2,50,4,9,5,"diamond",1)
+LDRP.AddMiningRock("Stone","models/props_wasteland/rockcliff01J.mdl","",Color(255,255,255,255),2,1,40,2,5000,5,"stone",1)
+LDRP.AddMiningRock("Gold","models/props_wasteland/rockcliff01J.mdl","",Color(255,255,0,255),4,2,30,3,5000,5,"gold",1)
+LDRP.AddMiningRock("Ruby","models/props_wasteland/rockcliff01J.mdl","models/shiny",Color(255,0,0,200),6,2,50,4,5000,5,"ruby",1)
+LDRP.AddMiningRock("Diamond","models/props_wasteland/rockcliff01J.mdl","models/shiny",Color(185,242,255,255),6,3,50,4,5000,5,"diamond",1)
 
 --[[ Player Skills ]]--
 LDRP_SH.AllSkills = {}
@@ -435,7 +438,7 @@ function LDRP.CreateStore(name,model,Saying,Sells,Buys)
 	end
 end
 LDRP.CreateStore("General Store","models/humans/group01/male_09.mdl","Welcome to the General Store!",{["Carrot Seed"] = LDRP_SH.CarrotSeedPrice,["Melon Seed"] = 75,["Pistol Ammo"] = 100,["Rifle Ammo"] = 140,["Shotgun Ammo"] = 140},{["Carrot"] = LDRP_SH.CarrotBuyPrice,["Melon"] = 50})
-LDRP.CreateStore("Miner","models/Characters/Hostage_02.mdl","I'm too lazy to mine rocks. Do it for me.",{["Pickaxe"] = 120,["hammer"] = 200},{["Stone"] = 40,["Gold"] = 60,["Ruby"] = 100, ["diamond"] = 150})
+LDRP.CreateStore("Miner","models/Characters/Hostage_02.mdl","I'm too lazy to mine rocks. Do it for me.",{["Pickaxe"] = 120,["hammer"] = 200},{["Stone"] = 40,["Gold"] = 60,["Ruby"] = 100, ["Diamond"] = 150})
 
 LDRP_SH.CraftItems = {}
 function LDRP.CreateCraftItem(Name,Icon,CraftTime,LevelNeeded,ExpGive,Recipe,Results,VIPOnly)

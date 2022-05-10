@@ -315,7 +315,7 @@ function LDRP.CreateMeterHUD(text,time)
 	local function MeterHUDLocal()
 		draw.RoundedBox( 8, ScrW()*.5-LDRP.MeterLengthHalf, 10, LDRP.MeterLength, LDRP.MeterHeight, Color( 9, 120, 245, 200 ) )
 		draw.RoundedBox( 8, ScrW()*.5-LDRP.MeterLengthHalf+4, 14, (LDRP.MeterLength-8)*math.Clamp(((CurTime()-MeterStart)/time),.04,1), LDRP.MeterHeight-8, Color( 9, 170, 245, 180 ) )
-		draw.SimpleTextOutlined( text, "HUDNumber", ScrW()*.5, (LDRP.MeterHeight*.5)+10, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color(0,0,0) )
+		draw.SimpleTextOutlined( text..math.Round(time-(CurTime()-MeterStart), 0), "HUDNumber", ScrW()*.5, (LDRP.MeterHeight*.5)+10, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color(0,0,0) )
 	end
 	hook.Add("HUDPaint","Shows a progress meter",MeterHUDLocal)
 	
