@@ -478,20 +478,20 @@ net.Receive("OpenF4Menu", function()
 	local selectedTab
 	local selectedTabIndex
 
+	print(InitContentRequested)
+
 	if InitContentRequested && InitContentRequested ~= "" then
 
 		-- Here we load a sub tab straight into the main window
 
 		local foundResult = findByValue(MENU_CONFIG.mainWindowContent, "name", InitContentRequested)
 
-		selectedTab = foundResult["loadtab"](mainWindowPanel)
+		selectedTab = foundResult["loadtab"](mainWindowPanel) || MENU_CONFIG.tabButtons[1]["loadtab"](mainWindowPanel)
 
 		selectedTabIndex = -1
 
 	else
 		-- F4 key was pressed, so we open onto home tab
-
-    PrintTable(MENU_CONFIG.tabButtons[1])
 
 		selectedTab = MENU_CONFIG.tabButtons[1]["loadtab"](mainWindowPanel)
 
@@ -601,8 +601,6 @@ net.Receive("OpenF4Menu", function()
 		but.DoClick = function()
 
 			selectedTab:Remove()
-
-			print("Loading....", mainWindowPanel)
 
 			selectedTab = v["loadtab"](mainWindowPanel)
 
