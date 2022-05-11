@@ -128,15 +128,19 @@ function LDRP.InitializeSelf(ply,cmd,args)
 end
 concommand.Add("_initme",LDRP.InitializeSelf)
 
-function LDRP.ItemCMD(ply,cmd,args)
+function LDRP.ItemCMD(ply, cmd, args)
+
 	if RPArrestedPlayers[ply:SteamID()] then ply:ChatPrint("You are in jail!") return end
+
 	if !args or !args[1] or !args[2] or args[3] then return end
+
 	if !ply:Alive() then ply:ChatPrint("You must be alive to do this!") return end
 	
 	local it = string.lower(tostring(args[2]))
 	local b = LDRP_SH.ItemTable(it)
 	
 	if b and ply:HasItem(it) then
+
 		if args[1] == "drop" then
 			local trace = {}
 			trace.start = ply:EyePos()
@@ -155,6 +159,7 @@ function LDRP.ItemCMD(ply,cmd,args)
 				DroppedItem = ents.Create("spawned_weapon")
 				DroppedItem.weaponclass = b.nicename
 				DroppedItem:SetModel(b.mdl)
+				DroppedItem:SetMaterial(b.mat)
 			else
 				DroppedItem = ents.Create("item_base")
 				DroppedItem.ItemType = it

@@ -194,8 +194,7 @@ LDRP.AddNewItem("Mushroom","Have a great trip!","models/props_swamp/shroom_ref_0
 	ply:ConCommand("pp_sharpen 1;pp_sharpen_contrast 2")
 	
 	local trip = 0
-	l
-	ocal UID = ply:UniqueID()
+	local UID = ply:UniqueID()
 	
 	timer.Create("ShroomTrip_" .. UID,5,4,function()
 		
