@@ -152,19 +152,46 @@ function LDRP.ItemCMD(ply, cmd, args)
 			local DroppedItem
 			
 			ply:AddItem(it,-1)
+
 			
 			if b.realent and !b.iswep then
 				DroppedItem = ents.Create(b.realent)
+
+				if b.clr then
+
+					DroppedItem:SetMaterial(b.mat)
+
+					DroppedItem:SetColor(b.clr)
+
+				end
+
 			elseif b.iswep then
 				DroppedItem = ents.Create("spawned_weapon")
 				DroppedItem.weaponclass = b.nicename
 				DroppedItem:SetModel(b.mdl)
-				DroppedItem:SetMaterial(b.mat)
+
+				if b.clr then
+
+					DroppedItem:SetMaterial(b.mat)
+
+					DroppedItem:SetColor(b.clr)
+
+				end
+
 			else
 				DroppedItem = ents.Create("item_base")
 				DroppedItem.ItemType = it
 				DroppedItem:SetModel(b.mdl)
 				DroppedItem.Owner = ply
+
+				if b.clr then
+
+					DroppedItem:SetMaterial(b.mat)
+
+					DroppedItem:SetColor(b.clr)
+
+				end
+				
 			end
 			DroppedItem.dt = {}
 			DroppedItem.dt.owning_ent = ply
