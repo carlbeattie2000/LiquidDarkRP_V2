@@ -635,7 +635,7 @@ function LDRP.CreateCraftItem( Name, Icon, CraftTime, LevelNeeded, ExpGive, Reci
 end
 
 LDRP.CreateCraftItem("Pickaxe Upgrade #1","models/weapons/w_stone_pickaxe.mdl",8,1,100,{["gold"] = 5,["stone"] = 5,["pickaxe"] = 1},{["pickaxe1"] = 1})
-LDRP.CreateCraftItem("Pickaxe Diamond","models/weapons/w_stone_pickaxe.mdl",8,1,100,{["diamond"] = 20, ["pickaxe1"] = 2},{["pickaxe_diamond"] = 1})
+LDRP.CreateCraftItem("Pickaxe Diamond","models/weapons/w_stone_pickaxe.mdl",8,1,100,{["diamond"] = 20, ["pickaxe1"] = 2},{["pickaxediamond"] = 1})
 LDRP.CreateCraftItem("Pickaxe Upgrade VIP","models/weapons/w_stone_pickaxe.mdl",12,1,130,{["ruby"] = 4,["stone"] = 4,["pickaxe1"] = 1},{["pickaxevip"] = 1},true)
 
 

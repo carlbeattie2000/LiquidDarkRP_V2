@@ -166,8 +166,11 @@ function CreateIcon(panel,model,sizex,sizey,mat,clr,clickfunc,campos,lookat) -- 
 	local Pressed = false
 	BG.Paint = function()
 		local Clr = (Pressed and LDRPColorMod(50,50,50,-50)) or LDRPColorMod(30,30,30,-50)
-		draw.RoundedBox(6,0,0,sizex,sizey,LDRPColorMod(-60,-60,-60,-20))
-		draw.RoundedBox(6,4,4,sizex-8,sizey-8,Clr)
+		-- draw.RoundedBox(0,0,0,sizex,sizey,LDRPColorMod(-60,-60,-60,-20))
+		draw.RoundedBox(6,0,0,sizex,sizey,Clr)
+
+		surface.SetDrawColor(0, 0, 0, 255)
+		surface.DrawOutlinedRect(0, 0, sizex, sizey, 1)
 	end
 	
 	local icon = vgui.Create( "DModelPanel", BG )
@@ -273,6 +276,16 @@ pmeta.Nick = pmeta.Name
 function pmeta:getDarkRPVar(var)
 	self.DarkRPVars = self.DarkRPVars or {}
 	return self.DarkRPVars[var]
+end
+
+function pmeta:HasItem(name,am)
+
+	if !LocalPlayer().Inventory then return false end
+
+	local Check = LocalPlayer().Inventory[name] || 0
+
+	return (Check >= (am || 1) && Check)
+
 end
 
 local ENT = FindMetaTable("Entity")
