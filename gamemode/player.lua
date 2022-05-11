@@ -615,6 +615,20 @@ function meta:DropDRPWeapon(weapon)
 	ent.clip2 = weapon:Clip2()
 	ent.ammoadd = ammo
 
+	local model_inv_data = LDRP_SH.AllItems[string.lower(weapon:GetClass())]
+
+	if model_inv_data != nil then
+
+		if model_inv_data.clr then
+
+			ent:SetMaterial(model_inv_data.mat)
+
+			ent:SetColor(model_inv_data.clr)
+
+		end
+
+	end
+
 	self:RemoveAmmo(ammo, weapon:GetPrimaryAmmoType())
 
 	ent:Spawn()

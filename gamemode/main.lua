@@ -350,7 +350,7 @@ local function DropWeapon(ply)
 
 	local RP = RecipientFilter()
 	RP:AddAllPlayers()
-	
+
 	umsg.Start("anim_dropitem", RP) 
 		umsg.Entity(ply)
 	umsg.End()
