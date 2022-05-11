@@ -12,10 +12,6 @@ As it stands right now, Liquid DarkRP (shortened to LiquidDRP, or LDRP) is a mod
 #### Currently working on:
 ###### Updating the F4 Menu
 
-Old Reference:
-![old_f4_ref](https://i.ibb.co/h199mtJ/old.jpg "Old Ref")
+Current build should be stable, ironing out most bugs. Know game breaking bug is not being able to create votes for jobs.
 
-Current Reference: 
-![current_f4_ref](https://i.ibb.co/HxNbWT1/new.jpg "Current Ref")
-
-[Join the discord](https://discord.gg/sfWkywmK6d)
+Full list of commands and basic scripting for the gamemode being released soon
