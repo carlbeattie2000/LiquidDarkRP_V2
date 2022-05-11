@@ -478,8 +478,6 @@ net.Receive("OpenF4Menu", function()
 	local selectedTab
 	local selectedTabIndex
 
-	print(InitContentRequested)
-
 	if InitContentRequested && InitContentRequested ~= "" then
 
 		-- Here we load a sub tab straight into the main window
