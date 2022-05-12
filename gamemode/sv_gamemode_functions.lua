@@ -243,6 +243,47 @@ end
 
 concommand.Add("addinvitem", addItemToPlayersInventory)
 
+function setInvWeight(ply, cmd, args)
+
+	if !ply:IsAdmin() then return end
+
+	if !args[1] || !args[2] then return end
+
+	local newWeight = tonumber(args[1])
+	local playerName = string.lower(args[2])
+
+	if type(newWeight) != "number" then return end
+
+	local playersOnServer = player.GetAll()
+
+	local foundMatchingPlayer = nil
+
+	for k, v in pairs(playersOnServer) do
+
+		if string.lower(v:Nick()) == playerName then
+
+			foundMatchingPlayer = v
+
+		end
+
+	end
+
+	if !foundMatchingPlayer then 
+
+		ply:ChatPrint("No player found!")
+
+		return
+
+	end
+
+	ply:ChatPrint("Attempting to set players weight")
+
+	foundMatchingPlayer:setInventoryWeight(newWeight)	
+
+end
+
+concommand.Add("setinvweight", setInvWeight)
+
 function GM:OnNPCKilled(victim, ent, weapon)
 	-- If something killed the npc
 	if ent then

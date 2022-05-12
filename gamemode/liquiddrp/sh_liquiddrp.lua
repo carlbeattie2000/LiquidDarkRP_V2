@@ -616,7 +616,7 @@ function LDRP.CreateStore(name, model, Saying, Sells, Buys)
 end
 
 LDRP.CreateStore("General Store","models/humans/group01/male_09.mdl","Welcome to the General Store!",{["Carrot Seed"] = LDRP_SH.CarrotSeedPrice,["Melon Seed"] = 75,["Pistol Ammo"] = 100,["Rifle Ammo"] = 140,["Shotgun Ammo"] = 140},{["Carrot"] = LDRP_SH.CarrotBuyPrice,["Melon"] = 50})
-LDRP.CreateStore("Miner","models/Characters/Hostage_02.mdl","I'm too lazy to mine rocks. Do it for me.",{["Pickaxe"] = 120,["hammer"] = 200},{["Stone"] = 40,["Gold"] = 60,["Ruby"] = 100, ["Diamond"] = 150})
+LDRP.CreateStore("Miner","models/Characters/Hostage_02.mdl","I'm too lazy to mine rocks. Do it for me.",{["Pickaxe"] = 120,["hammer"] = 200},{["Stone"] = 500,["Gold"] = 700,["Ruby"] = 900, ["Diamond"] = 1100})
 
 LDRP_SH.CraftItems = {}
 

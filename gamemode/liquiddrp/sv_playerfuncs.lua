@@ -84,6 +84,20 @@ function meta:SendBItem(item,am)
 	umsg.End()
 end
 
+function meta:setInventoryWeight(newMaxWeight)
+		
+		self.Character.InvWeight.allowed = newMaxWeight
+		
+		self:SavePlayer("Inventory")
+		
+		umsg.Start("SendWeight", self)
+		
+			umsg.Float(newMaxWeight)
+		
+		umsg.End()
+	
+end
+
 function meta:SendInterestInfo(item)
 
   util.AddNetworkString( "sendBankInterestRateInfo" )
