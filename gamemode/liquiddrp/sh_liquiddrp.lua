@@ -442,7 +442,7 @@ LDRP.AddSkill("Hacking","Allows you to keypad crack faster.","models/props_lab/k
 )
 LDRP_SH.CrackTimes = {[1] = 40,[2] = 35,[3] = 30,[4] = 25,[5] = 20}
 
-LDRP.AddSkill("Stamina","More weight in inventory and more fist damage","models/props_junk/Shoe001a.mdl",
+LDRP.AddSkill("Stamina","Each level allows more inventory weight","models/props_junk/Shoe001a.mdl",
 	{[1] = 4000,[2] = 8000,[3] = 12000,[4] = 16000,[5] = 20000}, -- EXP needed
 	{[1] = 2000,[2] = 3000,[3] = 4000,[4] = 5000,[5] = 6000}, -- EXP cost
 	
@@ -637,6 +637,29 @@ end
 LDRP.CreateCraftItem("Pickaxe Upgrade #1","models/weapons/w_stone_pickaxe.mdl",8,1,100,{["gold"] = 5,["stone"] = 5,["pickaxe"] = 1},{["pickaxe1"] = 1})
 LDRP.CreateCraftItem("Pickaxe Diamond","models/weapons/w_stone_pickaxe.mdl",8,1,100,{["diamond"] = 20, ["pickaxe1"] = 2},{["pickaxediamond"] = 1})
 LDRP.CreateCraftItem("Pickaxe Upgrade VIP","models/weapons/w_stone_pickaxe.mdl",12,1,130,{["ruby"] = 4,["stone"] = 4,["pickaxe1"] = 1},{["pickaxevip"] = 1},true)
+
+-- Outfits
+
+function LDRP.CreateOutfit(name, description, model, weight, clr, mat, realent, usefunc)
+
+  LDRP.AddNewItem(
+    name, 
+    description,
+    model, 
+    weight, 
+    clr, 
+    mat, 
+    realent, 
+    usefunc || function(ply) 
+
+      ply:SetModel( model )
+      ply:SetHealth(400)
+
+    end, "Wear/takeoff outfit", nil)
+
+end
+
+LDRP.CreateOutfit("drug man", "drug man outfit", "models/bloocobalt/splinter cell/chemsuit_cod.mdl", 2, nil, nil, nil)
 
 
 -- Moderator controls

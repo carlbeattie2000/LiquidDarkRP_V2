@@ -742,6 +742,14 @@ function GM:PlayerSelectSpawn(ply)
 	return self.BaseClass:PlayerSelectSpawn(ply), POS
 end
 
+function getLookAtPos(ply, cmd, args)
+
+  ply:PrintMessage(HUD_PRINTCONSOLE, ply:GetPos())
+
+end
+
+concommand.Add("getplayerpos", getLookAtPos)
+
 function GM:PlayerSpawn(ply)
 	self.BaseClass:PlayerSpawn(ply)
 	
@@ -782,6 +790,7 @@ function GM:PlayerSpawn(ply)
 		end)
 	end
 	ply.IsSleeping = false
+  
 	
 	GAMEMODE:SetPlayerSpeed(ply, GAMEMODE.Config.walkspeed, GAMEMODE.Config.runspeed)
 	if ply:Team() == TEAM_CHIEF or ply:Team() == TEAM_POLICE then
