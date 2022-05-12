@@ -1,17 +1,25 @@
 local LDRP = {}
 
+local craftingTextClr = Color(86, 168, 83)
+
 LDRP.NiceNames = LDRP_SH.NicerWepNames
 function LDRP.CraftItem(ply,cmd,args)
-	if !ply:GetEyeTrace().Entity or !ply:GetEyeTrace().Entity:IsValid() or ply:GetEyeTrace().Entity:GetClass() != "crafting_table" or ply:Team() != TEAM_CRAFTER then return end
+	if ply:Team() != TEAM_CRAFTER then 
+
+		ply:LiquidChat("CRAFTING", craftingTextClr, "You must be a crafter to craft items.")
+
+		return
+
+	end
 	
 	local Table = LDRP_SH.CraftItems[args[1]]
 	if !Table or ply.Crafting then return end
 	
 	if Table.vip and !ply:IsVIP() then
-		ply:LiquidChat("CRAFTING", Color(80,80,80), "You must be a VIP to craft this item.")
+		ply:LiquidChat("CRAFTING", craftingTextClr, "You must be a VIP to craft this item.")
 		return
 	elseif Table.lvl > ply.Character.Skills["Crafting"].lvl then
-		ply:LiquidChat("CRAFTING", Color(80,80,80), "You need a higher crafting level to craft this item.")
+		ply:LiquidChat("CRAFTING", craftingTextClr, "You need a higher crafting level to craft this item.")
 		return
 	end
 	
@@ -19,7 +27,7 @@ function LDRP.CraftItem(ply,cmd,args)
 	for k,v in pairs(Table.recipe) do
 		am = am+1
 		if !ply:HasItem(k,v) then
-			ply:LiquidChat("CRAFTING", Color(80,80,80), "You don't have the required resources in your inventory.")
+			ply:LiquidChat("CRAFTING", craftingTextClr, "You don't have the required resources in your inventory.")
 			return
 		end
 	end
@@ -50,7 +58,7 @@ function LDRP.CraftItem(ply,cmd,args)
 				Str = b .. " " .. (LDRP.NiceNames[c] or c)
 			end	
 		end
-		ply:LiquidChat("CRAFTING", Color(80,80,80), "Crafted " .. args[1] .. " (received " .. Str ..  " in inventory.)")
+		ply:LiquidChat("CRAFTING", craftingTextClr, "Crafted " .. args[1] .. " (received " .. Str ..  " in inventory.)")
 		ply:GiveEXP("Crafting",Table.exp,true)
 	end)
 end

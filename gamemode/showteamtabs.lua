@@ -3001,14 +3001,24 @@ function TabsCrafting(parent)
 
 				if !LocalPlayer():HasItem(k1, v1) then strColor = "213, 100, 100" end
 
-				recipeString = string.format("%s%s<colour=%s>%s (%s)</colour>", recipeString, firstRecipieItem && "" || ", ", strColor, LDRP_SH.NicerWepNames[k1] or LDRP_SH.AllItems[k1].nicename, v1)
+				recipeString = string.format(
+					"%s%s<colour=%s>%s (%s)</colour>", 
+					recipeString, 
+					firstRecipieItem && "" || ", ", 
+					strColor, LDRP_SH.NicerWepNames[k1] or LDRP_SH.AllItems[k1].nicename, 
+					v1)
 
 
 				firstRecipieItem = false
 
 			end
 
-			local newMarkupObj = markup.Parse(string.format("<font=Trebuchet18><colour=255,255,255>%s: </colour>%s</font>", "Recipe", recipeString))
+			local newMarkupObj = markup.Parse(
+				string.format(
+					"<font=Trebuchet18><colour=255,255,255>%s: </colour>%s</font>", 
+					"Recipe", 
+					recipeString)
+				)
 
 			if v.parent && IsValid(v.parent) then
 
@@ -3056,7 +3066,11 @@ function TabsCrafting(parent)
 			function craftingItemPanel:Paint()
 
 				draw.RoundedBox(3, 0, 0, self:GetWide(), self:GetTall(), Color(100, 100, 100, 100))
-				draw.SimpleText(k, "Trebuchet18", 100, self:GetTall() / 2 - 30, Color( 255, 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+				draw.SimpleText(
+					k, "Trebuchet18", 
+					100, self:GetTall() / 2 - 30, 
+					Color( 255, 255, 255, 255 ), 
+					TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
 			end
 
@@ -3085,7 +3099,18 @@ function TabsCrafting(parent)
 
 				draw.RoundedBox(2, 0, 0, self:GetWide(), self:GetTall(), Color(213, 100, 100, 255))
 
-				draw.SimpleTextOutlined("Craft", "Trebuchet24", self:GetWide() / 2, self:GetTall() / 2, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0, 255 ))
+				draw.SimpleTextOutlined(
+					"Craft", "Trebuchet24", 
+					self:GetWide() / 2, self:GetTall() / 2, 
+					Color( 255, 255, 255, 255 ), 
+					TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 
+					1, Color( 0, 0, 0, 255 ))
+
+			end
+
+			craftBtn.DoClick = function()
+
+				RunConsoleCommand("__crft", k)
 
 			end
 
@@ -3096,74 +3121,9 @@ function TabsCrafting(parent)
 	end
 
 	populateCraftingTab()
+
 	updateMarkupObjs()
-
-	-- local craftingItemsGrid = vgui.Create("DGrid", craftingPanel)
-
-	-- local rowWidth = craftingPanel:GetWide() / 2.1
-	-- local rowHeight = 100
-
-	-- craftingItemsGrid:SetPos(25, 10)
-	-- craftingItemsGrid:SetSize(craftingPanel:GetWide(), craftingPanel:GetTall())
-	-- craftingItemsGrid:SetColWide(rowWidth)
-	-- craftingItemsGrid:SetRowHeight(rowHeight)
-	-- craftingItemsGrid:SetCols(2)
-
-	-- for k, v in pairs(LDRP_SH.CraftItems) do
-
-	-- 	local modelDetails = LDRP_SH.AllItems[string.lower(getTableKeys(v.results)[1])]
-
-	-- 	local craftItemPanel = vgui.Create("DPanel")
-
-	-- 	craftItemPanel:SetSize(rowWidth - 10, rowHeight - 10)
-	-- 	craftItemPanel:SetPos(5, 5)
-
-	-- 	local recipeString = ""
-	-- 	local firstRecipeItem = true
-
-	-- 	for k1, v1 in pairs(v.recipe) do
-
-	-- 		local strcolor = "255, 255, 255"
-
-	-- 		if !LocalPlayer():HasItem(k1, v1) then strcolor = "213, 100, 100" end
-
-	-- 		recipeString = string.format("%s%s<colour=%s>%s (%s)</colour>", recipeString, firstRecipeItem && "" || ", ", strcolor, LDRP_SH.NicerWepNames[k1] or LDRP_SH.AllItems[k1].nicename, v1)
-
-	-- 		firstRecipeItem = false
-
-	-- 	end
-	-- 	recipeMarkupObj = ""
-	-- 	recipeMarkupObj = markup.Parse(string.format("<font=Trebuchet18><colour=255,255,255>%s: </colour>%s</font>", "Recipe", recipeString))
-
-	-- 	function craftItemPanel:Paint()
-
-	-- 		draw.RoundedBox(5, 0, 0, self:GetWide(), self:GetTall(), Color(100, 100, 100, 100))
-
-	-- 		draw.SimpleText(k, "Trebuchet18", 100, self:GetTall() / 2 - 20, Color( 255, 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-
-	-- 		recipeMarkupObj:Draw(100, self:GetTall() / 2, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-
-	-- 	end
-
-	-- 	local craftItemIconContainer = vgui.Create("DPanel", craftItemPanel)
-
-	-- 	craftItemIconContainer:SetSize(90, rowHeight)
-
-	-- 	function craftItemIconContainer:Paint()
-
-	-- 		draw.RoundedBox(0, 0, 0, self:GetWide(), self:GetTall(), Color(50, 50, 50, 255))
-
-	-- 	end
-
-	-- 	local craftItemIcon = CreateIcon(craftItemIconContainer, v.icon, craftItemIconContainer:GetWide(), craftItemIconContainer:GetTall()-10, modelDetails.mat || nil, modelDetails.clr || nil, function() end)
-
-
-	-- 	craftingItemsGrid:AddItem(craftItemPanel)
-
-	-- end
 
 	return craftingTab
 
 end
-
-print("Show team tabs loaded!!!!!!!")
