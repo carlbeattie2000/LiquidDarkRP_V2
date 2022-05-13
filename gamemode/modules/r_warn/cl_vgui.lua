@@ -70,7 +70,30 @@ function WARN_MENU.openMenu()
   end
 
   function WARN_MENU.playerSideBarList:PopulatePlayers()
+
+    local playersList = player.GetAll()
+
+    for i, v in ipairs(playersList) do
+
+     local playerNameBtn = WARN_MENU.playerSideBarList:Add("DButton")
+
+     playerNameBtn:SetSize(WARN_MENU.playerSideBarList:GetWide(), REBELLION.GetScaledHeight(40))
+     playerNameBtn:SetText("")
+     playerNameBtn:Dock(TOP)
+
+     function playerNameBtn:Paint(w, h)
+
+        draw.RoundedBox(2, 0, 5, w-1, h-5, Color(60, 60, 60, 200))
+
+        draw.SimpleText(v:Nick(), "Trebuchet18", w/2, (h/2)+2.5, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+     end
+
+    end
+
   end
+
+  WARN_MENU.playerSideBarList:PopulatePlayers()
 
 end
 
