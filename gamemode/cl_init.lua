@@ -244,8 +244,6 @@ local function LoadLiquidDarkRP()
 	include("liquiddrp/cl_stores.lua")
 	include("liquiddrp/sh_chat.lua")
 	include("liquiddrp/cl_hud.lua")
-
-	include("liquiddrp/sh_qmenu.lua")
 	
 	include("liquiddrp/cl_crafting.lua")
 	include("liquiddrp/cl_chat.lua")
