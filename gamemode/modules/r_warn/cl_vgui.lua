@@ -97,7 +97,7 @@ function WARN_MENU.openMenu()
 
 end
 
-net.Receive("open_h_warn", function()
+net.Receive("open_r_warn", function()
 
   WARN_MENU.openMenu()
 
