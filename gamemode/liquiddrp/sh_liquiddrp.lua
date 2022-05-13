@@ -479,7 +479,7 @@ function LDRP.AddNPC(name, mdl, Team, descrpt, buttons)
 	LDRP_SH.AllNPCs[name] = {}
 
 	LDRP_SH.AllNPCs[name].mdl = mdl
-	LDRP_SH.ModelToName[mdl] = name
+	LDRP_SH.ModelToName[string.lower(mdl)] = name
 	LDRP_SH.AllNPCs[name].descrpt = descrpt
 	LDRP_SH.AllNPCs[name].buttons = button
 	LDRP_SH.AllNPCs[name].NeedTeam = Team
@@ -595,7 +595,7 @@ function LDRP.CreateStore(name, model, Saying, Sells, Buys)
 
 	LDRP_SH.AllNPCs[name].mdl = model
 	
-	LDRP_SH.ModelToName[model] = name
+	LDRP_SH.ModelToName[string.lower(model)] = name
 	
 	local usermsg = string.Replace(name, " ", "")
 
@@ -616,7 +616,7 @@ function LDRP.CreateStore(name, model, Saying, Sells, Buys)
 end
 
 LDRP.CreateStore("General Store","models/humans/group01/male_09.mdl","Welcome to the General Store!",{["Carrot Seed"] = LDRP_SH.CarrotSeedPrice,["Melon Seed"] = 75,["Pistol Ammo"] = 100,["Rifle Ammo"] = 140,["Shotgun Ammo"] = 140},{["Carrot"] = LDRP_SH.CarrotBuyPrice,["Melon"] = 50})
-LDRP.CreateStore("Miner","models/Characters/Hostage_02.mdl","I'm too lazy to mine rocks. Do it for me.",{["Pickaxe"] = 120,["hammer"] = 200},{["Stone"] = 500,["Gold"] = 700,["Ruby"] = 900, ["Diamond"] = 1100})
+LDRP.CreateStore("Miner","models/Humans/Group02/male_02.mdl","I'm too lazy to mine rocks. Do it for me.",{["Pickaxe"] = 120,["hammer"] = 200},{["Stone"] = 500,["Gold"] = 700,["Ruby"] = 900, ["Diamond"] = 1100})
 
 LDRP_SH.CraftItems = {}
 
