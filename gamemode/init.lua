@@ -107,11 +107,7 @@ local function LoadLiquidDarkRP()
 	
 	LiquidInclude("sv","sv_crafting")
 	LiquidInclude("cl","cl_crafting")
-	
-	LiquidInclude("sh","sh_qmenu")
-	LiquidInclude("cl","cl_qmenu")
-	LiquidInclude("sv","sv_qmenu")
-	
+
 	LiquidInclude("cl","cl_chat")
 	
 	LiquidInclude("sv","sv_trading")
