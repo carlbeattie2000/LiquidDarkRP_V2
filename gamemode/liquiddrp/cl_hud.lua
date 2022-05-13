@@ -263,7 +263,6 @@ function LDRP.NPCNames()
 		
 		for k,v in pairs(ents.FindByClass("shop_base")) do
 			local p = v:GetPos()
-      -- PrintTable(LDRP_SH.ModelToName)
 			if LPos:Distance(p) < 600 then
 				cam.Start3D2D( p+Vector(0,0,80), Angle(0, LPAng.y-90, 90), .3 )
 					draw.SimpleText( LDRP_SH.ModelToName[v:GetModel()], "Trebuchet24", 0, 0, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )

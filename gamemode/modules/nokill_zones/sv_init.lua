@@ -1,10 +1,8 @@
 -- May remove this module. Will test run it for a little bit, should save some moderation work in the long run.
 
-local warnLimit = 10
+local warnLimit = 100
 local warnClearTimeInDays = 1 
 local dayInSeconds = 86400
-
-local TEST_TIME = 32400
 
 function hasPlayerExceededWarnLimit(ply, warns)
   
@@ -34,7 +32,7 @@ function savePlayerWarns(ply)
 
     local lastWarnTime = tonumber(playerWarnsFound[1]["lastWarn"])
 
-    if timeNow > lastWarnTime + TEST_TIME then
+    if timeNow > lastWarnTime + (warnClearTimeInDays * dayInSeconds) then
 
       updatedWarns = 1
 
@@ -76,7 +74,9 @@ function GM:PlayerShouldTakeDamage(victim, p1)
 
       local returnedPlayerWarns = savePlayerWarns(p1)
 
-      p1:LiquidChat("ANTI-RDM", Color(0,200,200), "You are not aloud to attack miners working!, you will be kicked! "..tostring(returnedPlayerWarns) .. "/"..warnLimit.." warns")
+      local warnsMesasge = string.format("%s/%s warns", returnedPlayerWarns, warnLimit)
+
+      p1:LiquidChat("ANTI-RDM", Color(0,200,200), "You are not aloud to attack miners working!, you will be kicked! "..warnsMesasge)
 
       return false
 
