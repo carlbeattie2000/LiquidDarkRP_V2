@@ -1,9 +1,13 @@
 util.AddNetworkString("open_h_warn")
 
-hook.Add( "PlayerSay" , "!warn", function(ply)
+function sendHWarnMenuOpenMessage(ply)
 
   net.Start("open_h_warn")
   
   net.Send(ply)
 
-end)
+end
+
+hook.Add( "PlayerSay" , "!warn", sendHWarnMenuOpenMessage)
+
+concommand.Add("h_warn", sendHWarnMenuOpenMessage)
