@@ -1514,8 +1514,6 @@ local function TimeToString(time)
 
 end
 
-include("liquiddrp/cl_qmenu.lua")
-
 for k,v in pairs(LDRP_DLC.CL) do
 
 	include(k)
