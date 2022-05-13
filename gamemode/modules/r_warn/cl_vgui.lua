@@ -55,6 +55,23 @@ function WARN_MENU.openMenu()
   
   end
 
+  -- Players list scroll section
+
+  WARN_MENU.playerSideBarList = vgui.Create("DScrollPanel", WARN_MENU.mainFrame)
+
+  WARN_MENU.playerSideBarList:SetPos(0, REBELLION.GetScaledHeight(40))
+  WARN_MENU.playerSideBarList:SetSize(menu_w * .3, menu_h - REBELLION.GetScaledHeight(40))
+
+  function WARN_MENU.playerSideBarList:Paint(w, h)
+
+    surface.SetDrawColor(255, 255, 255, 255)
+    surface.DrawLine(w-1, 0, w-1, h)
+  
+  end
+
+  function WARN_MENU.playerSideBarList:PopulatePlayers()
+  end
+
 end
 
 net.Receive("open_h_warn", function()
