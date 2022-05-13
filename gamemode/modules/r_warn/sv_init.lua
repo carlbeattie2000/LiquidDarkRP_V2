@@ -1,12 +1,32 @@
 util.AddNetworkString("open_r_warn")
 
 local aloudGroups = {
-  "admin"
+  ["superadmin"] = {"*"},
+  ["admin"] = {"warn", "remove_warn"},
+  ["moderator"] = {"warn"}
 }
+
+function checkPlayerCanOpen(ply)
+
+  local aloud = false
+
+  for k, v in pairs(aloudGroups) do
+
+    if ply:IsUserGroup(k) then
+
+      aloud = true
+    
+    end
+  
+  end
+
+  return aloud
+
+end
 
 function sendHWarnMenuOpenMessage(ply)
 
-  print(ply:IsUserGroup("superadmin"))
+  if !checkPlayerCanOpen(ply) then return end
 
   net.Start("open_r_warn")
   
@@ -19,6 +39,8 @@ hook.Add( "PlayerSay" , "warn", function(ply, text)
   if (string.lower( text ) == "!warn") then
 
     sendHWarnMenuOpenMessage(ply)
+
+    return ""
   
   end
 
