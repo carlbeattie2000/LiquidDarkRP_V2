@@ -4,11 +4,13 @@ local warnLimit = 10
 local warnClearTimeInDays = 1 
 local dayInSeconds = 86400
 
+local TEST_TIME = 32400
+
 function hasPlayerExceededWarnLimit(ply, warns)
   
   -- Could just count the amount of kicks and then ban after threshold, but i think this will be annoying enough,
 
-  if warns > warnLimit then
+  if warns >= warnLimit then
 
     ply:Kick("You exceeded your warn limit for attempted Mass RDM")
 
@@ -32,7 +34,7 @@ function savePlayerWarns(ply)
 
     local lastWarnTime = tonumber(playerWarnsFound[1]["lastWarn"])
 
-    if timeNow > lastWarnTime + (warnClearTimeInDays * dayInSeconds) then
+    if timeNow > lastWarnTime + TEST_TIME then
 
       updatedWarns = 1
 
