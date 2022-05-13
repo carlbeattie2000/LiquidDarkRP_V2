@@ -89,11 +89,43 @@ function WARN_MENU.openMenu()
 
      end
 
+     playerNameBtn.DoClick = function()
+     
+      WARN_MENU.playerWarnInformation:UpdatePlayerInformation(v)
+     
+     end
+
     end
 
   end
 
   WARN_MENU.playerSideBarList:PopulatePlayers()
+
+  WARN_MENU.playerWarnInformation = vgui.Create("DScrollPanel", WARN_MENU.mainFrame)
+
+  WARN_MENU.playerWarnInformation:SetSize(menu_w - (menu_w * .3), menu_h - REBELLION.GetScaledHeight(40))
+  WARN_MENU.playerWarnInformation:SetPos(menu_w * .3, REBELLION.GetScaledHeight(40))
+
+  function WARN_MENU.playerWarnInformation:UpdatePlayerInformation(ply)
+
+    if (IsValid(self)) then self:Clear() end
+
+    local playerInformationFrame = vgui.Create("DPanel", self)
+
+    playerInformationFrame:SetSize(self:GetWide() - 10, self:GetTall() - 10)
+    playerInformationFrame:SetPos(5, 5) 
+
+    local playerNickDisplay = vgui.Create("DPanel", playerInformationFrame)
+
+    playerNickDisplay:SetSize(self:GetWide(), 50)
+
+    function playerNickDisplay:Paint(w, h)
+
+      draw.SimpleText(ply:Nick(), "Trebuchet24", 0, 0, Color( 255, 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+    
+    end
+    
+  end
 
 end
 
