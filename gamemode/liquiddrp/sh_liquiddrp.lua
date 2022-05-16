@@ -443,13 +443,13 @@ LDRP.AddSkill("Hacking","Allows you to keypad crack faster.","models/props_lab/k
 LDRP_SH.CrackTimes = {[1] = 40,[2] = 35,[3] = 30,[4] = 25,[5] = 20}
 
 LDRP.AddSkill("Stamina","Each level allows more inventory weight","models/props_junk/Shoe001a.mdl",
-	{[1] = 4000,[2] = 8000,[3] = 12000,[4] = 16000,[5] = 20000}, -- EXP needed
-	{[1] = 2000,[2] = 3000,[3] = 4000,[4] = 5000,[5] = 6000}, -- EXP cost
+	{[1] = 2000,[2] = 4000,[3] = 6000,[4] = 8000,[5] = 10000, [6] = 15000}, -- EXP needed
+	{[1] = 2000,[2] = 3000,[3] = 4000,[4] = 5000,[5] = 6000, [6] = 8000}, -- EXP cost
 	
 
 	function(ply) -- On level up
 
-		local NewWeight = ply.Character.InvWeight.allowed+3
+		local NewWeight = ply.Character.InvWeight.allowed+12
 		
 		ply.Character.InvWeight.allowed = NewWeight
 		

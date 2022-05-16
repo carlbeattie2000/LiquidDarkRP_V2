@@ -73,12 +73,12 @@ function LDRP.InitializeSelf(ply,cmd,args)
 	else
 		ply.Character = {}
 		ply.Character.Skills = {}
-		ply.Character.InvWeight = {["cur"] = 0,["allowed"] = 10}
+		ply.Character.InvWeight = {["cur"] = 0,["allowed"] = 25}
 	end
 
 	if !ply.Character.BankWeight then
 		ply.Character.Bank = {["curcash"] = 0}
-		ply.Character.BankWeight = {["cur"] = 0,["allowed"] = 30}
+		ply.Character.BankWeight = {["cur"] = 0,["allowed"] = 40}
     ply.Character.InterestRate = {["cur"] = 0}
 	end
 

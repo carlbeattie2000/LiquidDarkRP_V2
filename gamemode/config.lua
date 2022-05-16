@@ -63,7 +63,7 @@ GM.Config.deathpov 						= false
 -- decalcleaner - Enable/Disable clearing ever players decals.
 GM.Config.decalcleaner 					= false
 -- dmautokick - Enable/disable Auto-kick of deathmatchers.
-GM.Config.dmautokick 					= true
+GM.Config.dmautokick 					= false
 -- doorwarrants - Enable/disable Warrant requirement to enter property.
 GM.Config.doorwarrants 					= true
 -- dropmoneyondeath - Enable/disable whether people drop money on death.
