@@ -1,6 +1,6 @@
 -- May remove this module. Will test run it for a little bit, should save some moderation work in the long run.
 
-local warnLimit = 100
+local warnLimit = 10
 local warnClearTimeInDays = 1 
 local dayInSeconds = 86400
 
@@ -65,6 +65,8 @@ function GM:PlayerShouldTakeDamage(victim, p1)
   local mineShaftCornerEnd = Vector(4356.834473, 620.909241, -606.532654)
 
   if team.GetName(ply:Team()) == "Miner" then
+
+    if ply == victim return true end
 
     local playerPos = ply:GetPos()
 
