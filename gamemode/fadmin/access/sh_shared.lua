@@ -1,5 +1,4 @@
 CreateConVar("_FAdmin_immunity", 1, {FCVAR_GAMEDLL, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE})
-print("FAdmin loaded!!!!-<><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
 FAdmin.Access = FAdmin.Access or {}
 FAdmin.Access.ADMIN = {"user", "admin", "superadmin"}
 FAdmin.Access.ADMIN[0] = "noaccess"

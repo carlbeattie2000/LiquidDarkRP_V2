@@ -2674,8 +2674,6 @@ function TabsStore(parent)
 
 				end
 
-				PrintTable(v[i])
-
 				if (v[i]["shipmodel"]) then
 
 					icon = CreateIcon(nil, v[i]["shipmodel"], 70, 70, nil, nil, function() LocalPlayer():ConCommand("say ".."/buyshipment "..v[i].name) end, Vector(40,40,40))
