@@ -227,7 +227,8 @@ function DarkRP.hooks:playerUnArrested(ply, actor)
 	end
 
 	-- "Arrested" DarkRPVar is set to false BEFORE this hook however, so it is safe here.
-	hook.Call("UpdatePlayerSpeed", GAMEMODE, ply)
+	GAMEMODE:SetPlayerSpeed(ply, GAMEMODE.Config.walkspeed, GAMEMODE.Config.runspeed )
+
 	GAMEMODE:PlayerLoadout(ply)
 	if GAMEMODE.Config.telefromjail and (not FAdmin or not ply:FAdmin_GetGlobal("fadmin_jailed")) then
 		local _, pos = GAMEMODE:PlayerSelectSpawn(ply)
@@ -241,10 +242,15 @@ function DarkRP.hooks:playerUnArrested(ply, actor)
 end
 
 hook.Add("PlayerInitialSpawn", "Arrested", function(ply)
+
 	if not arrestedPlayers[ply:SteamID()] then return end
-	local time = GAMEMODE.Config.jailtimer
+
+	local time = GAMEMODE.Config.jailtimer or 120
+
 	ply:arrest(time)
+
 	GAMEMODE:Notify(ply, 0, 5, string.format(LANGUAGE.jail_punishment, time))
+
 end)
 
 hook.Add( "PlayerSpawn", "some_unique_name", function(ply)
