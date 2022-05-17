@@ -56,7 +56,7 @@ function KnockoutToggle(player, command, args, caller)
 				SendUserMessage("blackScreen", player, false)
 
 				if command == true then
-					player:Arrest()
+					player:arrest()
 				end
 				player.Sleeping = false
 				player:SetSelfDarkRPVar("Energy", player.OldHunger)

@@ -289,7 +289,7 @@ function LDRP.BailNPC(ply,cmd,args)
 		end
 		ply:LiquidChat("BAIL NPC", Color(0,0,200), "Bailed you out for $500")
 		ply:AddMoney(-500)
-		ply:Unarrest()
+		ply:unArrest()
 		for k,v in pairs(team.GetPlayers(TEAM_POLICE)) do
 			v:AddMoney(50)
 			v:LiquidChat("BAIL NPC", Color(0,0,200), "Earned $50 for a bail. You should lock the jail doors.")
