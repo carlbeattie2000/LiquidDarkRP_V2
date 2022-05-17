@@ -119,15 +119,32 @@ end
 local Arrested = function() end
 
 usermessage.Hook("GotArrested", function(msg)
+
 	local StartArrested = CurTime()
+
 	local ArrestedUntil = msg:ReadFloat()
+
 	
 	Arrested = function()
+
 		if CurTime() - StartArrested <= ArrestedUntil and LocalPlayer().DarkRPVars.Arrested then
-		draw.DrawText(string.format(LANGUAGE.youre_arrested, math.ceil(ArrestedUntil - (CurTime() - StartArrested))), "ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
+
+		-- draw.DrawText(string.format(LANGUAGE.youre_arrested, math.ceil(ArrestedUntil - (CurTime() - StartArrested))), "ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
+
+    local bWidth = ScrW() * .3
+    local bHeight = 70
+
+    local x = (ScrW() / 2) - (bWidth / 2)
+    local y = ScrH() - 100
+
+    draw.RoundedBox(5, x, y, bWidth, bHeight, Color(255, 50, 50, 200))
+
+    draw.SimpleTextOutlined(string.format(LANGUAGE.youre_arrested, math.ceil(ArrestedUntil - (CurTime() - StartArrested))), "Trebuchet24", x + (bWidth/2), y + (bHeight / 2), Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2,Color(0,0,0,255))
+
 		elseif not LocalPlayer().DarkRPVars.Arrested then 
 			Arrested = function() end
 		end
+
 	end
 end)
 

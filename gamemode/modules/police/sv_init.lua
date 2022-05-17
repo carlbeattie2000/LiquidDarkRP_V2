@@ -77,6 +77,28 @@ function plyMeta:unWanted(actor)
 	timer.Destroy(self:UniqueID() .. " wantedtimer")
 end
 
+function sendPlayerToJailPos(ply)
+
+  timer.Simple(0.000001, function()
+  
+    if GAMEMODE.Config.teletojail and DB.CountJailPos() ~= 0 then
+
+      local jailpos = DB.RetrieveJailPos()
+  
+      if jailpos then
+        
+        jailpos = GAMEMODE:FindEmptyPos(jailpos, {ply}, 300, 30, Vector(16, 16, 64))
+  
+        ply:SetPos(jailpos)
+  
+      end
+  
+    end
+  
+  end)
+
+end
+
 function plyMeta:arrest(time, arrester)
 	time = GAMEMODE.Config.jailtimer or 120
 
@@ -85,13 +107,8 @@ function plyMeta:arrest(time, arrester)
 	arrestedPlayers[self:SteamID()] = true
 
 	-- Always get sent to jail when Arrest() is called, even when already under arrest
-	if GAMEMODE.Config.teletojail and DB.CountJailPos() ~= 0 then
-		local jailpos = DB.RetrieveJailPos()
-		if jailpos then
-			jailpos = GAMEMODE:FindEmptyPos(jailpos, {ply}, 300, 30, Vector(16, 16, 64))
-			self:SetPos(jailpos)
-		end
-	end
+	sendPlayerToJailPos(self)
+
 end
 
 function plyMeta:unArrest(unarrester)
@@ -228,4 +245,14 @@ hook.Add("PlayerInitialSpawn", "Arrested", function(ply)
 	local time = GAMEMODE.Config.jailtimer
 	ply:arrest(time)
 	GAMEMODE:Notify(ply, 0, 5, string.format(LANGUAGE.jail_punishment, time))
+end)
+
+hook.Add( "PlayerSpawn", "some_unique_name", function(ply)
+
+  if (ply:getDarkRPVar("Arrested")) then
+
+    sendPlayerToJailPos(ply)
+
+  end
+
 end)

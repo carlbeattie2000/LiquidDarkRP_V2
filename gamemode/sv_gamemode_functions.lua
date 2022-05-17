@@ -45,7 +45,7 @@ function GM:PlayerSpawnProp(ply, model)
 	-- If prop spawning is enabled or the user has admin or prop privileges
 	local allowed = ((GAMEMODE.Config.propspawning or (FAdmin and FAdmin.Access.PlayerHasPrivilege(ply, "rp_prop")) or ply:IsAdmin()) and true) or false
 
-	if RPArrestedPlayers[ply:SteamID()] then return false end
+	if ply:getDarkRPVar("Arrested") then return false end
 	model = string.gsub(tostring(model), "\\", "/")
 	if string.find(model,  "//") then Notify(ply, 1, 4, "You can't spawn this prop as it contains an invalid path. " ..model) 
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") tried to spawn prop with an invalid path "..model) return false end
@@ -797,7 +797,7 @@ function GM:PlayerSpawn(ply)
 		GAMEMODE:SetPlayerSpeed(ply, GAMEMODE.Config.walkspeed, GAMEMODE.Config.runspeed + 10)
 	end
 	
-	if RPArrestedPlayers[ply:SteamID()] then
+	if ply:getDarkRPVar("Arrested") then
 		GAMEMODE:SetPlayerSpeed(ply, GAMEMODE.Config.arrestspeed, GAMEMODE.Config.arrestspeed)
 	end
 
