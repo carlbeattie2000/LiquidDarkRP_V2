@@ -66,7 +66,7 @@ function GM:PlayerShouldTakeDamage(victim, p1)
 
   if team.GetName(ply:Team()) == "Miner" then
 
-    if ply == victim return true end
+    if ply == victim then return true end
 
     local playerPos = ply:GetPos()
 
