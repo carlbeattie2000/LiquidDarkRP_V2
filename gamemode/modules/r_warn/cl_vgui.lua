@@ -7,6 +7,9 @@ function WARN_MENU.openMenu()
   
   if IsValid(WARN_MENU.mainFrame) then WARN_MENU.mainFrame:Close() return end
 
+  local selectedPlayer = nil
+
+  local scrw, scrh = ScrW(), ScrH()
   local menu_w, menu_h = WARN_MENU.baseWidth(), WARN_MENU.baseHeight()
 
   WARN_MENU.mainFrame = vgui.Create("DFrame")
@@ -91,7 +94,9 @@ function WARN_MENU.openMenu()
      end
 
      playerNameBtn.DoClick = function()
-     
+      
+      selectedPlayer = v
+      
       WARN_MENU.playerWarnInformation:UpdatePlayerInformation(v)
      
      end
@@ -113,11 +118,10 @@ function WARN_MENU.openMenu()
     draw.RoundedBox(2, 0, 0, w, h, Color(213, 100, 100, 255))
 
     draw.SimpleText("Warn Player", "Trebuchet24", w / 2, h / 2, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-
-    surface.DrawLine(w-1, 0, w-1, h)
   
   end
 
+  -- Player Information Scroll Panel
   WARN_MENU.playerWarnInformation = vgui.Create("DScrollPanel", WARN_MENU.mainFrame)
 
   WARN_MENU.playerWarnInformation:SetSize(menu_w - (menu_w * .3), menu_h - REBELLION.GetScaledHeight(40))
@@ -129,18 +133,18 @@ function WARN_MENU.openMenu()
 
     local playerInformationScroll = vgui.Create("DScrollPanel", self)
 
-    local scrlW = self:GetWide() - 10
-    local scrlH = self:GetTall() - 10
+    local pInfoW = self:GetWide() - 10
+    local pInfoH = self:GetTall() - 10
 
-    playerInformationScroll:SetSize(scrlW, scrlH)
+    playerInformationScroll:SetSize(pInfoW, pInfoH)
     playerInformationScroll:SetPos(5, 5)
-
+    
     cUtils.funcs.EditScrollBarStyle(playerInformationScroll)
 
     -- Selected Players Name
     local selectedPlayersName = playerInformationScroll:Add("DPanel")
 
-    selectedPlayersName:SetSize(scrlW, 30)
+    selectedPlayersName:SetSize(pInfoW, 30)
     selectedPlayersName:Dock(TOP)
 
     function selectedPlayersName:Paint(w, h)
@@ -151,7 +155,7 @@ function WARN_MENU.openMenu()
 
     local selectedPlayersLastWarn = playerInformationScroll:Add("DPanel")
 
-    selectedPlayersLastWarn:SetSize(scrlW, 30)
+    selectedPlayersLastWarn:SetSize(pInfoW, 30)
     selectedPlayersLastWarn:Dock(TOP)
 
     function selectedPlayersLastWarn:Paint(w, h)
@@ -162,7 +166,7 @@ function WARN_MENU.openMenu()
 
     local selectedPlayersTotalAnCurrentWarns = playerInformationScroll:Add("DPanel")
 
-    selectedPlayersTotalAnCurrentWarns:SetSize(ScrW, 30)
+    selectedPlayersTotalAnCurrentWarns:SetSize(pInfoW, 30)
     selectedPlayersTotalAnCurrentWarns:Dock(TOP)
 
     function selectedPlayersTotalAnCurrentWarns:Paint(w, h)
@@ -174,6 +178,9 @@ function WARN_MENU.openMenu()
     end
 
   end
+
+  -- Load first player, so side player information panel is not empty
+  WARN_MENU.playerWarnInformation:UpdatePlayerInformation(player.GetAll()[1])
 
 end
 

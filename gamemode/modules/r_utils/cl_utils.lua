@@ -16,7 +16,7 @@ function cUtils.funcs.ScreenScale(num, h)
 
 end
 
-function cUtils.funcs.EditScrollBarStyle(scrollpanel)
+function cUtils.funcs.EditScrollBarStyle(scrollpanel, colour)
 
 	local scrollbar = scrollpanel.VBar
 
@@ -54,7 +54,7 @@ function cUtils.funcs.EditScrollBarStyle(scrollpanel)
 
 	end
 
-	local colour = Color(10, 10, 10, 175)
+	local colour = colour or Color(10, 10, 10, 175)
 
 	function scrollbar:Paint(w, h)
 
