@@ -60,7 +60,8 @@ function WARN_MENU.openMenu()
   WARN_MENU.playerSideBarList = vgui.Create("DScrollPanel", WARN_MENU.mainFrame)
 
   WARN_MENU.playerSideBarList:SetPos(0, REBELLION.GetScaledHeight(40))
-  WARN_MENU.playerSideBarList:SetSize(menu_w * .3, menu_h - REBELLION.GetScaledHeight(40))
+  WARN_MENU.playerSideBarList:SetSize(menu_w * .3, menu_h - REBELLION.GetScaledHeight(100))
+  cUtils.funcs.EditScrollBarStyle(WARN_MENU.playerSideBarList)
 
   function WARN_MENU.playerSideBarList:Paint(w, h)
 
@@ -101,6 +102,22 @@ function WARN_MENU.openMenu()
 
   WARN_MENU.playerSideBarList:PopulatePlayers()
 
+  WARN_MENU.warnPlayerButton = vgui.Create("DButton", WARN_MENU.mainFrame)
+
+  WARN_MENU.warnPlayerButton:SetSize(menu_w * .3 - 10, REBELLION.GetScaledHeight(50))
+  WARN_MENU.warnPlayerButton:SetPos(5, menu_h - REBELLION.GetScaledHeight(55))
+  WARN_MENU.warnPlayerButton:SetText("")
+
+  function WARN_MENU.warnPlayerButton:Paint(w, h)
+  
+    draw.RoundedBox(2, 0, 0, w, h, Color(213, 100, 100, 255))
+
+    draw.SimpleText("Warn Player", "Trebuchet24", w / 2, h / 2, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+    surface.DrawLine(w-1, 0, w-1, h)
+  
+  end
+
   WARN_MENU.playerWarnInformation = vgui.Create("DScrollPanel", WARN_MENU.mainFrame)
 
   WARN_MENU.playerWarnInformation:SetSize(menu_w - (menu_w * .3), menu_h - REBELLION.GetScaledHeight(40))
@@ -110,22 +127,67 @@ function WARN_MENU.openMenu()
 
     if (IsValid(self)) then self:Clear() end
 
-    local playerInformationFrame = vgui.Create("DPanel", self)
+    local playerInformationScroll = vgui.Create("DScrollPanel", self)
 
-    playerInformationFrame:SetSize(self:GetWide() - 10, self:GetTall() - 10)
-    playerInformationFrame:SetPos(5, 5) 
+    local scrlW = self:GetWide() - 10
+    local scrlH = self:GetTall() - 10
 
-    local playerNickDisplay = vgui.Create("DPanel", playerInformationFrame)
+    playerInformationScroll:SetSize(scrlW, scrlH)
+    playerInformationScroll:SetPos(5, 5)
 
-    playerNickDisplay:SetSize(self:GetWide(), 50)
+    cUtils.funcs.EditScrollBarStyle(playerInformationScroll)
 
-    function playerNickDisplay:Paint(w, h)
+    -- Selected Players Name
+    local selectedPlayersName = playerInformationScroll:Add("DPanel")
 
-      draw.SimpleText(ply:Nick(), "Trebuchet24", 0, 0, Color( 255, 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+    selectedPlayersName:SetSize(scrlW, 30)
+    selectedPlayersName:Dock(TOP)
+
+    function selectedPlayersName:Paint(w, h)
+
+      draw.SimpleText(ply:Nick(), "Trebuchet24", 0, h / 2, Color(255,255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+    end
+
+    local selectedPlayersLastWarn = playerInformationScroll:Add("DPanel")
+
+    selectedPlayersLastWarn:SetSize(scrlW, 30)
+    selectedPlayersLastWarn:Dock(TOP)
+
+    function selectedPlayersLastWarn:Paint(w, h)
+    
+      draw.SimpleText("Last Warn: 30 days ago", "Trebuchet24", 0, h / 2, Color(255,255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+    end
+
+    local selectedPlayersTotalAnCurrentWarns = playerInformationScroll:Add("DPanel")
+
+    selectedPlayersTotalAnCurrentWarns:SetSize(ScrW, 30)
+    selectedPlayersTotalAnCurrentWarns:Dock(TOP)
+
+    function selectedPlayersTotalAnCurrentWarns:Paint(w, h)
+
+      local formattedText = markup.Parse(string.format("<font=Trebuchet24>Active: <color=213,100,100,255>%s</color> Total: %s</font>", "1", "4"))
+
+      formattedText:Draw(0, h / 2, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 255)
     
     end
-    
+
   end
+
+end
+
+function WARN_MENU.openWarnPopup()
+
+  if IsValid(WARN_MENU.warnPopupMenu) then 
+    WARN_MENU.mainFrame:Close() 
+    return end
+
+  WARN_MENU.warnPopupMenu = vgui.Create("DFrame")
+
+  WARN_MENU.warnPopupMenu:SetSize(ScrW()*.2, ScrH()*.2)
+  WARN_MENU.warnPopupMenu:MakePopup()
+  WARN_MENU.warnPopupMenu:Center()
 
 end
 
