@@ -139,6 +139,7 @@ function WARN_MENU.openWarnPopup(ply, wType)
     warnPopupContent:GetWide(), menu_h * .2,
     "Trebuchet18",
     Color(213, 100, 100), Color(255, 255, 255),
+    function(value) selectedReason = value end, 
     TOP, 2
   )
 
@@ -160,12 +161,22 @@ function WARN_MENU.openWarnPopup(ply, wType)
   end
 
   warnButton.DoClick = function()
+
+    if selectedReason == "" || selectedReason == nil then return end
   
     if wType == "edit" then
+
       -- Send SQL Update
+      local reason = reasonEntry:GetText() || reason:GetSelected()
+
     else
+
       -- Send New SQL Entry
+      RunConsoleCommand("warn", ply:Nick(), selectedReason)
+
     end
+
+    RunConsoleCommand("load_player_warns",  ply:Nick())
   
   end
 

@@ -162,7 +162,7 @@ function cUtils.funcs.PrettyComboBox(parent, x, y, w, h, defaultTxt, values, fon
 
 end
 
-function cUtils.funcs.PrettyTextBox(parent, defaultTxt, x, y, w, h, font, bColor, fColor, dock, dockMargin)
+function cUtils.funcs.PrettyTextBox(parent, defaultTxt, x, y, w, h, font, bColor, fColor, onValueChange, dock, dockMargin)
 
   local textInput = vgui.Create("DTextEntry", parent or nil)
 
@@ -215,6 +215,7 @@ function cUtils.funcs.PrettyTextBox(parent, defaultTxt, x, y, w, h, font, bColor
   function textInput:OnValueChange(val)
   
     self.CurrentValue = val
+    onValueChange(val)
   
   end
 
