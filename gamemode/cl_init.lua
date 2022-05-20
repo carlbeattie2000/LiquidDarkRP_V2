@@ -432,6 +432,42 @@ function GM:HUDDrawTargetID()
 
 end
 
+function getTimeDifferenceFromPastDateToCurrent(time)
+
+  return os.time() - time
+
+end
+
+function formatTimeFromSeconds(time)
+
+  local days = math.floor(time/86400)
+
+  local hours = math.floor(math.mod(time, 86400)/3600)
+
+  local minutes = math.floor(math.mod(time,3600)/60)
+
+  local seconds = math.floor(math.mod(time,60))
+
+  if days > 0 then
+
+    return string.format("%d days ago", days)
+  
+  elseif hours > 0 then
+
+    return string.format("%d hours ago", hours)
+  
+  elseif minutes > 0 then
+
+    return string.format("%d mins ago", minutes)
+
+  else
+
+    return string.format("%d seconds ago", seconds)
+
+  end
+end
+
+
 function FindPlayer(info)
 
 	local pls = player.GetAll()
