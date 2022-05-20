@@ -3,6 +3,176 @@ local WARN_MENU = WARN_MENU || {}
 WARN_MENU.baseWidth = function() return ScrW() * .6 end
 WARN_MENU.baseHeight = function() return ScrH() * .6 end
 
+-- Warn popup, for editing or creating a new warn
+function WARN_MENU.openWarnPopup(ply, wType)
+
+  local typeName
+  local typeButtonName
+
+  if wType == "edit" then
+    
+    typeName = string.format("Edit %s's warn", ply:Nick())
+    typeButtonName = "Edit Warn"
+
+    -- Will load warn here
+  else
+
+    typeName = string.format("Warning player: %s", ply:Nick())
+    typeButtonName = "Warn"
+
+  end
+
+  if !IsValid(ply) then return end
+
+  if IsValid(WARN_MENU.warnPopupMenu) then WARN_MENU.warnPopupMenu:Close() return end
+
+  local selectedReason = nil
+  local customReason = nil
+
+  -- Warn Popup Config
+
+  local menu_w, menu_h = ScrW() * .25, ScrH() * .25
+
+  WARN_MENU.warnPopupMenu = vgui.Create("DFrame")
+
+  WARN_MENU.warnPopupMenu:SetSize(menu_w, menu_h)
+  WARN_MENU.warnPopupMenu:MakePopup()
+  WARN_MENU.warnPopupMenu:Center()
+  WARN_MENU.warnPopupMenu:SetSizable(false)
+  WARN_MENU.warnPopupMenu:SetDraggable(false)
+  WARN_MENU.warnPopupMenu:SetTitle("")
+  WARN_MENU.warnPopupMenu:ShowCloseButton(false)
+
+  function WARN_MENU.warnPopupMenu:Paint(w, h)
+  
+    draw.RoundedBox(0, 0, 0, w, h, Color(10, 10, 10, 255))
+  
+  end
+
+  local header_w, header_h = menu_w, menu_h * .1
+
+  -- Warn Menu Header (close, title)
+  local warnMenuHeader = vgui.Create("DPanel", WARN_MENU.warnPopupMenu)
+
+  warnMenuHeader:SetSize(header_w, header_h)
+
+  function warnMenuHeader:Paint(w, h)
+  
+    draw.RoundedBox(0, 0, 0, w, h, Color(255, 255, 255, 255))
+  
+  end
+
+  -- Warn Menu Header Close Button
+  local warnMenuHeaderCloseBtn = vgui.Create("DButton", warnMenuHeader)
+
+  warnMenuHeaderCloseBtn:SetText("")
+  warnMenuHeaderCloseBtn:SetSize(header_w * .15, header_h)
+  warnMenuHeaderCloseBtn:SetPos(header_w - (warnMenuHeaderCloseBtn:GetWide()), 0)
+
+  function warnMenuHeaderCloseBtn:Paint(w, h)
+  
+    draw.RoundedBox(0, 0, 0, w, h, Color(213, 100, 100, 255))
+
+    draw.SimpleText("X", "Trebuchet18", w / 2, h / 2, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+  
+  end
+
+  warnMenuHeaderCloseBtn.DoClick = function()
+  
+    WARN_MENU.warnPopupMenu:Close()
+  
+  end
+
+  -- Main Warn Popup Content (playername, warn message, warn)
+  local warnPopupContent = vgui.Create("DPanel", WARN_MENU.warnPopupMenu)
+
+  warnPopupContent:SetSize(menu_w, menu_h - header_h)
+  warnPopupContent:SetPos(0, menu_h * .12)
+
+  local playersName = vgui.Create("DLabel", warnPopupContent)
+
+  playersName:SetSize(menu_w, menu_h * .09)
+  playersName:SetText("")
+  playersName:Dock(TOP)
+  playersName:DockMargin(2, 0, 0, 2)
+
+  local playersNameText = string.format(typeName, ply:Nick())
+
+  function playersName:Paint(w, h)
+  
+    draw.SimpleText(playersNameText, "Trebuchet18", 0, 0, Color(255,255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+  
+  end
+
+  local reason = vgui.Create("DLabel", warnPopupContent)
+
+  reason:SetSize(menu_w, menu_h * .09)
+  reason:SetText("")
+  reason:Dock(TOP)
+  reason:DockMargin(2, 0, 0, 2)
+
+  function reason:Paint()
+  
+    draw.SimpleText("Reason", "Trebuchet18", 0, 0, Color(255,255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+  
+  end
+
+  local reasonListBColor = Color(213, 100, 100, 255)
+  local reasonListFColor = Color(255, 255, 255, 255)
+
+  local reasonsList = cUtils.funcs.PrettyComboBox(
+    warnPopupContent,
+    0, 0,
+    warnPopupContent:GetWide(), menu_h * .2,
+    "Select a reason (Optional)", WARN_REASONS,
+    "Trebuchet18",
+    reasonListBColor, reasonListFColor,
+    reasonListBColor, reasonListFColor,
+    Color(100, 213, 100, 255), Color(255, 255, 255, 255),
+    function(value) selectedReason = value end, TOP, 2
+  )
+
+  local reasonEntry = cUtils.funcs.PrettyTextBox(
+    warnPopupContent,
+    "",
+    0, 0,
+    warnPopupContent:GetWide(), menu_h * .2,
+    "Trebuchet18",
+    Color(213, 100, 100), Color(255, 255, 255),
+    TOP, 2
+  )
+
+  local warnButton = vgui.Create("DButton", warnPopupContent)
+
+  warnButton:SetSize(menu_w, menu_h * .15)
+  warnButton:Dock(BOTTOM)
+  warnButton:DockMargin(2, 2, 2, 2)
+  warnButton:SetText("")
+
+  function warnButton:Paint(w, h)
+  
+    local fColor = Color(255, 255, 255)
+
+    draw.RoundedBox(0, 0, 0, w, h-5, Color(213, 100, 100))
+
+    draw.SimpleText(typeButtonName, "Trebuchet18", w/2, (h-5)/2, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+  
+  end
+
+  warnButton.DoClick = function()
+  
+    if wType == "edit" then
+      -- Send SQL Update
+    else
+      -- Send New SQL Entry
+    end
+  
+  end
+
+  
+
+end
+
 function WARN_MENU.openMenu()
   
   if IsValid(WARN_MENU.mainFrame) then WARN_MENU.mainFrame:Close() return end
@@ -12,6 +182,7 @@ function WARN_MENU.openMenu()
   local scrw, scrh = ScrW(), ScrH()
   local menu_w, menu_h = WARN_MENU.baseWidth(), WARN_MENU.baseHeight()
 
+  -- Main frame config
   WARN_MENU.mainFrame = vgui.Create("DFrame")
 
   WARN_MENU.mainFrame:SetSize(menu_w, menu_h)
@@ -58,13 +229,13 @@ function WARN_MENU.openMenu()
   
   end
 
-  -- Players list scroll section
-
+  -- Online Players list scroll section
   WARN_MENU.playerSideBarList = vgui.Create("DScrollPanel", WARN_MENU.mainFrame)
 
   WARN_MENU.playerSideBarList:SetPos(0, REBELLION.GetScaledHeight(40))
   WARN_MENU.playerSideBarList:SetSize(menu_w * .3, menu_h - REBELLION.GetScaledHeight(100))
-  cUtils.funcs.EditScrollBarStyle(WARN_MENU.playerSideBarList)
+
+  cUtils.funcs.EditScrollBarStyle(WARN_MENU.playerSideBarList, Color(213, 100, 100, 255))
 
   function WARN_MENU.playerSideBarList:Paint(w, h)
 
@@ -73,9 +244,12 @@ function WARN_MENU.openMenu()
   
   end
 
+  -- >> Populate the players list
   function WARN_MENU.playerSideBarList:PopulatePlayers()
 
     local playersList = player.GetAll()
+
+    selectedPlayer = playersList[1]
 
     for i, v in ipairs(playersList) do
 
@@ -98,6 +272,8 @@ function WARN_MENU.openMenu()
       selectedPlayer = v
       
       WARN_MENU.playerWarnInformation:UpdatePlayerInformation(v)
+
+      if IsValid(WARN_MENU.warnPopupMenu) then WARN_MENU.warnPopupMenu:Close() return end
      
      end
 
@@ -107,6 +283,7 @@ function WARN_MENU.openMenu()
 
   WARN_MENU.playerSideBarList:PopulatePlayers()
 
+  -- Warn button for current selected player
   WARN_MENU.warnPlayerButton = vgui.Create("DButton", WARN_MENU.mainFrame)
 
   WARN_MENU.warnPlayerButton:SetSize(menu_w * .3 - 10, REBELLION.GetScaledHeight(50))
@@ -121,8 +298,14 @@ function WARN_MENU.openMenu()
   
   end
 
-  -- Player Information Scroll Panel
-  WARN_MENU.playerWarnInformation = vgui.Create("DScrollPanel", WARN_MENU.mainFrame)
+  WARN_MENU.warnPlayerButton.DoClick = function()
+  
+    WARN_MENU.openWarnPopup(selectedPlayer)
+  
+  end
+
+  -- Player Information Panel
+  WARN_MENU.playerWarnInformation = vgui.Create("DPanel", WARN_MENU.mainFrame)
 
   WARN_MENU.playerWarnInformation:SetSize(menu_w - (menu_w * .3), menu_h - REBELLION.GetScaledHeight(40))
   WARN_MENU.playerWarnInformation:SetPos(menu_w * .3, REBELLION.GetScaledHeight(40))
@@ -131,6 +314,7 @@ function WARN_MENU.openMenu()
 
     if (IsValid(self)) then self:Clear() end
 
+    -- Player Information Scroll Panel
     local playerInformationScroll = vgui.Create("DScrollPanel", self)
 
     local pInfoW = self:GetWide() - 10
@@ -138,7 +322,7 @@ function WARN_MENU.openMenu()
 
     playerInformationScroll:SetSize(pInfoW, pInfoH)
     playerInformationScroll:SetPos(5, 5)
-    
+
     cUtils.funcs.EditScrollBarStyle(playerInformationScroll)
 
     -- Selected Players Name
@@ -153,6 +337,7 @@ function WARN_MENU.openMenu()
 
     end
 
+    -- Selected players last warn
     local selectedPlayersLastWarn = playerInformationScroll:Add("DPanel")
 
     selectedPlayersLastWarn:SetSize(pInfoW, 30)
@@ -164,6 +349,7 @@ function WARN_MENU.openMenu()
 
     end
 
+    -- Selected players total and current warns
     local selectedPlayersTotalAnCurrentWarns = playerInformationScroll:Add("DPanel")
 
     selectedPlayersTotalAnCurrentWarns:SetSize(pInfoW, 30)
@@ -179,22 +365,8 @@ function WARN_MENU.openMenu()
 
   end
 
-  -- Load first player, so side player information panel is not empty
+  -- Load first player, so player information panel is not empty
   WARN_MENU.playerWarnInformation:UpdatePlayerInformation(player.GetAll()[1])
-
-end
-
-function WARN_MENU.openWarnPopup()
-
-  if IsValid(WARN_MENU.warnPopupMenu) then 
-    WARN_MENU.mainFrame:Close() 
-    return end
-
-  WARN_MENU.warnPopupMenu = vgui.Create("DFrame")
-
-  WARN_MENU.warnPopupMenu:SetSize(ScrW()*.2, ScrH()*.2)
-  WARN_MENU.warnPopupMenu:MakePopup()
-  WARN_MENU.warnPopupMenu:Center()
 
 end
 
