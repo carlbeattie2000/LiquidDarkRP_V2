@@ -207,7 +207,7 @@ function warnPlayerChatCommand(ply, args)
 
     sendHWarnMenuOpenMessage(ply)
 
-    return
+    return ""
 
   end
 
@@ -217,7 +217,9 @@ function warnPlayerChatCommand(ply, args)
 
   if !target || !reason then
 
-    return ply:ChatPrint("!warn <player_name> <reason>")
+    ply:ChatPrint("!warn <player_name> <reason>")
+
+    return ""
 
   end
 
@@ -261,7 +263,9 @@ function removePlayerWarnCommand(ply, args)
   
   if !expl[1] then 
 
-    return ply:ChatPrint("!warnremove <warn_id>")
+    ply:ChatPrint("!warnremove <warn_id>")
+
+    return ""
 
   end
 
@@ -292,5 +296,4 @@ function getPlayerWarnsCommands(ply, cmd, args)
   net.Send(ply)
 
 end
-
 concommand.Add("load_player_warns", getPlayerWarnsCommands)
