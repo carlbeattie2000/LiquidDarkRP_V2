@@ -400,6 +400,7 @@ function WARN_MENU.openMenu()
     playerWarnsGrid:DockMargin(2, 2, 2, 2)
     playerWarnsGrid:SetSize(pInfoW, pInfoH*.75)
     playerWarnsGrid:SetSortable(false)
+    playerWarnsGrid:AddColumn("Warn ID")
     playerWarnsGrid:AddColumn("Warn Reason")
     playerWarnsGrid:AddColumn("Warn Date")
     playerWarnsGrid:AddColumn("Warn Active")
@@ -417,7 +418,7 @@ function WARN_MENU.openMenu()
 
       if v["active"] then active = true end
     
-      playerWarnsGrid:AddLine(v["reason"], v["warn_time"], active)
+      playerWarnsGrid:AddLine(v["id"], v["reason"], v["warn_time"], active, v["warner_nick"])
     
     end
 
