@@ -7,12 +7,14 @@ local meta = FindMetaTable("Player")
 local R_WARN_CONFIG = {
   ["warns_before_kick"] = 3,
   ["warns_before_ban"] = 5,
+  ["warns_before_longer_ban"] = 7,
   ["warns_decay_seconds"] = 5000,
   ["warns_notify_global"] = true,
   ["warns_notify_player"] = true,
   ["warn_kick_message"] = "You have been kicked for receiving too many warns 3/5.",
   ["warn_ban_message"] = "You have been banned fir receiving to many warns 5/5.",
-  ["warn_ban_time_minutes"] = 120
+  ["warn_ban_time_minutes"] = 120,
+  ["warn_long_ban_time_minutes"] = 720
 }
 
 local aloudGroups = {
@@ -43,7 +45,11 @@ function meta:warnsPunishment()
 
   local playerWarns = findPlayersWarnsSQL(self:SteamID()) || {}
 
-  if #playerWarns >= R_WARN_CONFIG["warns_before_ban"] then
+  if #playerWarns >= R_WARN_CONFIG["warns_before_longer_ban"] then
+
+    ULib.ban(self, R_WARN_CONFIG["warn_long_ban_time_minutes"], R_WARN_CONFIG["warn_ban_message"])
+
+  elseif #playerWarns >= R_WARN_CONFIG["warns_before_ban"] then
 
     ULib.ban(self, R_WARN_CONFIG["warn_ban_time_minutes"], R_WARN_CONFIG["warn_ban_message"])
   
@@ -193,7 +199,7 @@ function warnPlayer(warner, ply, reason)
 end
 
 -- Warn Player Chat Command
-function warnPlayerCommand(ply, args)
+function warnPlayerChatCommand(ply, args)
 
   if !ply:playerHasPerms() then return end
 
@@ -222,15 +228,42 @@ function warnPlayerCommand(ply, args)
   return ""
 
 end
-AddChatCommand("!warn", warnPlayerCommand)
+AddChatCommand("!warn", warnPlayerChatCommand)
 
+-- warn console command
+function warnPlayerConsoleCommand(ply, cmd, args)
+
+  if !ply:playerHasPerms() then return end
+
+  if !args[1] || !args[2] then
+  
+    ply:PrintMessage(HUD_PRINTCONSOLE, "warn <player_name> <reason>")
+
+    return
+  
+  end
+
+  local warnTarget = GAMEMODE:FindPlayer(args[1])
+
+  warnPlayer(ply, warnTarget, args[2])
+
+  warnTarget:warnsPunishment()
+
+end
+concommand.Add("warn", warnPlayerConsoleCommand)
+
+-- Chat command to remove warn by id
 function removePlayerWarnCommand(ply, args)
 
   if !ply:playerHasPerms() then return end
 
   local expl = string.Explode(" ", args || "")
   
-  if !expl[1] then return end
+  if !expl[1] then 
+
+    return ply:ChatPrint("!warnremove <warn_id>")
+
+  end
 
   removeWarnSQL(expl[1])
 
