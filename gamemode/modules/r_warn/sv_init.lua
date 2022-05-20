@@ -1,7 +1,19 @@
 util.AddNetworkString("open_r_warn")
 util.AddNetworkString("r_chat_warn")
+util.AddNetworkString("r_player_warns_table")
 
 local meta = FindMetaTable("Player")
+
+local R_WARN_CONFIG = {
+  ["warns_before_kick"] = 3,
+  ["warns_before_ban"] = 5,
+  ["warns_decay_seconds"] = 5000,
+  ["warns_notify_global"] = true,
+  ["warns_notify_player"] = true,
+  ["warn_kick_message"] = "You have been kicked for receiving too many warns 3/5.",
+  ["warn_ban_message"] = "You have been banned fir receiving to many warns 5/5.",
+  ["warn_ban_time_minutes"] = 120
+}
 
 local aloudGroups = {
   ["superadmin"] = {"*"},
@@ -27,6 +39,22 @@ function meta:playerHasPerms()
 
 end
 
+function meta:warnsPunishment()
+
+  local playerWarns = findPlayersWarnsSQL(self:SteamID()) || {}
+
+  if #playerWarns >= R_WARN_CONFIG["warns_before_ban"] then
+
+    ULib.ban(self, R_WARN_CONFIG["warn_ban_time_minutes"], R_WARN_CONFIG["warn_ban_message"])
+  
+  elseif #playerWarns >= R_WARN_CONFIG["warns_before_kick"] then
+
+    self:Kick(R_WARN_CONFIG["warn_kick_message"])
+
+  end
+
+end
+
 function sendHWarnMenuOpenMessage(ply)
 
   if !ply:playerHasPerms() then return end
@@ -39,21 +67,24 @@ end
 
 function setupSqlTable()
 
-  sql.Query("CREATE TABLE IF NOT EXISTS r_warns (id INTEGER PRIMARY KEY AUTOINCREMENT, steam_id TEXT, reason TEXT, warn_time INTEGER, active INTEGER)")
+  sql.Query("CREATE TABLE IF NOT EXISTS r_warns (id INTEGER PRIMARY KEY AUTOINCREMENT, steam_id TEXT, reason TEXT, warn_time INTEGER, active INTEGER, warner_steam_id TEXT, warner_nick TEXT)")
 
 end
 setupSqlTable()
 
-function newWarnSQL(steam_id, reason)
+function newWarnSQL(warner, steam_id, reason)
 
-  local currentTimeMilliseconds = os.time() * 1000
+  print(warner)
 
-  sql.Query("INSERT INTO r_warns (steam_id, reason, warn_time, active) VALUES (" 
+  local currentTimeMilliseconds = os.time()
+
+  sql.Query("INSERT INTO r_warns (steam_id, reason, warn_time, active, warner_steam_id, warner_nick) VALUES (" 
   .. sql.SQLStr(steam_id) .. "," 
   .. sql.SQLStr(reason) .. "," 
   .. sql.SQLStr(currentTimeMilliseconds) .. "," 
-  .. sql.SQLStr(1) 
-  .. ")")
+  .. sql.SQLStr(1) .. ","
+  .. sql.SQLStr(warner:SteamID()) .. ","
+  .. sql.SQLStr(warner:Nick()) .. ")")
 
 end
 
@@ -131,7 +162,7 @@ function warnExpiredSQL(warnID)
   
 end
 
-function warnPlayer(ply, reason)
+function warnPlayer(warner, ply, reason)
 
   local formattedChatString = string.format("Warned %s for %s", ply:Nick(), reason)
 
@@ -157,10 +188,11 @@ function warnPlayer(ply, reason)
   
   end
 
-  newWarnSQL(ply:SteamID(), reason)
+  newWarnSQL(warner, ply:SteamID(), reason)
 
 end
 
+-- Warn Player Chat Command
 function warnPlayerCommand(ply, args)
 
   if !ply:playerHasPerms() then return end
@@ -183,10 +215,49 @@ function warnPlayerCommand(ply, args)
 
   end
 
-  warnPlayer(target, reason)
+  warnPlayer(ply, target, reason)
+
+  target:warnsPunishment()
 
   return ""
 
 end
-
 AddChatCommand("!warn", warnPlayerCommand)
+
+function removePlayerWarnCommand(ply, args)
+
+  if !ply:playerHasPerms() then return end
+
+  local expl = string.Explode(" ", args || "")
+  
+  if !expl[1] then return end
+
+  removeWarnSQL(expl[1])
+
+  ply:ChatPrint("Players warn has been removed if it exists.")
+
+  return ""
+  
+end
+AddChatCommand("!warnremove", removePlayerWarnCommand)
+
+-- Load player warns command
+function getPlayerWarnsCommands(ply, cmd, args)
+
+  if !ply:playerHasPerms() then return end
+
+  if #args < 1 then return end
+
+  local target = GAMEMODE:FindPlayer(args[1])
+
+  local playersWarns = findPlayersWarnsSQL(target:SteamID())
+
+  net.Start("r_player_warns_table")
+
+    net.WriteTable(playersWarns || {})
+
+  net.Send(ply)
+
+end
+
+concommand.Add("load_player_warns", getPlayerWarnsCommands)
