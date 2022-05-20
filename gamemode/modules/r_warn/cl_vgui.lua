@@ -271,7 +271,7 @@ function WARN_MENU.openMenu()
       
       selectedPlayer = v
       
-      WARN_MENU.playerWarnInformation:UpdatePlayerInformation(v)
+      RunConsoleCommand("load_player_warns",  v:Nick())
 
       if IsValid(WARN_MENU.warnPopupMenu) then WARN_MENU.warnPopupMenu:Close() return end
      
@@ -310,7 +310,30 @@ function WARN_MENU.openMenu()
   WARN_MENU.playerWarnInformation:SetSize(menu_w - (menu_w * .3), menu_h - REBELLION.GetScaledHeight(40))
   WARN_MENU.playerWarnInformation:SetPos(menu_w * .3, REBELLION.GetScaledHeight(40))
 
-  function WARN_MENU.playerWarnInformation:UpdatePlayerInformation(ply)
+  function WARN_MENU.playerWarnInformation:UpdatePlayerInformation(ply, warns)
+
+    local playerWarns = warns || {}
+    local activeWarns, totalWarns, lastWarnString, lastWarnSeconds = 0, 0, "", 0
+
+    for k, v in pairs(warns) do
+
+      if v["active"] then
+
+        activeWarns = activeWarns + 1
+
+      end
+
+      if tonumber(v["warn_time"]) > lastWarnSeconds then
+
+        lastWarnSeconds = tonumber(v["warn_time"])
+
+      end
+
+      totalWarns = totalWarns + 1
+
+    end
+
+    lastWarnString = formatTimeFromSeconds(getTimeDifferenceFromPastDateToCurrent(lastWarnSeconds))
 
     if (IsValid(self)) then self:Clear() end
 
@@ -323,6 +346,14 @@ function WARN_MENU.openMenu()
     playerInformationScroll:SetSize(pInfoW, pInfoH)
     playerInformationScroll:SetPos(5, 5)
 
+    function playerInformationScroll:Paint(w, h)
+    
+      draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 0))
+    
+    end
+
+    -- Set player data loaded form SQL variable
+  
     cUtils.funcs.EditScrollBarStyle(playerInformationScroll)
 
     -- Selected Players Name
@@ -345,7 +376,7 @@ function WARN_MENU.openMenu()
 
     function selectedPlayersLastWarn:Paint(w, h)
     
-      draw.SimpleText("Last Warn: 30 days ago", "Trebuchet24", 0, h / 2, Color(255,255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+      draw.SimpleText(string.format("Last Warn: %s", lastWarnString), "Trebuchet24", 0, h / 2, Color(255,255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
     end
 
@@ -357,16 +388,90 @@ function WARN_MENU.openMenu()
 
     function selectedPlayersTotalAnCurrentWarns:Paint(w, h)
 
-      local formattedText = markup.Parse(string.format("<font=Trebuchet24>Active: <color=213,100,100,255>%s</color> Total: %s</font>", "1", "4"))
+      local formattedText = markup.Parse(string.format("<font=Trebuchet24>Active: <color=213,100,100,255>%s</color> Total: %s</font>", activeWarns, totalWarns))
 
       formattedText:Draw(0, h / 2, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 255)
+    
+    end
+
+    local playerWarnsGrid = playerInformationScroll:Add("DListView")
+
+    playerWarnsGrid:Dock(TOP)
+    playerWarnsGrid:DockMargin(2, 2, 2, 2)
+    playerWarnsGrid:SetSize(pInfoW, pInfoH*.75)
+    playerWarnsGrid:SetSortable(false)
+    playerWarnsGrid:AddColumn("Warn Reason")
+    playerWarnsGrid:AddColumn("Warn Date")
+    playerWarnsGrid:AddColumn("Warn Active")
+    playerWarnsGrid:AddColumn("Warner")
+
+    function playerWarnsGrid:Paint(w, h)
+    
+      draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 0))
+    
+    end
+
+    for k, v in pairs(warns) do
+
+      local active = false
+
+      if v["active"] then active = true end
+    
+      playerWarnsGrid:AddLine(v["reason"], v["warn_time"], active)
+    
+    end
+
+    for i, v in ipairs(playerWarnsGrid.Columns) do
+      
+      function v.Header:Paint(w, h)
+      
+        draw.RoundedBox(2, 0, 0, w, h, Color(213, 100, 100))
+
+        draw.SimpleText(v.Header:GetText(), "Trebuchet18", w / 2, h / 2, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+        return true
+      
+      end
+
+    end
+
+    for i, v in ipairs(playerWarnsGrid.Lines) do
+
+      function v:Paint(w, h)
+      
+        draw.RoundedBox(0, 0, 0, w, h, Color(255, 255, 255))
+      
+      end
+
+      for _, v1 in ipairs(v.Columns) do
+
+        function v1:Paint(w, h)
+
+          draw.SimpleText(v1:GetText(), "Trebuchet18", 5, h / 2, Color(0,0,0,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+          surface.SetDrawColor(0, 0, 0, 255)
+          surface.DrawLine(w-1, 0, w-1, h)
+
+          return true
+
+        end
+
+      end
     
     end
 
   end
 
   -- Load first player, so player information panel is not empty
-  WARN_MENU.playerWarnInformation:UpdatePlayerInformation(player.GetAll()[1])
+  local defaultPlayer =  player.GetAll()[1]
+
+  RunConsoleCommand("load_player_warns",  defaultPlayer:Nick())
+
+  net.Receive("r_player_warns_table", function()
+  
+    WARN_MENU.playerWarnInformation:UpdatePlayerInformation(defaultPlayer, net.ReadTable())
+
+  end)
 
 end
 
