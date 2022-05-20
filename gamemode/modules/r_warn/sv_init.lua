@@ -1,4 +1,5 @@
 util.AddNetworkString("open_r_warn")
+util.AddNetworkString("r_chat_warn")
 
 local meta = FindMetaTable("Player")
 
@@ -35,20 +36,6 @@ function sendHWarnMenuOpenMessage(ply)
   net.Send(ply)
 
 end
-
-hook.Add( "PlayerSay" , "warn", function(ply, text)
-
-  if (string.lower( text ) == "!warn") then
-
-    sendHWarnMenuOpenMessage(ply)
-
-    return ""
-  
-  end
-
-end)
-
-concommand.Add("r_warn", sendHWarnMenuOpenMessage)
 
 function setupSqlTable()
 
@@ -98,7 +85,7 @@ end
 
 function removeWarnSQL(warnID)
 
-  local warnFound = local warnFound = sql.Query("SELECT id FROM r_warns WHERE id = " .. sql.SQLStr(warnID) .. ";")
+  local warnFound = sql.Query("SELECT id FROM r_warns WHERE id = " .. sql.SQLStr(warnID) .. ";")
 
   if warnFound then
 
@@ -130,7 +117,7 @@ end
 
 function warnExpiredSQL(warnID)
 
-  local warnFound = local warnFound = sql.Query("SELECT id FROM r_warns WHERE id = " .. sql.SQLStr(warnID) .. ";")
+  local warnFound = sql.Query("SELECT id FROM r_warns WHERE id = " .. sql.SQLStr(warnID) .. ";")
 
   if warnFound then
 
@@ -143,3 +130,63 @@ function warnExpiredSQL(warnID)
   return false
   
 end
+
+function warnPlayer(ply, reason)
+
+  local formattedChatString = string.format("Warned %s for %s", ply:Nick(), reason)
+
+  local playerWarnedChatString = string.format("You have been warned for %s", reason)
+
+  local playersOnline = player.GetAll()
+
+  for i, v in ipairs(playersOnline) do
+
+    local message = formattedChatString
+
+    if v:Nick() == ply:Nick() then
+
+      message = playerWarnedChatString
+      
+    end
+    
+    net.Start("r_chat_warn")
+
+      net.WriteString(message)
+
+    net.Send(v)
+  
+  end
+
+  newWarnSQL(ply:SteamID(), reason)
+
+end
+
+function warnPlayerCommand(ply, args)
+
+  if !ply:playerHasPerms() then return end
+
+  if #args < 1 then
+
+    sendHWarnMenuOpenMessage(ply)
+
+    return
+
+  end
+
+  local expl = string.Explode(" ", args or "")
+  local target = GAMEMODE:FindPlayer(expl[1])
+	local reason = table.concat(expl, " ", 2)
+
+  if !target || !reason then
+
+    return ply:ChatPrint("!warn <player_name> <reason>")
+
+  end
+
+  warnPlayer(target, reason)
+
+  return ""
+
+end
+
+AddChatCommand("!warn", warnPlayerCommand)

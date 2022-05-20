@@ -375,3 +375,12 @@ net.Receive("open_r_warn", function()
   WARN_MENU.openMenu()
 
 end)
+
+-- Warned Chat
+net.Receive("r_chat_warn", function()
+  
+  local formattedChatWarnString = net.ReadString()
+
+  chat.AddText(Color(213,100,100), "[REBELLION]", Color(255,255,255), " "..formattedChatWarnString)
+
+end)
