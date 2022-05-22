@@ -8,11 +8,11 @@ local R_WARN_CONFIG = {
   ["warns_before_kick"] = 3,
   ["warns_before_ban"] = 5,
   ["warns_before_longer_ban"] = 7,
-  ["warns_decay_seconds"] = 5000,
+  ["warns_decay_seconds"] = 604800, -- 7 Days
   ["warns_notify_global"] = true,
   ["warns_notify_player"] = true,
   ["warn_kick_message"] = "You have been kicked for receiving too many warns 3/5.",
-  ["warn_ban_message"] = "You have been banned fir receiving to many warns 5/5.",
+  ["warn_ban_message"] = "You have been banned for receiving to many warns 5/5.",
   ["warn_ban_time_minutes"] = 120,
   ["warn_long_ban_time_minutes"] = 720
 }
@@ -45,15 +45,27 @@ function meta:warnsPunishment()
 
   local playerWarns = findPlayersWarnsSQL(self:SteamID()) || {}
 
-  if #playerWarns >= R_WARN_CONFIG["warns_before_longer_ban"] then
+  local activeWarns = 0
+
+  for i, v in ipairs(playerWarns) do
+
+    if v["active"] then 
+
+      activeWarns = activeWarns + 1
+
+    end
+
+  end
+
+  if activeWarns >= R_WARN_CONFIG["warns_before_longer_ban"] then
 
     ULib.ban(self, R_WARN_CONFIG["warn_long_ban_time_minutes"], R_WARN_CONFIG["warn_ban_message"])
 
-  elseif #playerWarns >= R_WARN_CONFIG["warns_before_ban"] then
+  elseif activeWarns >= R_WARN_CONFIG["warns_before_ban"] then
 
     ULib.ban(self, R_WARN_CONFIG["warn_ban_time_minutes"], R_WARN_CONFIG["warn_ban_message"])
   
-  elseif #playerWarns >= R_WARN_CONFIG["warns_before_kick"] then
+  elseif activeWarns >= R_WARN_CONFIG["warns_before_kick"] then
 
     self:Kick(R_WARN_CONFIG["warn_kick_message"])
 
@@ -255,13 +267,13 @@ end
 concommand.Add("warn", warnPlayerConsoleCommand)
 
 -- Chat command to remove warn by id
-function removePlayerWarnCommand(ply, args)
+function removePlayerWarnChatCommand(ply, args)
 
   if !ply:playerHasPerms() then return end
 
   local expl = string.Explode(" ", args || "")
   
-  if !expl[1] then 
+  if !expl[1] || expl[1] == "" then 
 
     ply:ChatPrint("!warnremove <warn_id>")
 
@@ -276,7 +288,32 @@ function removePlayerWarnCommand(ply, args)
   return ""
   
 end
-AddChatCommand("!warnremove", removePlayerWarnCommand)
+AddChatCommand("!warnremove", removePlayerWarnChatCommand)
+
+function clearPlayerWarnChatCommand(ply, args)
+
+  if !ply:playerHasPerms() then return end
+
+  local expl = string.Explode(" ", args || "")
+  
+  if !expl[1] || expl[1] == "" then 
+
+    ply:ChatPrint("!warnclear <player_name>")
+
+    return ""
+
+  end
+
+  local targetPlayer = GAMEMODE:FindPlayer(expl[1])
+
+  clearPlayersWarnsSQL(targetPlayer:SteamID())
+
+  ply:ChatPrint("Players warns have been cleared")
+
+  return ""
+  
+end
+AddChatCommand("!warnclear", clearPlayerWarnChatCommand)
 
 -- Load player warns command
 function getPlayerWarnsCommands(ply, cmd, args)
@@ -297,3 +334,33 @@ function getPlayerWarnsCommands(ply, cmd, args)
 
 end
 concommand.Add("load_player_warns", getPlayerWarnsCommands)
+
+-- Run this function every 15 mins, and if the correct amount of time has passed since the warn had passed, then remove then deactivate the warn.
+function checkIfPlayersWarnsHaveExpired()
+
+  local players = player.GetAll()
+
+  for i, ply in ipairs(players) do
+
+    local playerWarns = findPlayersWarnsSQL(ply:SteamID())
+
+    for i1, warn in ipairs(playerWarns) do
+
+      local curTime = os.time()
+      local warnTime = warn["warn_time"]
+
+      local timeDifference = curTime - warnTime
+
+      if timeDifference > R_WARN_CONFIG["warns_decay_seconds"] then
+
+        sql.Query("UPDATE r_warns SET active = " .. sql.SQLStr(0) .. " WHERE id = " .. sql.SQLStr(warn["id"]) .. ";")
+
+      end
+
+    end
+
+  end
+
+
+end
+timer.Create("warnTimePassed", 900, 9999999999999, checkIfPlayersWarnsHaveExpired)
