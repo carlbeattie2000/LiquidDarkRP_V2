@@ -179,7 +179,7 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
   net.Receive("update_client_candidates", function()
     local newCandidatesTable = net.ReadTable()
 
-    if #newCandidatesTable > #R_GOVERNMENT.candidates then
+    if #newCandidatesTable != #R_GOVERNMENT.candidates then
 
       R_GOVERNMENT.candidates = newCandidatesTable
 

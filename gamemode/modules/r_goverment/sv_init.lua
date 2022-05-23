@@ -87,6 +87,12 @@ function meta:addPlayerAsCandidate()
 
   self:LiquidChat("MAYOR-ELECTIONS", Color(213, 100, 100), "You have joined the election")
 
+  if !R_GOVERNMENT.electionRunning then
+
+    print(canStartElection())
+
+  end
+
 end
 
 function meta:isCandidate()
@@ -106,6 +112,15 @@ function meta:isCandidate()
 end
 
 function meta:setMayor()
+end
+
+function canStartElection()
+
+  return #R_GOVERNMENT.candidates > R_GOVERNMENT.Config.VotingSettings["min_candidates"]
+
+end
+
+function startElection()
 end
 
 -- Mayor Election NPC is handled inside sh_liquiddrp.lua
@@ -133,5 +148,36 @@ end
 net.Receive("request_updated_client_candidates", function()
 
   updateClientCandidates()
+
+end)
+
+-- Remove player from election when they disconnect
+hook.Add("PlayerDisconnected", "playerVoteLeave", function(ply)
+  
+  if ply:isCandidate() then
+
+    print(ply, "disconnected")
+
+    local playerIndex = nil
+
+    for i, v in ipairs(R_GOVERNMENT.candidates) do
+
+      if v["steam_id"] == ply:SteamID() then
+
+        playerIndex = i
+
+      end
+
+    end
+
+    if playerIndex != nil then
+
+      table.remove(R_GOVERNMENT.candidates, playerIndex)
+
+      updateClientCandidates()
+
+    end
+
+  end
 
 end)
