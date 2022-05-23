@@ -165,7 +165,6 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
     end
 
   end
-  mayorCandidatesContainer:RefreshCandidates()
 
   -- Receive candidates refresh
   net.Receive("update_client_candidates", function()
@@ -174,6 +173,9 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
     mayorCandidatesContainer:RefreshCandidates()
 
   end)
+
+  net.Start("request_updated_client_candidates")
+  net.SendToServer()
 
   /*---------------------------------------------------------------------------
 

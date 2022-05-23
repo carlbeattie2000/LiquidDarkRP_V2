@@ -1,4 +1,5 @@
 util.AddNetworkString("update_client_candidates")
+util.AddNetworkString("request_updated_client_candidates")
 
 local meta = FindMetaTable("Player")
 
@@ -127,3 +128,7 @@ function updateClientCandidates()
   end
 
 end
+
+net.Receive("request_updated_client_candidates", function()
+  updateClientCandidates()
+end)
