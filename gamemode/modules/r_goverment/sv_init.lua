@@ -83,7 +83,7 @@ function meta:addPlayerAsCandidate()
     ["votes"] = 0
   })
 
-  updateClientCandidates(self)
+  updateClientCandidates()
 
   self:LiquidChat("MAYOR-ELECTIONS", Color(213, 100, 100), "You have joined the election")
 
@@ -117,7 +117,7 @@ concommand.Add("r_g_join_election", function(ply, cmd, args)
 end)
 
 -- Function to update client candidates
-function updateClientCandidates(player)
+function updateClientCandidates()
 
   if ( playerLastRequest != nil && CurTime() < playerLastRequest + playerRequestDelay) then return end
 
@@ -126,14 +126,12 @@ function updateClientCandidates(player)
 
     net.WriteTable(R_GOVERNMENT.candidates)
 
-  net.Send(player)
+  net.Broadcast()
 
 end
 
 net.Receive("request_updated_client_candidates", function()
-  
-  local ply = net.ReadEntity()
 
-  updateClientCandidates(ply)
+  updateClientCandidates()
 
 end)

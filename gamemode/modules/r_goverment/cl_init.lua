@@ -3,7 +3,6 @@ local R_GOVERNMENT_CL = R_GOVERNMENT_CL || {}
 function R_GOVERNMENT_CL.requestUpdatedCandidateTable()
 
   net.Start("request_updated_client_candidates")
-    net.WriteEntity(LocalPlayer())
   net.SendToServer()
 
 end
@@ -180,9 +179,9 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
   net.Receive("update_client_candidates", function()
     local newCandidatesTable = net.ReadTable()
 
-    if #R_GOVERNMENT.candidates > #newCandidatesTable then
+    if #newCandidatesTable > #R_GOVERNMENT.candidates then
 
-      R_GOVERNMENT.candidates = net.ReadTable()
+      R_GOVERNMENT.candidates = newCandidatesTable
 
       mayorCandidatesContainer:RefreshCandidates()
 
