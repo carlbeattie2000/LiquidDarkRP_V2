@@ -35,36 +35,6 @@ TEAM_CITIZEN = AddExtraTeam("Citizen", {
 	candemote = false
 })
 
-TEAM_POLICE = AddExtraTeam("Civil Protection", {
-	color = Color(25, 25, 170, 255),
-	model = "models/player/police.mdl",
-	description = [[The protector of every citizen that lives in the city. 
-		You have the power to arrest criminals and protect innocents. 
-		Hit them with your arrest baton to put them in jail
-		Bash them with a stunstick and they might learn better than to disobey 
-		the law.
-		The Battering Ram can break down the door of a criminal with a warrant 
-		for his/her arrest.
-		The Battering Ram can also unfreeze frozen props(if enabled).
-		Type /wanted <name> to alert the public to this criminal
-		OR go to tab and warrant someone by clicking the warrant button]],
-	weapons = {
-		"arrest_stick",
-		"unarrest_stick",
-		"weapon_real_cs_glock18",
-		"stunstick",
-		"door_ram",
-		"weaponchecker"
-	},
-	command = "cp",
-	max = 4,
-	salary = 230,
-  category = "Law & Order",
-	admin = 0,
-	vote = true,
-	hasLicense = true,
-})
-
 TEAM_GANG = AddExtraTeam("Gang Member", {
 	color = Color(75, 75, 75, 255),
 	model = {
@@ -154,10 +124,40 @@ TEAM_MEDIC = AddExtraTeam("Doctor", {
 	hasLicense = false
 })
 
-TEAM_CHIEF = AddExtraTeam("Civil Protection Chief", {
+TEAM_POLICE = AddExtraTeam("Police Officer", {
+	color = Color(25, 25, 170, 255),
+	model = "models/player/police.mdl",
+	description = [[The protector of every citizen that lives in the city. 
+		You have the power to arrest criminals and protect innocents. 
+		Hit them with your arrest baton to put them in jail
+		Bash them with a stunstick and they might learn better than to disobey 
+		the law.
+		The Battering Ram can break down the door of a criminal with a warrant 
+		for his/her arrest.
+		The Battering Ram can also unfreeze frozen props(if enabled).
+		Type /wanted <name> to alert the public to this criminal
+		OR go to tab and warrant someone by clicking the warrant button]],
+	weapons = {
+		"arrest_stick",
+		"unarrest_stick",
+		"weapon_real_cs_glock18",
+		"stunstick",
+		"door_ram",
+		"weaponchecker"
+	},
+	command = "cp",
+	max = 4,
+	salary = 230,
+  category = "Law & Order",
+	admin = 0,
+	vote = true,
+	hasLicense = true,
+})
+
+TEAM_CHIEF = AddExtraTeam("Police Chief", {
 	color = Color(20, 20, 255, 255),
 	model = "models/player/combine_soldier_prisonguard.mdl",
-	description = [[The Chief is the leader of the Civil Protection unit. 
+	description = [[The Chief is the leader of the Rebellion Police Force. 
 		Coordinate the police forces to bring law to the city
 		Hit them with arrest baton to put them in jail
 		Bash them with a stunstick and they might learn better than to 
@@ -230,7 +230,7 @@ TEAM_POLICE = AddExtraTeam("S.W.A.T Sniper", {
 	hasLicense = true,
 })
 
-TEAM_POLICE = AddExtraTeam("S.W.A.T Leader", {
+TEAM_POLICE = AddExtraTeam("S.W.A.T Commander", {
 	color = Color(20, 20, 255, 255),
 	model = {
 		"models/player/urban.mdl", 
@@ -257,27 +257,28 @@ TEAM_POLICE = AddExtraTeam("S.W.A.T Leader", {
 	NeedToChangeFrom = TEAM_POLICE,
 })
 
-TEAM_MAYOR = AddExtraTeam("Mayor", {
-	color = Color(150, 20, 20, 255),
-	model = "models/player/breen.mdl",
-	description = [[The Mayor of the city creates laws to serve the greater good 
-		of the people.
-		If you are the mayor you may create and accept warrants.
-		Type /wanted <name>  to warrant a player
-		Type /jailpos to set the Jail Position
-		Type /lockdown initiate a lockdown of the city. 
-		Everyone must be inside during a lockdown. 
-		The cops patrol the area
-		/unlockdown to end a lockdown]],
-	weapons = {},
-	command = "mayor",
-	max = 1,
-	salary = 220,
-  category = "Law & Order",
-	admin = 0,
-	vote = true,
-	hasLicense = false,
-})
+-- Disabled as no longer using this within the F4 Menu
+-- TEAM_MAYOR = AddExtraTeam("Mayor", { 
+-- 	color = Color(150, 20, 20, 255),
+-- 	model = "models/player/breen.mdl",
+-- 	description = [[The Mayor of the city creates laws to serve the greater good 
+-- 		of the people.
+-- 		If you are the mayor you may create and accept warrants.
+-- 		Type /wanted <name>  to warrant a player
+-- 		Type /jailpos to set the Jail Position
+-- 		Type /lockdown initiate a lockdown of the city. 
+-- 		Everyone must be inside during a lockdown. 
+-- 		The cops patrol the area
+-- 		/unlockdown to end a lockdown]],
+-- 	weapons = {},
+-- 	command = "mayor",
+-- 	max = 1,
+-- 	salary = 220,
+--   category = "Law & Order",
+-- 	admin = 0,
+-- 	vote = true,
+-- 	hasLicense = false,
+-- })
 
 TEAM_HOBO = AddExtraTeam("Hobo", {
 	color = Color(80, 45, 0, 255),

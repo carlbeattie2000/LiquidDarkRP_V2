@@ -361,6 +361,6 @@ function checkIfPlayersWarnsHaveExpired()
 
   end
 
-
 end
+
 timer.Create("warnTimePassed", 900, 9999999999999, checkIfPlayersWarnsHaveExpired)
