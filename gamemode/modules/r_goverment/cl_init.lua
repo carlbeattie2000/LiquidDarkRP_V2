@@ -14,7 +14,7 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
   local secondaryColor = Color(200, 60, 60, 245)
   local headerColor = Color(255, 255, 255, 245)
   local btnColor = Color(255, 40, 40, 245)
-  local candidateNameBgColor = Color(213, 100, 100, 245)
+  local candidateNameBgColor = Color(119, 119, 119, 245)
 
   local scrw, scrh = ScrW(), ScrH()
   local menuw, menuh = ScrW()*.4, ScrH()*.4
@@ -104,22 +104,28 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
 
   mayorCandidatesContainer:Dock(TOP)
   mayorCandidatesContainer:DockMargin(0, 5, 0, 5)
-  mayorCandidatesContainer:SetSize(menuw, menuh * .25)
+  mayorCandidatesContainer:SetSize(menuw, menuh * .3)
 
-  local mayorCandidates = mayorCandidatesContainer:Add("DGrid")
-
-  local cols = 4
+  local cols = 5
   local colsSpacing = 30
   local totalRowColSpacing = colsSpacing * cols
   local colWidth = (menuw / cols) - colsSpacing
 
-  mayorCandidates:SetSize(menuw, menuh * .25)
-  mayorCandidates:SetCols(cols)
-  mayorCandidates:SetColWide(colWidth)
-  mayorCandidates:SetPos((menuw / 2) - (menuw - totalRowColSpacing) / 2, 0)
-  mayorCandidates:SetRowHeight(50)
+  function mayorCandidatesContainer:RefreshCandidates()
 
-  function mayorCandidates:RefreshCandidates()
+    if IsValid(self) then
+
+      self:Clear()
+
+    end
+
+    local mayorCandidates = self:Add("DGrid")
+
+    mayorCandidates:SetSize(menuw, menuh * .3)
+    mayorCandidates:SetCols(cols)
+    mayorCandidates:SetColWide(colWidth)
+    mayorCandidates:SetPos((menuw / 2) - (menuw - totalRowColSpacing) / 2, 0)
+    mayorCandidates:SetRowHeight(50)
 
     if #R_GOVERNMENT.candidates == 0 then
 
@@ -133,29 +139,41 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
 
       end
 
-      self:AddItem(noPlayersPanel)
+      mayorCandidates:AddItem(noPlayersPanel)
 
     end
-  
+
     for i, v in ipairs(R_GOVERNMENT.candidates) do
     
       local playerNamePanel = vgui.Create("DPanel")
 
       playerNamePanel:SetSize(colWidth, 50)
 
+      local playerName = player.GetBySteamID(v["steam_id"]):Nick()
+
       function playerNamePanel:Paint(w, h)
       
         surface.SetDrawColor(candidateNameBgColor)
-        surface.DrawRect(0, 0, w, h)
+        surface.DrawRect(5, 5, w - 10, h - 10)
+
+        draw.SimpleText(playerName, "HudSelectionText", w * .5, h * .5, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
       end
 
-      self:AddItem(playerNamePanel)
+      mayorCandidates:AddItem(playerNamePanel)
 
     end
-    
+
   end
-  mayorCandidates:RefreshCandidates()
+  mayorCandidatesContainer:RefreshCandidates()
+
+  -- Receive candidates refresh
+  net.Receive("update_client_candidates", function()
+
+    R_GOVERNMENT.candidates = net.ReadTable()
+    mayorCandidatesContainer:RefreshCandidates()
+
+  end)
 
   /*---------------------------------------------------------------------------
 
@@ -202,7 +220,7 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
 
   joinElectionButton.DoClick = function()
 
-    RunConsoleCommand("", arguments)
+    RunConsoleCommand("r_g_join_election")
 
   end
 
