@@ -39,7 +39,7 @@ R_GOVERNMENT.Config.DefaultJobSettings = {
 }
 
 -- Default Funding Settings which the city will default to if not enough players.
-R_GOVERNMENT.Config.DefaultTaxSettings = {
+R_GOVERNMENT.Config.minMaxTaxes = {
 
   ["min_player_tax"] = 0.05, -- 5% tax
 
@@ -52,6 +52,16 @@ R_GOVERNMENT.Config.DefaultTaxSettings = {
   ["max_sales_tax"] = 0.6, -- 60%
 
   ["max_trading_tax"] = 0.45, -- 45%
+
+}
+
+R_GOVERNMENT.Config.DefaultPlayerTaxes = {
+
+  ["player_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_player_tax"],
+
+  ["sales_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_sales_tax"],
+
+  ["trading_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_trading_tax"]
 
 }
 
@@ -71,6 +81,61 @@ R_GOVERNMENT.Config.DefaultBudgetSettings = {
 }
 
 -- Basically a "store" from which items can be purchased from the funds budgeted into the equipment section, and will be stored in a locker in the police department. They won't be stored in the players inventory, rather instantly equipped.
+-- ENT_NAME = {nicename, price, allowed_job(nil for all)}
 R_GOVERNMENT.Config.DefaultPoliceEquipmentCanBuy = {
 
+  ["m9k_g36"] = {
+
+    ["nicename"] = "G36 Assault Rifle",
+    ["price"] = 15000,
+    ["allowed_job"] = nil
+    
+  },
+
+  ["m9k_m16a4_acog"] = {
+
+    ["nicename"] = "M16-A4-ACOG Assault Rifle",
+    ["price"] = 25000,
+    ["allowed_job"] = {"S.W.A.T", "S.W.A.T Commander"}
+
+  },
+
+  ["m9k_barret_m82"] = {
+
+    ["nicename"] = "M82-Barret Sniper Rifle",
+    ["price"] = 40000,
+    ["allowed_job"] = {"S.W.A.T Sniper"}
+
+  },
+
+  ["m9k_m92beretta"] = {
+
+    ["nicename"] = "M92-Beretta Pistol",
+    ["price"] = 12000,
+    ["allowed_job"] = nil
+
+  },
+
+  ["m9k_mossberg590"] = {
+
+    ["nicename"] = "Mossberg-590 Shotgun",
+    ["price"] = 18000,
+    ["allowed_job"] = nil
+
+  }
+
 }
+
+R_GOVERNMENT.Config.VotingSettings = {
+
+  ["min_candidates"] = 2,
+
+  ["max_candidates"] = 5,
+
+  ["entry_cost"] = 20000,
+
+  ["voting_time"] = 30, -- Seconds
+
+}
+
+R_GOVERNMENT.Config.DefaultGovernmentFunds = 50000
