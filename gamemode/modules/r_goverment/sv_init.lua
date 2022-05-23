@@ -72,6 +72,8 @@ function meta:addPlayerAsCandidate()
 
     self:LiquidChat("MAYOR-ELECTIONS", Color(213, 100, 100), "You can't afford to join this election")
 
+    return
+
   end
 
   self:RemoveMoney(entryCost)
