@@ -1,5 +1,7 @@
+local meta = FindMetaTable("Player")
+
 -- Load default settings into action
-local governmentFunds, governmentBudget, governmentTaxes = {}
+local governmentBudget, governmentTaxes = {}
 
 local voting = R_GOVERNMENT.Config.VotingSettings
 
@@ -42,7 +44,7 @@ resetGovernmentTaxes()
 -- Reset Government Funds
 function resetGovernmentFunds()
 
-  governmentFunds = R_GOVERNMENT.Config.DefaultGovernmentFunds
+  R_GOVERNMENT.funds = R_GOVERNMENT.Config.DefaultGovernmentFunds
 
 end
 resetGovernmentFunds()
@@ -52,3 +54,42 @@ resetGovernmentFunds()
 Mayor Voting + Job Setting
 
 ---------------------------------------------------------------------------*/
+function runMayorVote()
+end
+
+function meta:addPlayerAsCandidate()
+
+  if (self:isCandidate()) then return end
+
+  local entryCost = voting["entry_cost"]
+
+  if self:IsVIP() then entryCost = entryCost * .5 end
+
+  if !self:CanAfford(entryCost) then return end
+
+  self:RemoveMoney(entryCost)
+
+  R_GOVERNMENT.candidates[self:SteamID()] = true
+
+  PrintTable(R_GOVERNMENT.candidates)
+
+end
+
+function meta:isCandidate()
+
+  if table.HasValue(R_GOVERNMENT.candidates, self:SteamID()) then return true end
+
+  return false
+
+end
+
+function meta:setMayor()
+end
+
+-- Mayor Election NPC is handled inside sh_liquiddrp.lua
+
+concommand.Add("r_g_join_election", function(ply, cmd, args)
+
+  ply:addPlayerAsCandidate()
+
+end)

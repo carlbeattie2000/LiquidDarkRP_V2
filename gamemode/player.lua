@@ -476,6 +476,20 @@ function meta:UnownAll()
 	self:GetTable().OwnedNumz = 0
 end
 
+function meta:CanAfford(amount)
+  
+  if amount > self:getDarkRPVar("money") then return false end
+
+  return true
+
+end
+
+function meta:RemoveMoney(amount)
+
+  self:SetDarkRPVar("money", self:getDarkRPVar("money") - amount)
+
+end
+
 function meta:DoPropertyTax()
 	if not GAMEMODE.Config.propertytax then return end
 	if (self:IsCP()) and GAMEMODE.Config.cit_propertytax then return end

@@ -558,6 +558,7 @@ function LDRP.AddCustomNPC(name, mdl, usermsg)
 end
 
 LDRP.AddCustomNPC("Banker","models/humans/group01/male_05.mdl","SendBankMenu")
+LDRP.AddCustomNPC("Mayor's Elections","models/mossman.mdl","SendMayorElectionMenu")
 
 LDRP_SH.AllStores = {}
 

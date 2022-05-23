@@ -139,3 +139,37 @@ R_GOVERNMENT.Config.VotingSettings = {
 }
 
 R_GOVERNMENT.Config.DefaultGovernmentFunds = 50000
+
+
+-- Setup data
+if SERVER then
+
+  R_GOVERNMENT.funds = 0
+
+  R_GOVERNMENT.candidates = {}
+
+  R_GOVERNMENT.electionRunning = false
+
+  R_GOVERNMENT.mayorActive = false
+
+end
+
+local meta = FindMetaTable("Player")
+
+if CLIENT then
+
+  R_GOVERNMENT.funds = 0
+
+  R_GOVERNMENT.candidates = {}
+  
+  R_GOVERNMENT.electionRunning = false
+
+  R_GOVERNMENT.mayorActive = false
+
+end
+
+function meta:isCandidate()
+
+  return table.HasValue(R_GOVERNMENT.candidates, self:SteamID())
+
+end
