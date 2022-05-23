@@ -1,5 +1,13 @@
 local R_GOVERNMENT_CL = R_GOVERNMENT_CL || {}
 
+function R_GOVERNMENT_CL.requestUpdatedCandidateTable()
+
+  net.Start("request_updated_client_candidates")
+    net.WriteEntity(LocalPlayer())
+  net.SendToServer()
+
+end
+
 function R_GOVERNMENT_CL.OpenElectionMenu()
 
   if IsValid(R_GOVERNMENT_CL.electionMenu) then
@@ -166,16 +174,23 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
 
   end
 
+  mayorCandidatesContainer:RefreshCandidates()
+
   -- Receive candidates refresh
   net.Receive("update_client_candidates", function()
+    local newCandidatesTable = net.ReadTable()
 
-    R_GOVERNMENT.candidates = net.ReadTable()
-    mayorCandidatesContainer:RefreshCandidates()
+    if #R_GOVERNMENT.candidates > #newCandidatesTable then
+
+      R_GOVERNMENT.candidates = net.ReadTable()
+
+      mayorCandidatesContainer:RefreshCandidates()
+
+    end
 
   end)
 
-  net.Start("request_updated_client_candidates")
-  net.SendToServer()
+  
 
   /*---------------------------------------------------------------------------
 
@@ -225,6 +240,8 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
     RunConsoleCommand("r_g_join_election")
 
   end
+
+  R_GOVERNMENT_CL.requestUpdatedCandidateTable()
 
 end
 
