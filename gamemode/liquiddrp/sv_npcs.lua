@@ -371,22 +371,6 @@ function LDRP.StoreCMD(ply,cmd,args)
 end
 concommand.Add("__shp",LDRP.StoreCMD)
 
-function LDRP.KillMayor(ply,inf,killer)
-	if ply:Team() != TEAM_MAYOR then return end
-	
-	if !ply.Killed then
-		ply:LiquidChat("GAME", Color(0,200,200), "If you die once more you will become a citizen.")
-		ply.Killed = true
-	else
-		for k,v in pairs(player.GetAll()) do
-			v:LiquidChat("GAME", Color(0,200,200), "The mayor has been assasinated completely!")
-		end
-		ply.Killed = nil
-		ply:ChangeTeam(TEAM_CITIZEN, true)
-	end
-end
-hook.Add("PlayerDeath","Demotes a killed mayor",LDRP.KillMayor)
-
 local MR = math.Round
 function LDRP.DoGetPos(ply,cmd,args)
 	local EP = ply:GetEyeTrace().HitPos
