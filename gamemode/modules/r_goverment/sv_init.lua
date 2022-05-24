@@ -201,6 +201,24 @@ function meta:setMayor()
 
 end
 
+function meta:removeMayor(reason)
+
+  R_GOVERNMENT.mayor = nil
+
+  R_GOVERNMENT.mayorActive = false
+
+  local onlinePlayers = player.GetAll()
+
+  for _, v in ipairs(onlinePlayers) do
+
+    v:LiquidChat(R_GOVERNMENT.chatTag, R_GOVERNMENT.chatTagColor, reason)
+
+  end
+
+  updateMayorStatus()
+
+end
+
 function canStartElection()
 
   return #R_GOVERNMENT.candidates >= R_GOVERNMENT.Config.VotingSettings["min_candidates"] && !R_GOVERNMENT.mayorActive
@@ -323,19 +341,19 @@ function updateClientCandidates()
 
 end
 
-net.Receive("request_updated_client_candidates", function()
-
-  updateClientCandidates()
-
-end)
-
-net.Receive("is_mayor_active", function()
+function updateMayorStatus()
 
   net.Start("is_mayor_active")
+
     net.WriteBool(R_GOVERNMENT.mayorActive)
+
   net.Broadcast()
 
-end)
+end
+
+net.Receive("request_updated_client_candidates", updateClientCandidates)
+
+net.Receive("is_mayor_active", updateMayorStatus)
 
 -- Remove player from election when they disconnect
 hook.Add("PlayerDisconnected", "playerVoteLeave", function(ply)
@@ -361,6 +379,28 @@ hook.Add("PlayerDisconnected", "playerVoteLeave", function(ply)
       updateClientCandidates()
 
     end
+
+  end
+
+  if ply:isMayor() then
+
+    local removeReason = string.format("The Mayor(%s) has disconnected, a new election can now start.")
+
+    ply:removeMayor(removeReason)
+
+  end
+  
+end)
+
+hook.Add("PlayerDeath", "r_demote_mayor", function(vic, inf, atkr)
+
+  if vic:isMayor() then
+
+    local demoteMessage = string.format("The Mayor(%s) was killed, a new election can now start.", vic:Nick())
+
+    Demote(vic, demoteMessage)
+
+    vic:removeMayor(demoteMessage)
 
   end
 
