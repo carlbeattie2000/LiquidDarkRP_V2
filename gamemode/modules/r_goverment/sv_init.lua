@@ -246,6 +246,22 @@ function findWinner()
 
   for _, v in ipairs(R_GOVERNMENT.candidates) do
 
+    if v["votes"] == highestVotes then
+
+      local rnd = math.random(0, 1)
+
+      if rnd == 1 then
+
+        highestVotes = v["votes"]
+
+        plySteamID = v["steam_id"]
+
+      end
+
+      continue
+
+    end
+
     if v["votes"] > highestVotes then
 
       highestVotes = v["votes"]
@@ -318,7 +334,7 @@ net.Receive("is_mayor_active", function()
   net.Start("is_mayor_active")
     net.WriteBool(R_GOVERNMENT.mayorActive)
   net.Broadcast()
-  
+
 end)
 
 -- Remove player from election when they disconnect
