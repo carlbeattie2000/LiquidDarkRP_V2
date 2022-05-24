@@ -257,8 +257,20 @@ TEAM_POLICE = AddExtraTeam("S.W.A.T Commander", {
 	NeedToChangeFrom = TEAM_POLICE,
 })
 
--- Disabled as no longer using this within the F4 Menu
-TEAM_MAYOR = {}
+TEAM_MAYOR = AddExtraTeam("Mayor", {
+	color = Color(150, 20, 20, 255),
+	model = "models/player/breen.mdl",
+	description = [[The Mayor of the city creates laws to serve the greater good 
+		of the people. You can access the mayors computer using !mayor. Please visit the mayors sectary to become this job.]],
+	weapons = {},
+	command = "mayor",
+	max = 1,
+	salary = 220,
+  category = "Law & Order",
+	admin = 0,
+	vote = true,
+	hasLicense = true,
+})
 
 TEAM_HOBO = AddExtraTeam("Hobo", {
 	color = Color(80, 45, 0, 255),
