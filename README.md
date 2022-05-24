@@ -12,3 +12,5 @@ As it stands right now, Liquid DarkRP (shortened to LiquidDRP, or LDRP) is a mod
 Current build should be stable, ironing out most bugs. Know game breaking bug is not being able to create votes for jobs.
 
 Full list of commands and basic scripting for the gamemode being released soon
+
+# NOTE: BUGS ARE PRESENT IN CURRENT BUILDS
