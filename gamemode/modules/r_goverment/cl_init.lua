@@ -263,6 +263,12 @@ usermessage.Hook("SendMayorElectionMenu", R_GOVERNMENT_CL.OpenElectionMenu)
 /                                                                            /
 ---------------------------------------------------------------------------*/
 
+surface.CreateFont("vote_font", {
+  font = "HudSelectionText",
+  size = 20,
+  weight = 600,
+})
+
 function R_GOVERNMENT_CL.OpenVoteMenu()
 
   if (IsValid(R_GOVERNMENT_CL.voteMenu)) then
@@ -284,16 +290,104 @@ function R_GOVERNMENT_CL.OpenVoteMenu()
   R_GOVERNMENT_CL.voteMenu:SetDraggable(false)
   R_GOVERNMENT_CL.voteMenu:ShowCloseButton(false)
 
+  local timer = R_GOVERNMENT.Config.VotingSettings["voting_time"]
+  local prevTick = CurTime()
+
   function R_GOVERNMENT_CL.voteMenu:Paint(w, h)
   
     surface.SetDrawColor(voteBackground)
     surface.DrawRect(0, 0, w, h)
+
+    draw.SimpleText("Mayor Election", "vote_font", w / 2, 14, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+    draw.SimpleText(timer, "vote_font", w / 2, h - 14, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+  end
+
+  function R_GOVERNMENT_CL.voteMenu:Think()
+
+    if CurTime() > prevTick + 1 then
+
+      timer = timer - 1
+
+      prevTick = CurTime()
+
+    end
 
   end
 
   ----------------------------------
   -- Draw the players in the vote --
   ----------------------------------
+  local candidatesPanel = R_GOVERNMENT_CL.voteMenu:Add("DPanel")
+
+  candidatesPanel:SetSize(menuw, menuh)
+
+  function candidatesPanel:RefreshCandidates()
+
+    if IsValid(self) then
+
+      self:Clear()
+
+    end
+
+    local candidatesGrid = self:Add("DGrid")
+
+    local cols, colWidth, colPadding = 5, self:GetWide() / 5, 50
+
+    candidatesGrid:SetCols(cols)
+    candidatesGrid:SetColWide(colWidth)
+    candidatesGrid:SetRowHeight(menuh - colPadding)
+    candidatesGrid:SetSize(menuw, menuh - colPadding)
+    candidatesGrid:SetPos(5, (menuh / 2) - ((menuh - colPadding) / 2))
+
+
+    for _, v in ipairs(R_GOVERNMENT.candidates) do
+
+      local ply = player.GetBySteamID(v["steam_id"])
+
+      local playerModel = ply:GetModel()
+      local playerName = ply:Nick()
+      local playerVotes = v["votes"]
+
+      local playerFrame = vgui.Create("DPanel")
+
+      playerFrame:SetSize(colWidth, menuh - colPadding)
+      playerFrame:SetCursor("hand")
+
+      playerFrame.DoClick = function()
+
+          
+
+      end
+
+      function playerFrame:Paint(w, h)
+      
+        surface.SetDrawColor(255, 255, 255, 150)
+        surface.DrawRect(0, 0, w, h)
+
+        draw.SimpleText(playerName, "vote_font", w / 2, 20, Color(0, 0, 0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+        draw.SimpleText(string.format("Votes: %s", playerVotes), "vote_font", w / 2, h - 20, Color(0, 0, 0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+      end
+
+      local playerModelIcon = playerFrame:Add("SpawnIcon")
+
+      playerModelIcon:SetModel(playerModel)
+      playerModelIcon:SetSize(64, 64)
+      playerModelIcon:SetPos((colWidth / 2) - (playerModelIcon:GetWide() / 2), 30)
+
+      function playerModelIcon:Think() return end
+      function playerModelIcon:PaintOver() return end
+
+      candidatesGrid:AddItem(playerFrame)
+
+    end
+
+  end
+
+  candidatesPanel:RefreshCandidates()
 
 end
 
@@ -316,8 +410,6 @@ net.Receive("election_started", function()
 end)
 
 net.Receive("election_ended", function()
-
-  print("Election Over")
 
   R_GOVERNMENT_CL.CloseVoteMenu()
 

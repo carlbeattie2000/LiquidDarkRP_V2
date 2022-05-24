@@ -140,8 +140,6 @@ function startElection()
 
   timer.Simple(R_GOVERNMENT.Config.VotingSettings["voting_time"], function()
 
-    print("Election Over ----------------------- <<<<<<<<<<<<<<<<<<<<<<<")
-
     net.Start("election_ended")
     net.Broadcast()
 
@@ -190,8 +188,6 @@ end)
 hook.Add("PlayerDisconnected", "playerVoteLeave", function(ply)
   
   if ply:isCandidate() then
-
-    print(ply, "disconnected")
 
     local playerIndex = nil
 
