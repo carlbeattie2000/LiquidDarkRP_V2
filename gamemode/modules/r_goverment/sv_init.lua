@@ -1,5 +1,19 @@
+function PrintConsoleTaggedMessage(msg)
+
+  MsgC(R_GOVERNMENT.Config.chatTagColor, "["..R_GOVERNMENT.Config.chatTag.."]")
+  MsgN(msg)
+
+end
+
+/*---------------------------------------------------------------------------
+
+Default R_GOVERNMENT Settings
+
+---------------------------------------------------------------------------*/
+
 util.AddNetworkString("update_client_candidates")
 util.AddNetworkString("request_updated_client_candidates")
+util.AddNetworkString("is_mayor_active")
 util.AddNetworkString("election_started")
 util.AddNetworkString("election_ended")
 
@@ -10,41 +24,6 @@ local governmentBudget, governmentTaxes = {}
 
 local voting = R_GOVERNMENT.Config.VotingSettings
 
--- Change Default Job Settings
-function loadDefaultJobSettings()
-
-  for i, v in ipairs(RPExtraTeams) do
-  
-    local jobSettings = R_GOVERNMENT.Config.DefaultJobSettings[v["name"]]
-
-    if jobSettings != nil then
-
-      RPExtraTeams[i]["max"] = jobSettings["limit"]
-
-      RPExtraTeams[i]["salary"] = jobSettings["salary"]
-
-    end
-
-    if string.lower(RPExtraTeams[i]["name"]) == "mayor" then
-
-      RPExtraTeams[i].customCheck = function(ply)
-
-        print(ply:isMayor())
-
-        if ply:isMayor() then return true end
-
-        ply:LiquidChat("MAYOR-ELECTIONS", Color(213, 100, 100), "You must start / join an election to become this job!")
-
-        return false
-
-      end
-
-    end
-  
-  end
-
-end
-loadDefaultJobSettings()
 
 -- Reset Government Budget
 function resetGovernmentBudget()
@@ -75,6 +54,56 @@ resetGovernmentFunds()
 Mayor Voting + Job Setting
 
 ---------------------------------------------------------------------------*/
+
+-- Add custom check to mayors job
+function loadMayorCustomCheck()
+
+  for k, job in pairs(RPExtraTeams) do
+  
+    if ( string.lower(R_GOVERNMENT.Config.mayorsName) == string.lower(job.name) ) then
+
+      R_GOVERNMENT.mayorTeamID = k
+      R_GOVERNMENT.mayorTeamTab = job
+
+      job.CustomCheck = function(ply)
+      
+        if ply:isMayor() then return true end
+
+        job.CustomCheckFailMsg = "Visit the mayor's secretary if you want to join the election!"
+
+        return false
+
+      end
+
+      return true
+
+    end
+
+  end
+
+  return false
+
+end
+
+-- Change Default Job Settings
+function loadDefaultJobSettings()
+
+  for i, v in ipairs(RPExtraTeams) do
+  
+    local jobSettings = R_GOVERNMENT.Config.DefaultJobSettings[v["name"]]
+
+    if jobSettings != nil then
+
+      RPExtraTeams[i]["max"] = jobSettings["limit"]
+
+      RPExtraTeams[i]["salary"] = jobSettings["salary"]
+
+    end
+  
+  end
+
+end
+
 function meta:addPlayerAsCandidate()
 
   if (R_GOVERNMENT.mayorActive) then
@@ -166,11 +195,15 @@ function meta:setMayor()
 
   R_GOVERNMENT.mayor = self:SteamID()
 
+  R_GOVERNMENT.mayorActive = true
+
+  self:ChangeTeam(R_GOVERNMENT.mayorTeamID, true)
+
 end
 
 function canStartElection()
 
-  return #R_GOVERNMENT.candidates >= R_GOVERNMENT.Config.VotingSettings["min_candidates"]
+  return #R_GOVERNMENT.candidates >= R_GOVERNMENT.Config.VotingSettings["min_candidates"] && !R_GOVERNMENT.mayorActive
 
 end
 
@@ -237,6 +270,8 @@ function handleWinningPlayer(ply)
 
   end
 
+  ply:setMayor()
+
 end
 
 -- Mayor Election NPC is handled inside sh_liquiddrp.lua
@@ -278,6 +313,14 @@ net.Receive("request_updated_client_candidates", function()
 
 end)
 
+net.Receive("is_mayor_active", function()
+
+  net.Start("is_mayor_active")
+    net.WriteBool(R_GOVERNMENT.mayorActive)
+  net.Broadcast()
+  
+end)
+
 -- Remove player from election when they disconnect
 hook.Add("PlayerDisconnected", "playerVoteLeave", function(ply)
   
@@ -306,3 +349,45 @@ hook.Add("PlayerDisconnected", "playerVoteLeave", function(ply)
   end
 
 end)
+
+/*---------------------------------------------------------------------------
+
+R_GOVERNMENT Init
+
+---------------------------------------------------------------------------*/
+
+function InitFinished(status)
+
+  if status then
+
+    PrintConsoleTaggedMessage("Finished Loading R_GOVERNMENT")
+
+  else
+
+    PrintConsoleTaggedMessage("Failed Loading R_GOVERNMENT")
+
+  end
+
+end
+
+function rGovernmentInit()
+
+  local status = true
+
+  timer.Simple(1, function()
+
+    if !loadMayorCustomCheck() then
+
+      status = false
+
+    end
+
+    loadDefaultJobSettings()
+
+    InitFinished(status)
+
+  end)
+
+end
+
+hook.Add("Initialize", "rGovernmentInit", rGovernmentInit)

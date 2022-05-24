@@ -207,6 +207,15 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
                         Join Election
 
   ---------------------------------------------------------------------------*/
+  net.Start("is_mayor_active")
+  net.SendToServer()
+
+  net.Receive("is_mayor_active", function()
+
+    R_GOVERNMENT.mayorActive = net.ReadBool()
+
+  end)
+  
   local joinElectionButton = R_GOVERNMENT_CL.electionMenu:Add("DButton")
 
   joinElectionButton:SetSize(menuw, menuh * .1)
@@ -229,6 +238,11 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
 
       bgColor = Color(50, 50, 50, 245)
       joinElectionText = "The election list is full!"
+    
+    elseif R_GOVERNMENT.mayorActive then
+
+      bgColor = Color(50, 50, 50, 245)
+      joinElectionText = "We currently already have a mayor!"
 
     end
 
@@ -239,7 +253,7 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
 
   end
 
-  if LocalPlayer():isCandidate() || #R_GOVERNMENT.candidates > R_GOVERNMENT.Config.VotingSettings["max_candidates"] then
+  if LocalPlayer():isCandidate() || #R_GOVERNMENT.candidates > R_GOVERNMENT.Config.VotingSettings["max_candidates"] || R_GOVERNMENT.mayorActive then
 
     joinElectionButton:SetEnabled(false)
 
