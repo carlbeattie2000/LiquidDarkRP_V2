@@ -11,36 +11,83 @@ local function checkValid(tbl, requiredItems)
 end
 
 RPExtraTeams = {}
-function AddExtraTeam(Name, colorOrTable, model, Description, Weapons, command, maximum_amount_of_this_class, Salary, category, admin, Vote, Haslicense, NeedToChangeFrom, CustomCheck)
-	local tableSyntaxUsed = colorOrTable.r == nil -- the color is not a color table.
+function AddExtraTeam(Name, colorOrTable, model, Description, Weapons, Command, Max, Salary, Category, Admin, Vote, Haslicense, NeedToChangeFrom, CustomCheck)
 
-	local CustomTeam = tableSyntaxUsed and colorOrTable or
-		{color = colorOrTable, model = model, description = Description, weapons = Weapons, command = command,
-			max = maximum_amount_of_this_class, salary = Salary, category = category, admin = admin or 0, vote = tobool(Vote), hasLicense = Haslicense,
-			NeedToChangeFrom = NeedToChangeFrom, customCheck = CustomCheck
-		}
-	CustomTeam.name = Name
+  local tableSyntaxUsed = !IsColor(colorOrTable)
 
-	local corrupt = checkValid(CustomTeam, requiredTeamItems)
-	if corrupt then ErrorNoHalt("Corrupt team \"" ..(CustomTeam.name or "") .. "\": element " .. corrupt .. " is incorrect.\n") end
+  local CustomTeam = tableSyntaxUsed && colorOrTable || {
+    color = colorOrTable,
+    model = model,
+    description = Description,
+    weapons = Weapons,
+    command = Command,
+    max = Max,
+    salary = Salary,
+    category = Category,
+    admin = Admin || 0,
+    vote = tobool(Vote),
+    haslicense = Haslicense,
+    needToChangeFrom = NeedToChangeFrom,
+    customCheck = CustomCheck
+  }
 
-	table.insert(RPExtraTeams, CustomTeam)
-	team.SetUp(#RPExtraTeams, Name, CustomTeam.color)
-	local Team = #RPExtraTeams
+  CustomTeam.name = Name
 
-	timer.Simple(0, function() GAMEMODE:AddTeamCommands(CustomTeam, CustomTeam.max) end)
+  local corrupt = checkValid(CustomTeam, requiredTeamItems)
 
-	// Precache model here. Not right before the job change is done
-	if type(CustomTeam.model) == "table" then
-		for k,v in pairs(CustomTeam.model) do util.PrecacheModel(v) end
-	else
-		util.PrecacheModel(CustomTeam.model)
-	end
-	return Team
+  if corrupt then
+  
+    ErrorNoHalt("Corrupt team \"" ..(CustomTeam.name or "") .. "\": element " .. corrupt .. " is incorrect.\n")
+
+  end
+
+  if !(GM || GAMEMODE):CustomObjFitsMap(CustomTeam) then return end
+
+  CustomTeam.salary = math.floor(CustomTeam.salary)
+
+  CustomTeam.customCheck = CustomTeam.customCheck
+  CustomTeam.CustomCheckFailMsg = CustomTeam.CustomCheckFailMsg
+  CustomTeam.CanPlayerSuicide = CustomTeam.CanPlayerSuicide
+  CustomTeam.PlayerCanPickupItem = CustomTeam.PlayerCanPickupItem
+  CustomTeam.PlayerDeath = CustomTeam.PlayerDeath
+  CustomTeam.PlayerLoadout = CustomTeam.PlayerLoadout
+  CustomTeam.PlayerSelectSpawn = CustomTeam.PlayerSelectSpawn
+  CustomTeam.PlayerSetModel = CustomTeam.PlayerSetModel
+  CustomTeam.PlayerSpawn = CustomTeam.PlayerSpawn
+  CustomTeam.PlayerSpawnProp = CustomTeam.PlayerSpawnProp
+  CustomTeam.RequiresVote = CustomTeam.RequiresVote
+  CustomTeam.ShowSpare1 = CustomTeam.ShowSpare1
+  CustomTeam.ShowSpare2 = CustomTeam.ShowSpare2
+  CustomTeam.canStartVote = CustomTeam.canStartVote
+
+  table.insert(RPExtraTeams, CustomTeam)
+  team.SetUp(#RPExtraTeams, Name, CustomTeam.color)
+
+  timer.Simple(0, function()
+
+    GAMEMODE:AddTeamCommands(CustomTeam, CustomTeam.max)
+
+  end)
+
+  if istable(CustomTeam.model) then
+
+    for k, v in pairs(CustomTeam.model) do
+
+      util.PrecacheModel(v)
+
+    end
+
+  else
+
+    util.PrecacheModel(CustomTeam.model)
+
+  end
+
+  return #RPExtraTeams
+
 end
 
 RPExtraTeamDoors = {}
-
 function AddDoorGroup(name, ...)
 	RPExtraTeamDoors[name] = {...}
 end
