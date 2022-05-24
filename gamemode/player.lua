@@ -390,19 +390,16 @@ function meta:PayDay()
 					self:LiquidChat("PAYCHECK", Color(0,192,10), "You aren't employed so you don't receive a paycheck.")
 				else
 					
-					local OldCheck = self.CurCheck
-					self.CurCheck = (self:IsVIP() and math.Round(amount*1.5)) or amount
-					local Str = "You have a paycheck of $" .. self.CurCheck .. " at the paycheck lady."
-					if !LDRP_SH.UsePaycheckLady then
-						self:AddMoney(self.CurCheck)
-						Str = "You have received a paycheck of $" .. self.CurCheck .. ". It is now in your wallet."
-						self.CurCheck = 0
-						OldCheck = nil
-					end
-					if OldCheck and LDRP_SH.StackChecks then
-						self.CurCheck = self.CurCheck+OldCheck
-					end
-					self:LiquidChat("PAYCHECK", Color(0,192,10), Str)
+        local OldCheck = self.CurCheck
+        self.CurCheck = (self:IsVIP() and math.Round(amount*1.5)) or amount
+
+        hook.Call("r_government_payday", nil, self, self.CurCheck)
+        
+        self.CurCheck = 0
+        OldCheck = nil
+        if OldCheck and LDRP_SH.StackChecks then
+          self.CurCheck = self.CurCheck+OldCheck
+        end
 				end
 			end)
 		else

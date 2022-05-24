@@ -774,24 +774,7 @@ function GM:PlayerSpawn(ply)
 		umsg.String("0")
 	umsg.End()
 	RP:AddAllPlayers()
-
-	if GAMEMODE.Config.babygod and not ply.IsSleeping then
-		ply.Babygod = true
-		ply:GodEnable()
-		local r,g,b,a = ply:GetColor()
-		ply:SetColor(r, g, b, 100)
-		ply:SetCollisionGroup(  COLLISION_GROUP_WORLD )
-		timer.Simple(GAMEMODE.Config.babygodtime, function()
-			if not IsValid(ply) then return end
-			ply.Babygod = false
-			ply:SetColor(r, g, b, a)
-			ply:GodDisable()
-			ply:SetCollisionGroup( COLLISION_GROUP_PLAYER )
-		end)
-	end
-	ply.IsSleeping = false
   
-	
 	GAMEMODE:SetPlayerSpeed(ply, GAMEMODE.Config.walkspeed, GAMEMODE.Config.runspeed)
 	if ply:Team() == TEAM_CHIEF or ply:Team() == TEAM_POLICE then
 		GAMEMODE:SetPlayerSpeed(ply, GAMEMODE.Config.walkspeed, GAMEMODE.Config.runspeed + 10)

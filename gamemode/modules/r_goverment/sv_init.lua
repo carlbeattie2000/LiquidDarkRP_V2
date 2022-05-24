@@ -402,6 +402,29 @@ end)
 
 /*---------------------------------------------------------------------------
 
+Core R_GOVERNMENT functionally
+
+---------------------------------------------------------------------------*/
+function handlePlayerSalaryPay(ply, salary)
+
+  print("paycheck R_GOVERNMENT")
+
+  local tax = governmentTaxes["player_tax"]
+
+  local taxedAmount = salary * tax
+
+  local playerTaxedSalary = salary - taxedAmount
+
+  local paycheckMsg = string.format("You have received a paycheck of $%s and was taxed $%s. It is now in your wallet", REBELLION.numberFormat(playerTaxedSalary), REBELLION.numberFormat(taxedAmount))
+
+  ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, paycheckMsg)
+
+end
+
+hook.Add("r_government_payday", handlePlayerSalaryPay)
+
+/*---------------------------------------------------------------------------
+
 R_GOVERNMENT Init
 
 ---------------------------------------------------------------------------*/

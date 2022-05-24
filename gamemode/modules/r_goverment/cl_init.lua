@@ -412,7 +412,11 @@ function R_GOVERNMENT_CL.OpenVoteMenu()
 
     R_GOVERNMENT.candidates = net.ReadTable()
 
-    candidatesPanel:RefreshCandidates()
+    if IsValid(R_GOVERNMENT_CL.voteMenu) then
+
+      candidatesPanel:RefreshCandidates()
+
+    end
 
   end)
 
