@@ -128,7 +128,7 @@ R_GOVERNMENT.Config.DefaultPoliceEquipmentCanBuy = {
 
 R_GOVERNMENT.Config.VotingSettings = {
 
-  ["min_candidates"] = 2,
+  ["min_candidates"] = 1,
 
   ["max_candidates"] = 5,
 
@@ -157,8 +157,6 @@ end
 local meta = FindMetaTable("Player")
 
 if CLIENT then
-
-  R_GOVERNMENT.funds = 0
 
   R_GOVERNMENT.candidates = {}
   

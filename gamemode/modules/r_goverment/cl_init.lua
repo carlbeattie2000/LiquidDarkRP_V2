@@ -7,6 +7,12 @@ function R_GOVERNMENT_CL.requestUpdatedCandidateTable()
 
 end
 
+/*------------------------------------------------------------------------------
+/                                                                              /
+/              Join Election Menu                                             /
+/                                                                            /
+---------------------------------------------------------------------------*/
+
 function R_GOVERNMENT_CL.OpenElectionMenu()
 
   if IsValid(R_GOVERNMENT_CL.electionMenu) then
@@ -177,13 +183,18 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
 
   -- Receive candidates refresh
   net.Receive("update_client_candidates", function()
+
     local newCandidatesTable = net.ReadTable()
 
     if #newCandidatesTable != #R_GOVERNMENT.candidates then
 
       R_GOVERNMENT.candidates = newCandidatesTable
 
-      mayorCandidatesContainer:RefreshCandidates()
+      if IsValid(mayorCandidatesContainer) then
+
+        mayorCandidatesContainer:RefreshCandidates()
+
+      end
 
     end
 
@@ -245,3 +256,71 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
 end
 
 usermessage.Hook("SendMayorElectionMenu", R_GOVERNMENT_CL.OpenElectionMenu)
+
+/*------------------------------------------------------------------------------
+/                                                                              /
+/              Vote Window                                                    /
+/                                                                            /
+---------------------------------------------------------------------------*/
+
+function R_GOVERNMENT_CL.OpenVoteMenu()
+
+  if (IsValid(R_GOVERNMENT_CL.voteMenu)) then
+
+    R_GOVERNMENT_CL.voteMenu:Remove()
+
+  end
+
+  local voteBackground = Color(213, 100, 100, 200)
+
+  local scrw, scrh = ScrW(), ScrH()
+  local menuw, menuh = scrw, scrh * .2
+
+  R_GOVERNMENT_CL.voteMenu = vgui.Create("DFrame")
+
+  R_GOVERNMENT_CL.voteMenu:SetSize(menuw, menuh)
+  R_GOVERNMENT_CL.voteMenu:SetTitle("")
+  R_GOVERNMENT_CL.voteMenu:SetSizable(false)
+  R_GOVERNMENT_CL.voteMenu:SetDraggable(false)
+  R_GOVERNMENT_CL.voteMenu:ShowCloseButton(false)
+
+  function R_GOVERNMENT_CL.voteMenu:Paint(w, h)
+  
+    surface.SetDrawColor(voteBackground)
+    surface.DrawRect(0, 0, w, h)
+
+  end
+
+  ----------------------------------
+  -- Draw the players in the vote --
+  ----------------------------------
+
+end
+
+function R_GOVERNMENT_CL.CloseVoteMenu()
+
+  if IsValid(R_GOVERNMENT_CL.voteMenu) then
+
+    R_GOVERNMENT_CL.voteMenu:Remove()
+
+  end
+
+end
+
+net.Receive("election_started", function()
+
+  R_GOVERNMENT.electionRunning = true
+
+  R_GOVERNMENT_CL.OpenVoteMenu()
+
+end)
+
+net.Receive("election_ended", function()
+
+  print("Election Over")
+
+  R_GOVERNMENT_CL.CloseVoteMenu()
+
+  R_GOVERNMENT.electionRunning = false
+
+end)

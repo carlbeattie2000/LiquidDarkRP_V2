@@ -1,5 +1,7 @@
 util.AddNetworkString("update_client_candidates")
 util.AddNetworkString("request_updated_client_candidates")
+util.AddNetworkString("election_started")
+util.AddNetworkString("election_ended")
 
 local meta = FindMetaTable("Player")
 
@@ -57,10 +59,15 @@ resetGovernmentFunds()
 Mayor Voting + Job Setting
 
 ---------------------------------------------------------------------------*/
-function runMayorVote()
-end
-
 function meta:addPlayerAsCandidate()
+
+  if (R_GOVERNMENT.mayorActive) then
+
+    self:LiquidChat("MAYOR-ELECTIONS", Color(213, 100, 100), "The mayor is currently active!")
+
+    return
+
+  end
 
   if (self:isCandidate()) then return end
 
@@ -89,7 +96,11 @@ function meta:addPlayerAsCandidate()
 
   if !R_GOVERNMENT.electionRunning then
 
-    print(canStartElection())
+    if canStartElection() then
+
+      startElection()
+
+    end
 
   end
 
@@ -116,11 +127,38 @@ end
 
 function canStartElection()
 
-  return #R_GOVERNMENT.candidates > R_GOVERNMENT.Config.VotingSettings["min_candidates"]
+  return #R_GOVERNMENT.candidates >= R_GOVERNMENT.Config.VotingSettings["min_candidates"]
 
 end
 
 function startElection()
+
+  R_GOVERNMENT.electionRunning = true
+
+  net.Start("election_started")
+  net.Broadcast()
+
+  timer.Simple(R_GOVERNMENT.Config.VotingSettings["voting_time"], function()
+
+    print("Election Over ----------------------- <<<<<<<<<<<<<<<<<<<<<<<")
+
+    net.Start("election_ended")
+    net.Broadcast()
+
+    endElection()
+
+  end)
+
+end
+
+function endElection()
+
+  R_GOVERNMENT.electionRunning = false
+
+  R_GOVERNMENT.candidates = {}
+
+  updateClientCandidates()
+
 end
 
 -- Mayor Election NPC is handled inside sh_liquiddrp.lua
@@ -133,9 +171,6 @@ end)
 
 -- Function to update client candidates
 function updateClientCandidates()
-
-  if ( playerLastRequest != nil && CurTime() < playerLastRequest + playerRequestDelay) then return end
-
 
   net.Start("update_client_candidates")
 
