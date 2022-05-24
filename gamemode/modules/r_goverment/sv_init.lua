@@ -108,7 +108,7 @@ function meta:addPlayerAsCandidate()
 
   if (R_GOVERNMENT.mayorActive) then
 
-    self:LiquidChat("MAYOR-ELECTIONS", Color(213, 100, 100), "The mayor is currently active!")
+    self:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "The mayor is currently active!")
 
     return
 
@@ -122,7 +122,7 @@ function meta:addPlayerAsCandidate()
 
   if !self:CanAfford(entryCost) then 
 
-    self:LiquidChat("MAYOR-ELECTIONS", Color(213, 100, 100), "You can't afford to join this election")
+    self:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "You can't afford to join this election")
 
     return
 
@@ -137,7 +137,7 @@ function meta:addPlayerAsCandidate()
 
   updateClientCandidates()
 
-  self:LiquidChat("MAYOR-ELECTIONS", Color(213, 100, 100), "You have joined the election")
+  self:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "You have joined the election")
 
   if !R_GOVERNMENT.electionRunning then
 
@@ -211,9 +211,14 @@ function meta:removeMayor(reason)
 
   for _, v in ipairs(onlinePlayers) do
 
-    v:LiquidChat(R_GOVERNMENT.chatTag, R_GOVERNMENT.chatTagColor, reason)
+    print(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor)
+
+    v:LiquidChat("R_GOVERNMENT", R_GOVERNMENT.Config.chatTagColor, reason)
 
   end
+
+  self:TeamBan()
+  self:ChangeTeam(R_GOVERNMENT.Config.DefaultTeamID, true)
 
   updateMayorStatus()
 
@@ -264,6 +269,16 @@ function findWinner()
 
   for _, v in ipairs(R_GOVERNMENT.candidates) do
 
+    if v["votes"] == 0 && highestVotes == 0 then
+
+      highestVotes = 0
+
+      plySteamID = nil
+
+      continue
+
+    end
+
     if v["votes"] == highestVotes then
 
       local rnd = math.random(0, 1)
@@ -290,6 +305,12 @@ function findWinner()
 
   end
 
+  if plySteamID == nil then
+
+    return nil
+
+  end
+
   return player.GetBySteamID(plySteamID)
 
 end
@@ -298,9 +319,21 @@ function handleWinningPlayer(ply)
 
   local onlinePlayers = player.GetAll()
 
+  if ply == nil then
+
+    for _, v in ipairs(onlinePlayers) do
+
+      v:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "Not enough votes!")
+  
+    end
+
+    return
+
+  end
+
   for _, v in ipairs(onlinePlayers) do
 
-    v:LiquidChat("MAYOR-ELECTIONS", Color(213, 100, 100), string.format("%s won the election!", ply:Nick()))
+    v:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, string.format("%s won the election!", ply:Nick()))
 
   end
 
@@ -384,21 +417,19 @@ hook.Add("PlayerDisconnected", "playerVoteLeave", function(ply)
 
   if ply:isMayor() then
 
-    local removeReason = string.format("The Mayor(%s) has disconnected, a new election can now start.")
+    local removeReason = string.format("The Mayor(%s) has disconnected, a new election can now start.", ply:Nick())
 
     ply:removeMayor(removeReason)
 
   end
-  
+
 end)
 
-hook.Add("PlayerDeath", "r_demote_mayor", function(vic, inf, atkr)
+hook.Add("PlayerDeath", "r_demote_mayor", function(vic, _, atkr)
 
   if vic:isMayor() then
 
     local demoteMessage = string.format("The Mayor(%s) was killed, a new election can now start.", vic:Nick())
-
-    Demote(vic, demoteMessage)
 
     vic:removeMayor(demoteMessage)
 
