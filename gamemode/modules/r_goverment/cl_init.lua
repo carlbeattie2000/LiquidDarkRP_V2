@@ -140,7 +140,7 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
     mayorCandidates:SetPos((menuw / 2) - (menuw - totalRowColSpacing) / 2, 0)
     mayorCandidates:SetRowHeight(50)
 
-    if #R_GOVERNMENT.candidates == 0 then
+    if tablelength(R_GOVERNMENT.candidates) == 0 then
 
       local noPlayersPanel = vgui.Create("DPanel")
 
@@ -156,7 +156,7 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
 
     end
 
-    for i, v in ipairs(R_GOVERNMENT.candidates) do
+    for k, v in pairs(R_GOVERNMENT.candidates) do
     
       local playerNamePanel = vgui.Create("DPanel")
 
@@ -186,9 +186,11 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
 
     local newCandidatesTable = net.ReadTable()
 
-    if #newCandidatesTable != #R_GOVERNMENT.candidates then
+    if tablelength(newCandidatesTable) != tablelength(R_GOVERNMENT.candidates) then
 
       R_GOVERNMENT.candidates = newCandidatesTable
+
+      PrintTable(R_GOVERNMENT.candidates)
 
       if IsValid(mayorCandidatesContainer) then
 
@@ -215,7 +217,7 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
     R_GOVERNMENT.mayorActive = net.ReadBool()
 
   end)
-  
+
   local joinElectionButton = R_GOVERNMENT_CL.electionMenu:Add("DButton")
 
   joinElectionButton:SetSize(menuw, menuh * .1)
@@ -234,7 +236,7 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
       bgColor = Color(50, 50, 50, 245)
       joinElectionText = "You are already in this election!"
 
-    elseif #R_GOVERNMENT.candidates > R_GOVERNMENT.Config.VotingSettings["max_candidates"] then
+    elseif tablelength(R_GOVERNMENT.candidates) > R_GOVERNMENT.Config.VotingSettings["max_candidates"] then
 
       bgColor = Color(50, 50, 50, 245)
       joinElectionText = "The election list is full!"
@@ -253,7 +255,7 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
 
   end
 
-  if LocalPlayer():isCandidate() || #R_GOVERNMENT.candidates > R_GOVERNMENT.Config.VotingSettings["max_candidates"] || R_GOVERNMENT.mayorActive then
+  if LocalPlayer():isCandidate() || tablelength(R_GOVERNMENT.candidates) > R_GOVERNMENT.Config.VotingSettings["max_candidates"] || R_GOVERNMENT.mayorActive then
 
     joinElectionButton:SetEnabled(false)
 
@@ -356,7 +358,9 @@ function R_GOVERNMENT_CL.OpenVoteMenu()
     candidatesGrid:SetPos(5, (menuh / 2) - ((menuh - colPadding) / 2))
 
 
-    for _, v in ipairs(R_GOVERNMENT.candidates) do
+    for _, v in pairs(R_GOVERNMENT.candidates) do
+
+      print(v)
 
       local ply = player.GetBySteamID(v["steam_id"])
 

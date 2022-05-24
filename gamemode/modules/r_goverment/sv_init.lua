@@ -20,7 +20,7 @@ util.AddNetworkString("election_ended")
 local meta = FindMetaTable("Player")
 
 -- Load default settings into action
-local governmentBudget, governmentTaxes = {}
+local governmentBudget, governmentTaxes, governmentFunds = {}
 
 local voting = R_GOVERNMENT.Config.VotingSettings
 
@@ -31,7 +31,6 @@ function resetGovernmentBudget()
   governmentBudget = R_GOVERNMENT.Config.DefaultBudgetSettings
 
 end
-resetGovernmentBudget()
 
 -- Reset Government Taxes
 function resetGovernmentTaxes()
@@ -39,15 +38,13 @@ function resetGovernmentTaxes()
   governmentTaxes = R_GOVERNMENT.Config.DefaultPlayerTaxes
 
 end
-resetGovernmentTaxes()
 
 -- Reset Government Funds
 function resetGovernmentFunds()
 
-  R_GOVERNMENT.funds = R_GOVERNMENT.Config.DefaultGovernmentFunds
+  governmentFunds = R_GOVERNMENT.Config.DefaultGovernmentFunds
 
 end
-resetGovernmentFunds()
 
 /*---------------------------------------------------------------------------
 
@@ -129,15 +126,13 @@ function meta:addPlayerAsCandidate()
   end
 
   self:RemoveMoney(entryCost)
-
-  table.insert(R_GOVERNMENT.candidates, {
+  
+  R_GOVERNMENT.candidates[self:SteamID()] = {
     ["steam_id"] = self:SteamID(),
     ["votes"] = 0
-  })
+  }
 
-  updateClientCandidates()
-
-  self:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "You have joined the election")
+  self:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "You have joined the election!")
 
   if !R_GOVERNMENT.electionRunning then
 
@@ -149,39 +144,21 @@ function meta:addPlayerAsCandidate()
 
   end
 
+  updateClientCandidates()
+
 end
 
 function meta:addVote()
 
-  for i, v in ipairs(R_GOVERNMENT.candidates) do
+  R_GOVERNMENT.candidates[self:SteamID()]["votes"] = R_GOVERNMENT.candidates[self:SteamID()]["votes"] + 1
 
-    if v["steam_id"] == self:SteamID() then
-
-      R_GOVERNMENT.candidates[i]["votes"] = R_GOVERNMENT.candidates[i]["votes"] + 1
-
-      updateClientCandidates()
-
-      return
-
-    end
-
-  end
+  updateClientCandidates()
 
 end
 
 function meta:isCandidate()
 
-  for i, v in ipairs(R_GOVERNMENT.candidates) do
-
-    if v["steam_id"] == self:SteamID() then
-
-      return true
-
-    end
-
-  end
-
-  return false
+  return R_GOVERNMENT.candidates[self:SteamID()] != nil
 
 end
 
@@ -226,7 +203,7 @@ end
 
 function canStartElection()
 
-  return #R_GOVERNMENT.candidates >= R_GOVERNMENT.Config.VotingSettings["min_candidates"] && !R_GOVERNMENT.mayorActive
+  return tablelength(R_GOVERNMENT.candidates) >= R_GOVERNMENT.Config.VotingSettings["min_candidates"] && !R_GOVERNMENT.mayorActive
 
 end
 
@@ -267,13 +244,9 @@ function findWinner()
   local highestVotes = 0
   local plySteamID = nil
 
-  for _, v in ipairs(R_GOVERNMENT.candidates) do
+  for _, v in pairs(R_GOVERNMENT.candidates) do
 
     if v["votes"] == 0 && highestVotes == 0 then
-
-      highestVotes = 0
-
-      plySteamID = nil
 
       continue
 
@@ -305,13 +278,7 @@ function findWinner()
 
   end
 
-  if plySteamID == nil then
-
-    return nil
-
-  end
-
-  return player.GetBySteamID(plySteamID)
+  return player.GetBySteamID(plySteamID) || nil
 
 end
 
@@ -395,21 +362,17 @@ hook.Add("PlayerDisconnected", "playerVoteLeave", function(ply)
 
     local playerIndex = nil
 
-    for i, v in ipairs(R_GOVERNMENT.candidates) do
+    for k, v in pairs(R_GOVERNMENT.candidates) do
 
       if v["steam_id"] == ply:SteamID() then
 
-        playerIndex = i
+        table.remove(R_GOVERNMENT.candidates, i)
+
+        updateClientCandidates()
+
+        return
 
       end
-
-    end
-
-    if playerIndex != nil then
-
-      table.remove(R_GOVERNMENT.candidates, playerIndex)
-
-      updateClientCandidates()
 
     end
 
@@ -460,6 +423,12 @@ end
 function rGovernmentInit()
 
   local status = true
+
+  resetGovernmentBudget()
+
+  resetGovernmentTaxes()
+
+  resetGovernmentFunds()
 
   timer.Simple(1, function()
 

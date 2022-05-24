@@ -152,8 +152,6 @@ R_GOVERNMENT.Config.DefaultGovernmentFunds = 50000
 -- Setup data
 if SERVER then
 
-  R_GOVERNMENT.funds = 0
-
   R_GOVERNMENT.candidates = {}
 
   R_GOVERNMENT.playersVoted = {}
@@ -169,6 +167,12 @@ end
 local meta = FindMetaTable("Player")
 
 if CLIENT then
+
+  R_GOVERNMENT.funds = 0
+
+  R_GOVERNMENT.taxes = {}
+
+  R_GOVERNMENT.budget = {}
 
   R_GOVERNMENT.candidates = {}
   
@@ -192,4 +196,10 @@ function meta:isCandidate()
 
   return false
 
+end
+
+function tablelength(T)
+  local count = 0
+  for _ in pairs(T) do count = count + 1 end
+  return count
 end
