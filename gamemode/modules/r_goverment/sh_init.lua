@@ -154,6 +154,8 @@ if SERVER then
 
   R_GOVERNMENT.mayorActive = false
 
+  R_GOVERNMENT.mayor = nil
+
 end
 
 local meta = FindMetaTable("Player")

@@ -24,6 +24,22 @@ function loadDefaultJobSettings()
       RPExtraTeams[i]["salary"] = jobSettings["salary"]
 
     end
+
+    if string.lower(RPExtraTeams[i]["name"]) == "mayor" then
+
+      RPExtraTeams[i].customCheck = function(ply)
+
+        print(ply:isMayor())
+
+        if ply:isMayor() then return true end
+
+        ply:LiquidChat("MAYOR-ELECTIONS", Color(213, 100, 100), "You must start / join an election to become this job!")
+
+        return false
+
+      end
+
+    end
   
   end
 
@@ -140,7 +156,16 @@ function meta:isCandidate()
 
 end
 
+function meta:isMayor()
+
+  return R_GOVERNMENT.mayor == self:SteamID()
+
+end
+
 function meta:setMayor()
+
+  R_GOVERNMENT.mayor = self:SteamID()
+
 end
 
 function canStartElection()
