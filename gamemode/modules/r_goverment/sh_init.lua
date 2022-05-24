@@ -148,6 +148,8 @@ if SERVER then
 
   R_GOVERNMENT.candidates = {}
 
+  R_GOVERNMENT.playersVoted = {}
+
   R_GOVERNMENT.electionRunning = false
 
   R_GOVERNMENT.mayorActive = false

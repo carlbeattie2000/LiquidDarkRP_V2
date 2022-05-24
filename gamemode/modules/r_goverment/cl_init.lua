@@ -355,9 +355,9 @@ function R_GOVERNMENT_CL.OpenVoteMenu()
       playerFrame:SetSize(colWidth, menuh - colPadding)
       playerFrame:SetCursor("hand")
 
-      playerFrame.DoClick = function()
+      function playerFrame:OnMousePressed()
 
-          
+        RunConsoleCommand("r_g_vote", v["steam_id"])
 
       end
 
@@ -388,6 +388,15 @@ function R_GOVERNMENT_CL.OpenVoteMenu()
   end
 
   candidatesPanel:RefreshCandidates()
+
+  -- Receive candidates refresh
+  net.Receive("update_client_candidates", function()
+
+    R_GOVERNMENT.candidates = net.ReadTable()
+
+    candidatesPanel:RefreshCandidates()
+
+  end)
 
 end
 

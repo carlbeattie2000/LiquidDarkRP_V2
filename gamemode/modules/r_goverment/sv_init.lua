@@ -106,6 +106,24 @@ function meta:addPlayerAsCandidate()
 
 end
 
+function meta:addVote()
+
+  for i, v in ipairs(R_GOVERNMENT.candidates) do
+
+    if v["steam_id"] == self:SteamID() then
+
+      R_GOVERNMENT.candidates[i]["votes"] = R_GOVERNMENT.candidates[i]["votes"] + 1
+
+      updateClientCandidates()
+
+      return
+
+    end
+
+  end
+
+end
+
 function meta:isCandidate()
 
   for i, v in ipairs(R_GOVERNMENT.candidates) do
@@ -151,11 +169,48 @@ end
 
 function endElection()
 
+  handleWinningPlayer(findWinner())
+
   R_GOVERNMENT.electionRunning = false
 
   R_GOVERNMENT.candidates = {}
 
+  R_GOVERNMENT.playersVoted = {}
+
   updateClientCandidates()
+
+end
+
+function findWinner()
+
+  local highestVotes = 0
+  local plySteamID = nil
+
+  for _, v in ipairs(R_GOVERNMENT.candidates) do
+
+    if v["votes"] > highestVotes then
+
+      highestVotes = v["votes"]
+
+      plySteamID = v["steam_id"]
+
+    end
+
+  end
+
+  return player.GetBySteamID(plySteamID)
+
+end
+
+function handleWinningPlayer(ply)
+
+  local onlinePlayers = player.GetAll()
+
+  for _, v in ipairs(onlinePlayers) do
+
+    v:LiquidChat("MAYOR-ELECTIONS", Color(213, 100, 100), string.format("%s won the election!", ply:Nick()))
+
+  end
 
 end
 
@@ -165,6 +220,20 @@ concommand.Add("r_g_join_election", function(ply, cmd, args)
 
   ply:addPlayerAsCandidate()
 
+end)
+
+concommand.Add("r_g_vote", function(ply, cmd, args)
+
+  if table.HasValue(R_GOVERNMENT.playersVoted, ply:SteamID()) then return end
+
+  table.insert(R_GOVERNMENT.playersVoted, ply:SteamID())
+
+  local targetPly = player.GetBySteamID(args[1])
+
+  if !targetPly || !targetPly:isCandidate() then return end
+
+  targetPly:addVote()
+  
 end)
 
 -- Function to update client candidates
