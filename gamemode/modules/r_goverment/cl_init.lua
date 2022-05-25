@@ -457,7 +457,21 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
   end
 
   local scrw, scrh = ScrW(), ScrH()
+
   local menuw, menuh = scrw * .6, scrh * .6
+
+  R_GOVERNMENT_CL.mayorMenu = cUtils.funcs.createMenu(0, 0, menuw, menuh, true, Color(40, 40, 40))
+
+  local closeBtn = R_GOVERNMENT_CL.mayorMenu:Add("DButton")
+
+  closeBtn:SetText("Close")
+  closeBtn:Dock(TOP)
+
+  closeBtn.DoClick = function()
+
+    R_GOVERNMENT_CL.mayorMenu:Remove()
+
+  end
 
 end
 
