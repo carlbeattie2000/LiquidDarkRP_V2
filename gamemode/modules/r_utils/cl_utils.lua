@@ -253,4 +253,6 @@ function cUtils.funcs.createMenu(x, y, w, h, centered, bgColor, closeBtns)
 
   end
 
+  return frame
+
 end
