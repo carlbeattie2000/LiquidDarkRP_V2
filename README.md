@@ -17,5 +17,5 @@ NOTE: BUGS ARE PRESENT IN CURRENT BUILDS
 - Inventory
 - Banking
 - Custom NPCs
-- Government System
+- Government System (Elections, Government Funds, Taxes)
 - Player Warns
