@@ -228,3 +228,29 @@ function cUtils.funcs.PrettyTextBox(parent, defaultTxt, x, y, w, h, font, bColor
   return textInput
 
 end
+
+function cUtils.funcs.createMenu(x, y, w, h, centered, bgColor, closeBtns)
+  
+  local frame = vgui.Create("DFrame")
+
+  frame:SetPos(x, y)
+  frame:SetSize(w, h)
+  frame:MakePopup()
+  frame:SetSizable(false)
+  frame:SetDraggable(false)
+  frame:ShowCloseButton(closeBtns or false)
+
+  if centered then
+
+    frame:Center()
+
+  end
+
+  function frame:Paint(w, h)
+
+    surface.SetDrawColor(bgColor)
+    surface.DrawRect(0, 0, w, h)
+
+  end
+
+end
