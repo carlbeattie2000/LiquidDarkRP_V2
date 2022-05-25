@@ -447,3 +447,18 @@ net.Receive("election_ended", function()
   R_GOVERNMENT.electionRunning = false
 
 end)
+
+function R_GOVERNMENT_CL.OpenMayorMenu()
+
+  if IsValid(R_GOVERNMENT_CL.mayorMenu) then
+
+    R_GOVERNMENT_CL.mayorMenu:Remove()
+
+  end
+
+  local scrw, scrh = ScrW(), ScrH()
+  local menuw, menuh = scrw * .6, scrh * .6
+
+end
+
+net.Receive("open_mayor_menu", R_GOVERNMENT_CL.OpenMayorMenu)
