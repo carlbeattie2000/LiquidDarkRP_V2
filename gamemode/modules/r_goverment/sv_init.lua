@@ -201,6 +201,24 @@ function meta:removeMayor(reason)
 
 end
 
+function notifyMayor(msg)
+  
+  local onlinePlayers = player.GetAll()
+
+  for _, v in ipairs(onlinePlayers) do
+
+    if v:isMayor() then
+
+      v:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, msg)
+
+      return
+
+    end
+
+  end
+  
+end
+
 function canStartElection()
 
   return tablelength(R_GOVERNMENT.candidates) >= R_GOVERNMENT.Config.VotingSettings["min_candidates"] && !R_GOVERNMENT.mayorActive
@@ -405,23 +423,31 @@ end)
 Core R_GOVERNMENT functionally
 
 ---------------------------------------------------------------------------*/
+function addGovernmentFunds(a)
+
+  governmentFunds = governmentFunds + a
+
+end
+
 function handlePlayerSalaryPay(ply, salary)
 
   print("paycheck R_GOVERNMENT")
 
   local tax = governmentTaxes["player_tax"]
 
-  local taxedAmount = salary * tax
+  local taxedAmount = math.floor(salary * tax)
 
-  local playerTaxedSalary = salary - taxedAmount
+  local playerTaxedSalary = math.floor(salary - taxedAmount)
 
-  local paycheckMsg = string.format("You have received a paycheck of $%s and was taxed $%s. It is now in your wallet", REBELLION.numberFormat(playerTaxedSalary), REBELLION.numberFormat(taxedAmount))
+  local paycheckMsg = string.format("You have received a paycheck of $%s and was taxed $%s. It is now in your wallet", REBELLION.format_num(playerTaxedSalary), REBELLION.format_num(taxedAmount))
 
   ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, paycheckMsg)
 
-end
+  ply:AddMoney(playerTaxedSalary)
+  
+  addGovernmentFunds(taxedAmount)
 
-hook.Add("r_government_payday", handlePlayerSalaryPay)
+end
 
 /*---------------------------------------------------------------------------
 
@@ -462,6 +488,8 @@ function rGovernmentInit()
     end
 
     loadDefaultJobSettings()
+
+    hook.Add("r_government_payday", "rGovernmentSalary", handlePlayerSalaryPay)
 
     InitFinished(status)
 
