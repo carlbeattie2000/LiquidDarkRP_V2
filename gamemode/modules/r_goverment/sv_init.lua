@@ -21,7 +21,9 @@ util.AddNetworkString("open_mayor_menu")
 local meta = FindMetaTable("Player")
 
 -- Load default settings into action
-local governmentBudget, governmentTaxes, governmentFunds = {}
+local governmentBudget, governmentTaxes = {}
+
+governmentFunds = 0
 
 local voting = R_GOVERNMENT.Config.VotingSettings
 
@@ -43,7 +45,7 @@ end
 -- Reset Government Funds
 function resetGovernmentFunds()
 
-  governmentFunds = R_GOVERNMENT.Config.DefaultGovernmentFunds
+  governmentFunds = R_GOVERNMENT.Config.DefaultGovernmentFunds || 0
 
 end
 
@@ -179,6 +181,12 @@ function meta:setMayor()
 
 end
 
+function getMayor()
+
+  return R_GOVERNMENT.mayor
+
+end
+
 function meta:removeMayor(reason)
 
   R_GOVERNMENT.mayor = nil
@@ -203,18 +211,12 @@ function meta:removeMayor(reason)
 end
 
 function notifyMayor(msg)
+
+  local mayor = getMayor()
   
-  local onlinePlayers = player.GetAll()
+  if mayor != nil then
 
-  for _, v in ipairs(onlinePlayers) do
-
-    if v:isMayor() then
-
-      v:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, msg)
-
-      return
-
-    end
+    mayor:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, msg)
 
   end
   
@@ -297,7 +299,9 @@ function findWinner()
 
   end
 
-  return player.GetBySteamID(plySteamID) || nil
+  if plySteamID == nil then return nil end
+
+  return player.GetBySteamID(plySteamID)
 
 end
 
