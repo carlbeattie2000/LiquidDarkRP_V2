@@ -16,6 +16,7 @@ util.AddNetworkString("request_updated_client_candidates")
 util.AddNetworkString("is_mayor_active")
 util.AddNetworkString("election_started")
 util.AddNetworkString("election_ended")
+util.AddNetworkString("open_mayor_menu")
 
 local meta = FindMetaTable("Player")
 
@@ -368,6 +369,26 @@ function updateMayorStatus()
   net.Broadcast()
 
 end
+
+function handleMayorMenuRequest(ply, _, args)
+
+  if ply:isMayor() then
+
+    net.Start("open_mayor_menu")
+    net.Send(ply)
+
+    return ""
+
+  end
+
+  ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "Only the mayor can access this menu!")
+
+  return ""
+
+end
+
+concommand.Add("mayor_menu", handleMayorMenuRequest)
+AddChatCommand("!mayor", handleMayorMenuRequest)
 
 net.Receive("request_updated_client_candidates", updateClientCandidates)
 
