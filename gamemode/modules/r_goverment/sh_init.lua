@@ -184,17 +184,7 @@ end
 
 function meta:isCandidate()
 
-  for i, v in ipairs(R_GOVERNMENT.candidates) do
-
-    if R_GOVERNMENT.candidates[i]["steam_id"] == self:SteamID() then
-
-      return true
-
-    end
-
-  end
-
-  return false
+  return R_GOVERNMENT.candidates[self:SteamID()]
 
 end
 
