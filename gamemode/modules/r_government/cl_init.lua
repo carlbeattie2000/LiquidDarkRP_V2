@@ -7,6 +7,13 @@ function R_GOVERNMENT_CL.requestUpdatedCandidateTable()
 
 end
 
+function R_GOVERNMENT.requestUpdatedIsMayorActivate()
+
+  net.Start("is_mayor_active")
+  net.SendToServer()
+
+end
+
 /*------------------------------------------------------------------------------
 /                                                                              /
 /              Join Election Menu                                             /
@@ -113,18 +120,18 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
                         Current Candidates
 
   ---------------------------------------------------------------------------*/
-  local mayorCandidatesContainer = R_GOVERNMENT_CL.electionMenu:Add("DPanel")
+  R_GOVERNMENT_CL.electionMenuCandidatesContainer = R_GOVERNMENT_CL.electionMenu:Add("DPanel")
 
-  mayorCandidatesContainer:Dock(TOP)
-  mayorCandidatesContainer:DockMargin(0, 5, 0, 5)
-  mayorCandidatesContainer:SetSize(menuw, menuh * .3)
+  R_GOVERNMENT_CL.electionMenuCandidatesContainer:Dock(TOP)
+  R_GOVERNMENT_CL.electionMenuCandidatesContainer:DockMargin(0, 5, 0, 5)
+  R_GOVERNMENT_CL.electionMenuCandidatesContainer:SetSize(menuw, menuh * .3)
 
   local cols = 5
   local colsSpacing = 30
   local totalRowColSpacing = colsSpacing * cols
   local colWidth = (menuw / cols) - colsSpacing
 
-  function mayorCandidatesContainer:RefreshCandidates()
+  function R_GOVERNMENT_CL.electionMenuCandidatesContainer:RefreshCandidates()
 
     if IsValid(self) then
 
@@ -179,38 +186,14 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
 
   end
 
-  mayorCandidatesContainer:RefreshCandidates()
-
-  -- Receive candidates refresh
-  net.Receive("update_client_candidates", function()
-
-    local newCandidatesTable = net.ReadTable()
-
-    if tablelength(newCandidatesTable) != tablelength(R_GOVERNMENT.candidates) then
-
-      R_GOVERNMENT.candidates = newCandidatesTable
-
-      PrintTable(R_GOVERNMENT.candidates)
-
-      if IsValid(mayorCandidatesContainer) then
-
-        mayorCandidatesContainer:RefreshCandidates()
-
-      end
-
-    end
-
-  end)
-
-  
+  R_GOVERNMENT_CL.electionMenuCandidatesContainer:RefreshCandidates()  
 
   /*---------------------------------------------------------------------------
 
                         Join Election
 
   ---------------------------------------------------------------------------*/
-  net.Start("is_mayor_active")
-  net.SendToServer()
+  R_GOVERNMENT.requestUpdatedIsMayorActivate()
 
   net.Receive("is_mayor_active", function()
 
@@ -262,7 +245,7 @@ function R_GOVERNMENT_CL.OpenElectionMenu()
   end
 
   joinElectionButton.DoClick = function()
-
+  
     RunConsoleCommand("r_g_join_election")
 
   end
@@ -335,11 +318,11 @@ function R_GOVERNMENT_CL.OpenVoteMenu()
   ----------------------------------
   -- Draw the players in the vote --
   ----------------------------------
-  local candidatesPanel = R_GOVERNMENT_CL.voteMenu:Add("DPanel")
+  R_GOVERNMENT_CL.voteMenuCandidatesPanel = R_GOVERNMENT_CL.voteMenu:Add("DPanel")
 
-  candidatesPanel:SetSize(menuw, menuh)
+  R_GOVERNMENT_CL.voteMenuCandidatesPanel:SetSize(menuw, menuh)
 
-  function candidatesPanel:RefreshCandidates()
+  function R_GOVERNMENT_CL.voteMenuCandidatesPanel:RefreshCandidates()
 
     if IsValid(self) then
 
@@ -359,8 +342,6 @@ function R_GOVERNMENT_CL.OpenVoteMenu()
 
 
     for _, v in pairs(R_GOVERNMENT.candidates) do
-
-      print(v)
 
       local ply = player.GetBySteamID(v["steam_id"])
 
@@ -405,20 +386,7 @@ function R_GOVERNMENT_CL.OpenVoteMenu()
 
   end
 
-  candidatesPanel:RefreshCandidates()
-
-  -- Receive candidates refresh
-  net.Receive("update_client_candidates", function()
-
-    R_GOVERNMENT.candidates = net.ReadTable()
-
-    if IsValid(R_GOVERNMENT_CL.voteMenu) then
-
-      candidatesPanel:RefreshCandidates()
-
-    end
-
-  end)
+  R_GOVERNMENT_CL.voteMenuCandidatesPanel:RefreshCandidates()
 
 end
 
@@ -447,6 +415,42 @@ net.Receive("election_ended", function()
   R_GOVERNMENT.electionRunning = false
 
 end)
+
+/*------------------------------------------------------------------------------
+/                                                                              /
+/              Refresh Candidates                                             /
+/                                                                            /
+---------------------------------------------------------------------------*/
+
+net.Receive("update_client_candidates", function()
+
+  local newCandidatesTable = net.ReadTable()
+
+  if tablelength(newCandidatesTable) != tablelength(R_GOVERNMENT.candidates) then
+
+    R_GOVERNMENT.candidates = newCandidatesTable
+
+    if IsValid(R_GOVERNMENT_CL.electionMenuCandidatesContainer) then
+
+      R_GOVERNMENT_CL.electionMenuCandidatesContainer:RefreshCandidates()
+
+    end
+
+    if IsValid(R_GOVERNMENT_CL.voteMenu) then
+
+      R_GOVERNMENT_CL.voteMenuCandidatesPanel:RefreshCandidates()
+  
+    end
+
+  end
+
+end)
+
+/*------------------------------------------------------------------------------
+/                                                                              /
+/              Mayor Menu                                                     /
+/                                                                            /
+---------------------------------------------------------------------------*/
 
 function R_GOVERNMENT_CL.OpenMayorMenu()
 
