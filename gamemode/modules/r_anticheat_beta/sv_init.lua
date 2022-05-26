@@ -142,16 +142,12 @@ function cvmInit()
 
     local onlinePlayers = player.GetAll()
 
-    for __, v in pairs(onlinePlayers) do
+    for k, v in pairs(onlinePlayers) do
 
       for _, c in pairs(R_ANTICHEAT.Config.ConVars.blacklisted) do
 
         v:SendLua(
-          "local GetConVar = GetConVar"..
-          "local var = GetConVar('".._.."')"..
-          "if var:GetInt() != "..c.." then ".. 
-          "LocalPlayer():ConCommand('"..string.."') "..
-          "end"
+          "local var = GetConVar('".._.."') if var:GetInt() != "..c.." then LocalPlayer():ConCommand('"..string.."') end"
         )
 
       end
@@ -192,7 +188,7 @@ function rAntiCheatInit()
   cCInit()
 
   PrintConsoleTaggedMessage(" Finished Loading")
-  
+
 end
 
 -- Can be disabled in config

@@ -50,9 +50,9 @@ R_ANTICHEAT.Config.ConVars.banMessage = "[Anti-Chat] You have been banned for ch
 
 --/ Ban Length \--
 R_ANTICHEAT.Config.ConVars.blacklisted = {
-  sv_allowcslua = 0,
-	mat_wireframe = 0,
-	sv_cheats = 0
+  ["sv_allowcslua"] = 0,
+	["mat_wireframe"] = 0,
+	["sv_cheats"] = 0
 }
 
 R_ANTICHEAT.Config.illegalCommands = {
