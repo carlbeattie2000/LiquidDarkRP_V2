@@ -71,15 +71,9 @@ end
 -- Reset Government Taxes
 function resetGovernmentTaxes()
 
-  R_GOVERNMENT.playerTaxes = {
-
-    ["player_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_player_tax"],
-
-    ["sales_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_sales_tax"],
-
-    ["trading_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_trading_tax"]
-
-  }
+  R_GOVERNMENT.playerTaxes["player_tax"]["tax"] = R_GOVERNMENT.playerTaxes["player_tax"]["min"]
+  R_GOVERNMENT.playerTaxes["sales_tax"]["tax"] = R_GOVERNMENT.playerTaxes["sales_tax"]["min"]
+  R_GOVERNMENT.playerTaxes["trading_tax"]["tax"] = R_GOVERNMENT.playerTaxes["trading_tax"]["min"]
 
   serverDataUpdated("government_values")
 
@@ -518,9 +512,9 @@ function clientUpdateGovernmentDetails(ply)
   net.Start("update_client_gov_details")
 
     -- Taxes 
-    net.WriteFloat(R_GOVERNMENT.playerTaxes["player_tax"])
-    net.WriteFloat(R_GOVERNMENT.playerTaxes["sales_tax"])
-    net.WriteFloat(R_GOVERNMENT.playerTaxes["trading_tax"])
+    net.WriteFloat(R_GOVERNMENT.playerTaxes["player_tax"]["tax"])
+    net.WriteFloat(R_GOVERNMENT.playerTaxes["sales_tax"]["tax"])
+    net.WriteFloat(R_GOVERNMENT.playerTaxes["trading_tax"]["tax"])
 
     -- Budget
     net.WriteFloat(R_GOVERNMENT.budget["police_force_jobs_budget"])
@@ -564,7 +558,7 @@ net.Receive("request_client_gov_details", requestUpdatedGovernmentDetails)
 --/ SALARY TAX \--
 function handlePlayerSalaryPay(ply, salary)
 
-  local tax =  R_GOVERNMENT.playerTaxes["player_tax"]
+  local tax =  R_GOVERNMENT.playerTaxes["player_tax"]["tax"]
 
   local taxedAmount = math.floor(salary * tax)
 
@@ -583,7 +577,7 @@ end
 --/ F4 MENU SALES \--
 function handleItemSale(ply, itemName, itemPrice)
 
-  local tax =  R_GOVERNMENT.playerTaxes["sales_tax"]
+  local tax =  R_GOVERNMENT.playerTaxes["sales_tax"]["tax"]
 
   local taxedAmount = math.floor(itemPrice * tax)
 

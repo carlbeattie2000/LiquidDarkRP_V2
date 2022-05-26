@@ -46,23 +46,6 @@ R_GOVERNMENT.Config.DefaultJobSettings = {
 
 }
 
--- Default Funding Settings which the city will default to if not enough players.
-R_GOVERNMENT.Config.minMaxTaxes = {
-
-  ["min_player_tax"] = 0.05, -- 5% tax
-
-  ["min_sales_tax"] = 0.1, -- 10% tax
-
-  ["min_trading_tax"] = 0.05, -- 5% tax if player is trading cash
-
-  ["max_player_tax"] = 0.5, -- 50%
-
-  ["max_sales_tax"] = 0.6, -- 60%
-
-  ["max_trading_tax"] = 0.45, -- 45%
-
-}
-
 -- Basically a "store" from which items can be purchased from the funds budgeted into the equipment section, and will be stored in a locker in the police department. They won't be stored in the players inventory, rather instantly equipped.
 -- ENT_NAME = {nicename, price, allowed_job(nil for all)}
 R_GOVERNMENT.Config.DefaultPoliceEquipmentCanBuy = {
@@ -128,11 +111,26 @@ R_GOVERNMENT.Config.DefaultGovernmentFunds = 50000
 
 R_GOVERNMENT.playerTaxes = {
 
-  ["player_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_player_tax"],
+  ["player_tax"] = {
+    ["nicename"] = "Player Tax",
+    ["tax"] = 0.05,
+    ["min"] = 0.05,
+    ["max"] = 0.5
+  },
 
-  ["sales_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_sales_tax"],
+  ["sales_tax"] = {
+    ["nicename"] = "Sales Tax",
+    ["tax"] = 0.1,
+    ["min"] = 0.1,
+    ["max"] = 0.6
+  },
 
-  ["trading_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_trading_tax"]
+  ["trading_tax"] = {
+    ["nicename"] = "Trading Tax",
+    ["tax"] = 0.05,
+    ["min"] = 0.05,
+    ["max"] = 0.45
+  }
 
 }
 

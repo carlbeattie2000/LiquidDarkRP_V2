@@ -454,6 +454,12 @@ surface.CreateFont("mayor_font", {
   weight = 600,
 })
 
+surface.CreateFont("mayor_font_large", {
+  font = "HudSelectionText",
+  size = 30,
+  weight = 600,
+})
+
 function getUpdatedGovernmentData()
 
   net.Start("request_client_gov_details")
@@ -496,41 +502,260 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
     surface.SetDrawColor(secondaryColor)
     surface.DrawRect(0, 0, w, h)
 
-    draw.SimpleText("Close", "mayor_font", w / 2, h / 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText("Close", "mayor_font", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
   end
 
+  local mayorMenuTitle = R_GOVERNMENT_CL.mayorMenu:Add("DPanel")
+
+  mayorMenuTitle:Dock(TOP)
+  mayorMenuTitle:SetSize(menuw, menuh * .1)
+
+  function mayorMenuTitle:Paint(w, h)
+    
+    draw.SimpleText("Mayor Menu", "mayor_font_large", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+  end
+
+  local mayorMenuContent = R_GOVERNMENT_CL.mayorMenu:Add("DScrollPanel")
+  
+  mayorMenuContent:Dock(FILL)
+
+  function mayorMenuContent:RefreshContent()
+
+    if IsValid(self) then
+
+      self:Clear()
+
+    end
+
+    local governmentFunds = self:Add("DPanel")
+
+    governmentFunds:SetSize(menuw, menuh * .1)
+    governmentFunds:Dock(TOP)
+
+    function governmentFunds:Paint(w, h)
+
+      draw.SimpleText("City Funds: $"..REBELLION.numberFormat(R_GOVERNMENT.funds), "mayor_font", 0, 0, color_white, TEXT_ALIGN_LEFT)
+
+    end
+
+    for k, v in pairs(R_GOVERNMENT.playerTaxes) do
+
+      local taxPanel = self:Add("DGrid")
+
+      taxPanel:SetCols(3)
+      taxPanel:SetColWide(menuw * .3)
+      taxPanel:SetRowHeight(menuh * .05)
+      taxPanel:Dock(TOP)
+      taxPanel:DockMargin(0, 2, 0, 2)
+
+      local taxName = vgui.Create("DPanel")
+
+      taxName:SetSize((menuw * .3) * .8, menuh * .05)
+
+      function taxName:Paint(w, h)
+
+        draw.SimpleText(v["nicename"]..": "..(v["tax"] * 100).."%", "mayor_font", 0, 0, color_white, TEXT_ALIGN_LEFT)
+
+      end
+
+      taxPanel:AddItem(taxName)
+
+      
+      local newTaxAmount = vgui.Create("DNumberWang")
+
+      newTaxAmount:SetSize((menuw * .3) * .8, menuh * .05)
+      newTaxAmount:SetMin(1)
+      newTaxAmount:SetMax(100)
+      newTaxAmount:SetValue(v["tax"] * 100)
+
+      function newTaxAmount:Paint(w, h)
+
+        surface.SetDrawColor(secondaryColor)
+        surface.DrawRect(0, 0, w, h)
+
+        draw.SimpleText(self:GetValue(), "mayor_font", 5, h / 2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+      end
+
+      taxPanel:AddItem(newTaxAmount)
+
+      local changeTax = vgui.Create("DButton")
+
+      changeTax:SetText("")
+      changeTax:SetSize((menuw * .3) * .8, menuh * .05)
+
+      function changeTax:Paint(w, h)
+
+        surface.SetDrawColor(secondaryColor)
+        surface.DrawRect(0, 0, w, h)
+
+        draw.SimpleText("Change tax", "mayor_font", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+      end
+
+      taxPanel:AddItem(changeTax)
+
+    end
+
+    local taxIncomeView = self:Add("DButton")
+
+    taxIncomeView:SetText("")
+    taxIncomeView:Dock(TOP)
+    taxIncomeView:DockMargin(0, 10, 0, 10)
+
+    taxIncomeView.DoClick = function()
+
+      R_GOVERNMENT_CL.OpenTaxIncomeView()
+
+    end
+
+    function taxIncomeView:Paint(w, h)
+
+      surface.SetDrawColor(secondaryColor)
+      surface.DrawRect(0, 0, w, h)
+
+      draw.SimpleText("View tax income", "mayor_font", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+    end
+
+  end
+
+/*------------------------------------------------------------------------------
+/                                                                              /
+/ Update Government Data                                                      /
+/                                                                            /
+---------------------------------------------------------------------------*/
+
+  net.Receive("update_client_gov_details", function()
+
+    R_GOVERNMENT.playerTaxes["player_tax"]["tax"] = math.Round(net.ReadFloat(), 2)
+    R_GOVERNMENT.playerTaxes["sales_tax"]["tax"] = math.Round(net.ReadFloat(), 2)
+    R_GOVERNMENT.playerTaxes["trading_tax"]["tax"] = math.Round(net.ReadFloat(), 2)
+  
+    R_GOVERNMENT.budget = {
+  
+      ["police_force_jobs_budget"] = net.ReadFloat(), -- 25%
+    
+      ["police_force_equipment_budget"] = net.ReadFloat(), -- 25%
+    
+      ["national_lottery_funds"] = net.ReadFloat(), -- 40%
+    
+      ["national_deposit"] = net.ReadFloat(), -- 9%
+    
+      ["mayors_salary"] = net.ReadFloat() -- 3%
+  
+    }
+    
+      
+    R_GOVERNMENT.funds = net.ReadDouble()
+
+    mayorMenuContent:RefreshContent()
+  
+  end)
+
+  mayorMenuContent:RefreshContent()
+
 end
 
-net.Receive("update_client_gov_details", function()
+/*------------------------------------------------------------------------------
+/                                                                              /
+/             Tax View                                                        /
+/                                                                            /
+---------------------------------------------------------------------------*/
 
-  R_GOVERNMENT.playerTaxes = {
+  function R_GOVERNMENT_CL.OpenTaxIncomeView()
 
-    ["player_tax"] = net.ReadFloat(),
-  
-    ["sales_tax"] = net.ReadFloat(),
-  
-    ["trading_tax"] = net.ReadFloat()
-  
-  }
+    if IsValid(R_GOVERNMENT_CL.taxIncomeView) then
 
-  R_GOVERNMENT.budget = {
+      R_GOVERNMENT_CL.taxIncomeView:Remove()
 
-    ["police_force_jobs_budget"] = net.ReadFloat(), -- 25%
-  
-    ["police_force_equipment_budget"] = net.ReadFloat(), -- 25%
-  
-    ["national_lottery_funds"] = net.ReadFloat(), -- 40%
-  
-    ["national_deposit"] = net.ReadFloat(), -- 9%
-  
-    ["mayors_salary"] = net.ReadFloat() -- 3%
+    end
 
-  }
-  
+    local scrw, scrh = ScrW(), ScrH()
+    local menuw, menuh = scrw * .15, scrh * .2
+
+    local primaryColor = Color(50, 50, 50)
+    local secondaryColor = Color(213, 100, 100)
+
+    R_GOVERNMENT_CL.taxIncomeView = cUtils.funcs.createMenu(0, 0, menuw, menuh, "", true, primaryColor)
+
+    local closeBtn = R_GOVERNMENT_CL.taxIncomeView:Add("DButton")
+
+    closeBtn:SetText("")
+    closeBtn:SetSize(menuw, menuh * .1)
+
+    function closeBtn:Paint(w, h)
+
+      surface.SetDrawColor(secondaryColor)
+      surface.DrawRect(0, 0, w, h)
+
+      draw.SimpleText("Close", "HudSelectionText", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+    end
+
+    closeBtn.DoClick = function()
+
+      R_GOVERNMENT_CL.taxIncomeView:Remove()
+
+    end
+
+    local playerTaxIncome = 0
+    local playersOnline = 0
+    local averageIncome = 0
+    local totalIncome = 0
+
+    local onlinePlayers = player.GetAll()
+
+    for _, v in ipairs(onlinePlayers) do
+
+      local plyJob = RPExtraTeams[v:Team()]
+
+      local playerWage = plyJob["salary"]
+
+      local playerTax = math.floor(playerWage * R_GOVERNMENT.playerTaxes["player_tax"]["tax"])
+
+      playerTaxIncome = playerTaxIncome + playerTax
+
+      playersOnline = playersOnline + 1
+
+      totalIncome = totalIncome + playerWage
+
+    end
+
+    averageIncome = math.floor(totalIncome / playersOnline) 
     
-  R_GOVERNMENT.funds = net.ReadDouble()
+    local taxIncome = R_GOVERNMENT_CL.taxIncomeView:Add("DPanel")
 
-end)
+    taxIncome:Dock(TOP)
+    
+    function taxIncome:Paint(w, h)
+
+      draw.SimpleText("Wage Tax Income $"..REBELLION.numberFormat(playerTaxIncome), "HudSelectionText", 0, 0, color_white, TEXT_ALIGN_LEFT)
+
+    end 
+
+    local playersOnlinePanel = R_GOVERNMENT_CL.taxIncomeView:Add("DPanel")
+
+    playersOnlinePanel:Dock(TOP)
+    
+    function playersOnlinePanel:Paint(w, h)
+
+      draw.SimpleText("Players Online: "..playersOnline, "HudSelectionText", 0, 0, color_white, TEXT_ALIGN_LEFT)
+
+    end 
+
+    local averagePlayersWagePanel = R_GOVERNMENT_CL.taxIncomeView:Add("DPanel")
+
+    averagePlayersWagePanel:Dock(TOP)
+    
+    function averagePlayersWagePanel:Paint(w, h)
+
+      draw.SimpleText("Average Player Wage $"..REBELLION.numberFormat(averageIncome), "HudSelectionText", 0, 0, color_white, TEXT_ALIGN_LEFT)
+
+    end 
+
+  end
 
 net.Receive("open_mayor_menu", R_GOVERNMENT_CL.OpenMayorMenu)
