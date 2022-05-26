@@ -63,31 +63,6 @@ R_GOVERNMENT.Config.minMaxTaxes = {
 
 }
 
-R_GOVERNMENT.Config.DefaultPlayerTaxes = {
-
-  ["player_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_player_tax"],
-
-  ["sales_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_sales_tax"],
-
-  ["trading_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_trading_tax"]
-
-}
-
--- The default budget percentage settings to use. Total will have to always equal 100%. NO MORE NO LESS
-R_GOVERNMENT.Config.DefaultBudgetSettings = {
-
-  ["police_force_jobs_budget"] = 0.25, -- 25%
-
-  ["police_force_equipment_budget"] = 0.25, -- 25%
-
-  ["national_lottery_funds"] = 0.4, -- 40%
-
-  ["national_deposit"] = 0.07, -- 9%
-
-  ["mayors_salary"] = 0.03 -- 3%
-
-}
-
 -- Basically a "store" from which items can be purchased from the funds budgeted into the equipment section, and will be stored in a locker in the police department. They won't be stored in the players inventory, rather instantly equipped.
 -- ENT_NAME = {nicename, price, allowed_job(nil for all)}
 R_GOVERNMENT.Config.DefaultPoliceEquipmentCanBuy = {
@@ -150,6 +125,34 @@ R_GOVERNMENT.Config.DefaultGovernmentFunds = 50000
 
 
 -- Setup data
+
+R_GOVERNMENT.playerTaxes = {
+
+  ["player_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_player_tax"],
+
+  ["sales_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_sales_tax"],
+
+  ["trading_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_trading_tax"]
+
+}
+
+-- The default budget percentage settings to use. Total will have to always equal 100%. NO MORE NO LESS
+R_GOVERNMENT.budget = {
+
+  ["police_force_jobs_budget"] = 0.25, -- 25%
+
+  ["police_force_equipment_budget"] = 0.25, -- 25%
+
+  ["national_lottery_funds"] = 0.4, -- 40%
+
+  ["national_deposit"] = 0.07, -- 9%
+
+  ["mayors_salary"] = 0.03 -- 3%
+
+}
+
+R_GOVERNMENT.funds = 0
+
 if SERVER then
 
   R_GOVERNMENT.candidates = {}

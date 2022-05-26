@@ -448,6 +448,13 @@ end)
 /                                                                            /
 ---------------------------------------------------------------------------*/
 
+function getUpdatedGovernmentData()
+
+  net.Start("request_client_gov_details")
+  net.SendToServer()
+
+end
+
 function R_GOVERNMENT_CL.OpenMayorMenu()
 
   if IsValid(R_GOVERNMENT_CL.mayorMenu) then
@@ -455,6 +462,8 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
     R_GOVERNMENT_CL.mayorMenu:Remove()
 
   end
+
+  getUpdatedGovernmentData()
 
   local scrw, scrh = ScrW(), ScrH()
 
@@ -465,7 +474,7 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
   local closeBtn = R_GOVERNMENT_CL.mayorMenu:Add("DButton")
 
   closeBtn:SetText("Close")
-  closeBtn:Dock(TOP)
+  closeBtn:Dock(BOTTOM)
 
   closeBtn.DoClick = function()
 
@@ -474,5 +483,36 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
   end
 
 end
+
+net.Receive("update_client_gov_details", function()
+
+  R_GOVERNMENT.playerTaxes = {
+
+    ["player_tax"] = net.ReadFloat(),
+  
+    ["sales_tax"] = net.ReadFloat(),
+  
+    ["trading_tax"] = net.ReadFloat()
+  
+  }
+
+  R_GOVERNMENT.budget = {
+
+    ["police_force_jobs_budget"] = net.ReadFloat(), -- 25%
+  
+    ["police_force_equipment_budget"] = net.ReadFloat(), -- 25%
+  
+    ["national_lottery_funds"] = net.ReadFloat(), -- 40%
+  
+    ["national_deposit"] = net.ReadFloat(), -- 9%
+  
+    ["mayors_salary"] = net.ReadFloat() -- 3%
+
+  }
+  
+    
+  R_GOVERNMENT.funds = net.ReadDouble()
+
+end)
 
 net.Receive("open_mayor_menu", R_GOVERNMENT_CL.OpenMayorMenu)

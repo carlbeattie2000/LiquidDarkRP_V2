@@ -18,35 +18,79 @@ util.AddNetworkString("election_started")
 util.AddNetworkString("election_ended")
 util.AddNetworkString("open_mayor_menu")
 util.AddNetworkString("update_client_gov_details")
+util.AddNetworkString("request_client_gov_details")
 
 local meta = FindMetaTable("Player")
 
+local serverDataLastUpdated = {}
+local clientDataLastUpdated = {}
+
+function serverDataUpdated(groupName)
+
+  serverDataLastUpdated[groupName] = CurTime()
+
+end
+
+function playerDataUpdated(ply, groupName)
+
+  clientDataLastUpdated[ply:SteamID()][groupName] = CurTime()
+
+end
+
+function meta:isDataSynced(groupName)
+
+  return serverDataLastUpdated[groupName] < clientDataLastUpdated[self:SteamID()][groupName]
+
+end
+
 -- Load default settings into action
-local governmentBudget, governmentTaxes = {}
-
-governmentFunds = 0
-
 local voting = R_GOVERNMENT.Config.VotingSettings
 
 
 -- Reset Government Budget
 function resetGovernmentBudget()
 
-  governmentBudget = R_GOVERNMENT.Config.DefaultBudgetSettings
+  R_GOVERNMENT.budget = {
+
+    ["police_force_jobs_budget"] = 0.25, -- 25%
+
+    ["police_force_equipment_budget"] = 0.25, -- 25%
+
+    ["national_lottery_funds"] = 0.4, -- 40%
+
+    ["national_deposit"] = 0.07, -- 9%
+
+    ["mayors_salary"] = 0.03 -- 3%
+
+  }
+
+  serverDataUpdated("government_values")
 
 end
 
 -- Reset Government Taxes
 function resetGovernmentTaxes()
 
-  governmentTaxes = R_GOVERNMENT.Config.DefaultPlayerTaxes
+  R_GOVERNMENT.playerTaxes = {
+
+    ["player_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_player_tax"],
+
+    ["sales_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_sales_tax"],
+
+    ["trading_tax"] = R_GOVERNMENT.Config.minMaxTaxes["min_trading_tax"]
+
+  }
+
+  serverDataUpdated("government_values")
 
 end
 
 -- Reset Government Funds
 function resetGovernmentFunds()
 
-  governmentFunds = R_GOVERNMENT.Config.DefaultGovernmentFunds || 0
+  R_GOVERNMENT.funds = R_GOVERNMENT.Config.DefaultGovernmentFunds || 0
+
+  serverDataUpdated("government_values")
 
 end
 
@@ -148,6 +192,8 @@ function meta:addPlayerAsCandidate()
 
   end
 
+  serverDataUpdated("government_voting")
+
   updateClientCandidates()
 
 end
@@ -155,6 +201,8 @@ end
 function meta:addVote()
 
   R_GOVERNMENT.candidates[self:SteamID()]["votes"] = R_GOVERNMENT.candidates[self:SteamID()]["votes"] + 1
+
+  serverDataUpdated("government_voting")
 
   updateClientCandidates()
 
@@ -179,6 +227,8 @@ function meta:setMayor()
   R_GOVERNMENT.mayorActive = true
 
   self:ChangeTeam(R_GOVERNMENT.mayorTeamID, true)
+
+  serverDataUpdated("government_voting")
 
 end
 
@@ -206,6 +256,8 @@ function meta:removeMayor(reason)
 
   self:TeamBan()
   self:ChangeTeam(R_GOVERNMENT.Config.DefaultTeamID, true)
+
+  serverDataUpdated("government_voting")
 
   updateMayorStatus()
 
@@ -236,6 +288,8 @@ function startElection()
   net.Start("election_started")
   net.Broadcast()
 
+  serverDataUpdated("government_voting")
+
   timer.Simple(R_GOVERNMENT.Config.VotingSettings["voting_time"], function()
 
     net.Start("election_ended")
@@ -256,6 +310,8 @@ function endElection()
   R_GOVERNMENT.candidates = {}
 
   R_GOVERNMENT.playersVoted = {}
+
+  serverDataUpdated("government_voting")
 
   updateClientCandidates()
 
@@ -451,14 +507,64 @@ Core R_GOVERNMENT functionally
 ---------------------------------------------------------------------------*/
 function addGovernmentFunds(a)
 
-  governmentFunds = governmentFunds + a
+  R_GOVERNMENT.funds = R_GOVERNMENT.funds + a
+
+  serverDataUpdated("government_values")
 
 end
+
+function clientUpdateGovernmentDetails(ply)
+
+  net.Start("update_client_gov_details")
+
+    -- Taxes 
+    net.WriteFloat(R_GOVERNMENT.playerTaxes["player_tax"])
+    net.WriteFloat(R_GOVERNMENT.playerTaxes["sales_tax"])
+    net.WriteFloat(R_GOVERNMENT.playerTaxes["trading_tax"])
+
+    -- Budget
+    net.WriteFloat(R_GOVERNMENT.budget["police_force_jobs_budget"])
+    net.WriteFloat(R_GOVERNMENT.budget["police_force_equipment_budget"])
+    net.WriteFloat(R_GOVERNMENT.budget["national_lottery_funds"])
+    net.WriteFloat(R_GOVERNMENT.budget["national_deposit"])
+    net.WriteFloat(R_GOVERNMENT.budget["mayors_salary"])
+
+    -- Funds
+    net.WriteDouble(R_GOVERNMENT.funds)
+
+  net.Send(ply)
+
+  playerDataUpdated(ply, "government_values")
+
+end
+
+function requestUpdatedGovernmentDetails(_, ply)
+
+  -- If the player requesting the update is already synced, we can just assume they are spamming
+  if ply:isDataSynced("government_values") then return end
+
+  local onlinePlayers = player.GetAll()
+
+  for _, v in ipairs(onlinePlayers) do
+
+    if v:isDataSynced("government_values") then
+
+      continue
+
+    end
+    
+    clientUpdateGovernmentDetails(v)
+
+  end
+
+end
+
+net.Receive("request_client_gov_details", requestUpdatedGovernmentDetails)
 
 --/ SALARY TAX \--
 function handlePlayerSalaryPay(ply, salary)
 
-  local tax = governmentTaxes["player_tax"]
+  local tax =  R_GOVERNMENT.playerTaxes["player_tax"]
 
   local taxedAmount = math.floor(salary * tax)
 
@@ -477,7 +583,7 @@ end
 --/ F4 MENU SALES \--
 function handleItemSale(ply, itemName, itemPrice)
 
-  local tax = governmentTaxes["sales_tax"]
+  local tax =  R_GOVERNMENT.playerTaxes["sales_tax"]
 
   local taxedAmount = math.floor(itemPrice * tax)
 
@@ -516,6 +622,15 @@ end
 function rGovernmentInit()
 
   local status = true
+
+  hook.Add("PlayerInitialSpawn", "setupNetTablesPly", function(ply)
+
+    clientDataLastUpdated[ply:SteamID()] = {
+      ["government_values"] = 0,
+      ["government_voting"] = 0
+    }
+  
+  end)
 
   resetGovernmentBudget()
 
