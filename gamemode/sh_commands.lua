@@ -182,7 +182,8 @@ function GM:AddEntityCommands(tblEnt)
 			GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, tblEnt.cmd))
 			return ""
 		end
-		ply:AddMoney(-tblEnt.price)
+
+    hook.Call("r_government_item_sale", nil, ply, tblEnt.name, tblEnt.price)
 
 		local trace = {}
 		trace.start = ply:EyePos()

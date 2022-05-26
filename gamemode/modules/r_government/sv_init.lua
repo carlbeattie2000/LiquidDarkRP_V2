@@ -17,6 +17,7 @@ util.AddNetworkString("is_mayor_active")
 util.AddNetworkString("election_started")
 util.AddNetworkString("election_ended")
 util.AddNetworkString("open_mayor_menu")
+util.AddNetworkString("update_client_gov_details")
 
 local meta = FindMetaTable("Player")
 
@@ -454,9 +455,8 @@ function addGovernmentFunds(a)
 
 end
 
+--/ SALARY TAX \--
 function handlePlayerSalaryPay(ply, salary)
-
-  print("paycheck R_GOVERNMENT")
 
   local tax = governmentTaxes["player_tax"]
 
@@ -470,6 +470,25 @@ function handlePlayerSalaryPay(ply, salary)
 
   ply:AddMoney(playerTaxedSalary)
   
+  addGovernmentFunds(taxedAmount)
+
+end
+
+--/ F4 MENU SALES \--
+function handleItemSale(ply, itemName, itemPrice)
+
+  local tax = governmentTaxes["sales_tax"]
+
+  local taxedAmount = math.floor(itemPrice * tax)
+
+  local itemTaxedAmount = math.floor(itemPrice - taxedAmount)
+
+  local saleMessage = string.format("You have purchased a %s for $%s and was taxed $%s", itemName, REBELLION.format_num(itemTaxedAmount), REBELLION.format_num(taxedAmount))
+
+  ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, saleMessage)
+
+  ply:AddMoney(-itemPrice)
+
   addGovernmentFunds(taxedAmount)
 
 end
@@ -515,6 +534,7 @@ function rGovernmentInit()
     loadDefaultJobSettings()
 
     hook.Add("r_government_payday", "rGovernmentSalary", handlePlayerSalaryPay)
+    hook.Add("r_government_item_sale", "rGovernmentSale", handleItemSale)
 
     InitFinished(status)
 
