@@ -478,7 +478,7 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
   local primaryColor = Color(40, 40, 40)
   local secondaryColor = Color(105, 105, 105)
 
-  R_GOVERNMENT_CL.mayorMenu = cUtils.funcs.createMenu(0, 0, menuw, menuh, true, primaryColor)
+  R_GOVERNMENT_CL.mayorMenu = cUtils.funcs.createMenu(0, 0, menuw, menuh, "", true, primaryColor)
 
   local closeBtn = R_GOVERNMENT_CL.mayorMenu:Add("DButton")
 

@@ -229,7 +229,7 @@ function cUtils.funcs.PrettyTextBox(parent, defaultTxt, x, y, w, h, font, bColor
 
 end
 
-function cUtils.funcs.createMenu(x, y, w, h, centered, bgColor, closeBtns)
+function cUtils.funcs.createMenu(x, y, w, h, title, centered, bgColor, closeBtns)
   
   local frame = vgui.Create("DFrame")
 
@@ -239,6 +239,7 @@ function cUtils.funcs.createMenu(x, y, w, h, centered, bgColor, closeBtns)
   frame:SetSizable(false)
   frame:SetDraggable(false)
   frame:ShowCloseButton(closeBtns or false)
+  frame:SetTitle(title)
 
   if centered then
 
