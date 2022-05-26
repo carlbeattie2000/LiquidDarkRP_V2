@@ -639,20 +639,12 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
     R_GOVERNMENT.playerTaxes["player_tax"]["tax"] = math.Round(net.ReadFloat(), 2)
     R_GOVERNMENT.playerTaxes["sales_tax"]["tax"] = math.Round(net.ReadFloat(), 2)
     R_GOVERNMENT.playerTaxes["trading_tax"]["tax"] = math.Round(net.ReadFloat(), 2)
-  
-    R_GOVERNMENT.budget = {
-  
-      ["police_force_jobs_budget"] = net.ReadFloat(), -- 25%
-    
-      ["police_force_equipment_budget"] = net.ReadFloat(), -- 25%
-    
-      ["national_lottery_funds"] = net.ReadFloat(), -- 40%
-    
-      ["national_deposit"] = net.ReadFloat(), -- 9%
-    
-      ["mayors_salary"] = net.ReadFloat() -- 3%
-  
-    }
+
+    R_GOVERNMENT.budget["police_force_jobs_budget"]["budget"] = math.Round(net.ReadFloat(), 2)
+    R_GOVERNMENT.budget["police_force_equipment_budget"]["budget"] = math.Round(net.ReadFloat(), 2)
+    R_GOVERNMENT.budget["national_lottery_funds"]["budget"] = math.Round(net.ReadFloat(), 2)
+    R_GOVERNMENT.budget["national_deposit"]["budget"] = math.Round(net.ReadFloat(), 2)
+    R_GOVERNMENT.budget["mayors_salary"]["budget"] = math.Round(net.ReadFloat(), 2)
     
       
     R_GOVERNMENT.funds = net.ReadDouble()
