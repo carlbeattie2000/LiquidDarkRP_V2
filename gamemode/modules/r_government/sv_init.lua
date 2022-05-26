@@ -64,9 +64,9 @@ function resetGovernmentBudget()
 
   R_GOVERNMENT.budget["police_force_jobs_budget"]["budget"] = 0.25
   R_GOVERNMENT.budget["police_force_equipment_budget"]["budget"] = 0.25
-  R_GOVERNMENT.budget["national_lottery_funds"] = 0.4
-  R_GOVERNMENT.budget["national_deposit"] = 0.07
-  R_GOVERNMENT.budget["mayors_salary"] = 0.03
+  R_GOVERNMENT.budget["national_lottery_funds"]["budget"] = 0.4
+  R_GOVERNMENT.budget["national_deposit"]["budget"] = 0.07
+  R_GOVERNMENT.budget["mayors_salary"]["budget"] = 0.03
 
   serverDataUpdated("government_values")
 
