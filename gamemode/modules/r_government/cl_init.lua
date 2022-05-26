@@ -426,21 +426,17 @@ net.Receive("update_client_candidates", function()
 
   local newCandidatesTable = net.ReadTable()
 
-  if tablelength(newCandidatesTable) != tablelength(R_GOVERNMENT.candidates) then
+  R_GOVERNMENT.candidates = newCandidatesTable
 
-    R_GOVERNMENT.candidates = newCandidatesTable
+  if IsValid(R_GOVERNMENT_CL.electionMenuCandidatesContainer) then
 
-    if IsValid(R_GOVERNMENT_CL.electionMenuCandidatesContainer) then
+    R_GOVERNMENT_CL.electionMenuCandidatesContainer:RefreshCandidates()
 
-      R_GOVERNMENT_CL.electionMenuCandidatesContainer:RefreshCandidates()
+  end
 
-    end
+  if IsValid(R_GOVERNMENT_CL.voteMenu) then
 
-    if IsValid(R_GOVERNMENT_CL.voteMenu) then
-
-      R_GOVERNMENT_CL.voteMenuCandidatesPanel:RefreshCandidates()
-  
-    end
+    R_GOVERNMENT_CL.voteMenuCandidatesPanel:RefreshCandidates()
 
   end
 
