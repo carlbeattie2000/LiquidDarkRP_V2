@@ -454,6 +454,12 @@ surface.CreateFont("mayor_font", {
   weight = 600,
 })
 
+surface.CreateFont("mayor_font_small", {
+  font = "HudSelectionText",
+  size = 17,
+  weight = 600,
+})
+
 surface.CreateFont("mayor_font_large", {
   font = "HudSelectionText",
   size = 30,
@@ -479,10 +485,11 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
 
   local scrw, scrh = ScrW(), ScrH()
 
-  local menuw, menuh = scrw * .6, scrh * .6
+  local menuw, menuh = scrw * .7, scrh * .7
 
   local primaryColor = Color(40, 40, 40)
   local secondaryColor = Color(105, 105, 105)
+  local contentBtnColor = Color(213, 100, 100)
 
   R_GOVERNMENT_CL.mayorMenu = cUtils.funcs.createMenu(0, 0, menuw, menuh, "", true, primaryColor)
 
@@ -521,6 +528,8 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
   
   mayorMenuContent:Dock(FILL)
 
+  cUtils.funcs.EditScrollBarStyle(mayorMenuContent, Color(10, 10, 10, 255))
+
   function mayorMenuContent:RefreshContent()
 
     if IsValid(self) then
@@ -540,6 +549,18 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
 
     end
 
+    local sectionHeader = self:Add("DPanel")
+
+    sectionHeader:SetSize(menuw, menuh * .05)
+    sectionHeader:Dock(TOP)
+    sectionHeader:DockMargin(0, 3, 0, 3)
+
+    function sectionHeader:Paint(w, h)
+
+      draw.SimpleText("Taxes", "mayor_font", 0, 0, color_white, TEXT_ALIGN_LEFT)
+
+    end
+
     for k, v in pairs(R_GOVERNMENT.playerTaxes) do
 
       local taxPanel = self:Add("DGrid")
@@ -556,7 +577,7 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
 
       function taxName:Paint(w, h)
 
-        draw.SimpleText(v["nicename"]..": "..(v["tax"] * 100).."%", "mayor_font", 0, 0, color_white, TEXT_ALIGN_LEFT)
+        draw.SimpleText(v["nicename"]..": "..(v["tax"] * 100).."%", "mayor_font_small", 0, 0, color_white, TEXT_ALIGN_LEFT)
 
       end
 
@@ -575,7 +596,7 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
         surface.SetDrawColor(secondaryColor)
         surface.DrawRect(0, 0, w, h)
 
-        draw.SimpleText(self:GetValue(), "mayor_font", 5, h / 2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self:GetValue(), "mayor_font_small", 5, h / 2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
       end
 
@@ -591,7 +612,7 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
         surface.SetDrawColor(secondaryColor)
         surface.DrawRect(0, 0, w, h)
 
-        draw.SimpleText("Change tax", "mayor_font", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText("Change tax", "mayor_font_small", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
       end
 
@@ -619,10 +640,108 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
 
     function taxIncomeView:Paint(w, h)
 
-      surface.SetDrawColor(secondaryColor)
+      surface.SetDrawColor(contentBtnColor)
       surface.DrawRect(0, 0, w, h)
 
       draw.SimpleText("View tax income", "mayor_font", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+    end
+
+    local sectionHeader2 = self:Add("DPanel")
+
+    sectionHeader2:SetSize(menuw, menuh * .05)
+    sectionHeader2:Dock(TOP)
+    sectionHeader2:DockMargin(0, 3, 0, 3)
+
+    function sectionHeader2:Paint(w, h)
+
+      draw.SimpleText("Budgeting", "mayor_font", 0, 0, color_white, TEXT_ALIGN_LEFT)
+
+    end
+
+    for k, v in pairs(R_GOVERNMENT.budget) do
+
+      local budgetPanel = self:Add("DGrid")
+
+      budgetPanel:SetCols(3)
+      budgetPanel:SetColWide(menuw * .3)
+      budgetPanel:SetRowHeight(menuh * .05)
+      budgetPanel:Dock(TOP)
+      budgetPanel:DockMargin(0, 2, 0, 2)
+
+      local budgetName = vgui.Create("DPanel")
+
+      budgetName:SetSize((menuw * .3) * .8, menuh * .05)
+
+      function budgetName:Paint(w, h)
+
+        draw.SimpleText(v["nicename"]..": "..(v["budget"] * 100).."%", "mayor_font_small", 0, 0, color_white, TEXT_ALIGN_LEFT)
+
+      end
+
+      budgetPanel:AddItem(budgetName)
+
+      
+      local newBudgetAmount = vgui.Create("DNumberWang")
+
+      newBudgetAmount:SetSize((menuw * .3) * .8, menuh * .05)
+      newBudgetAmount:SetMin(1)
+      newBudgetAmount:SetMax(100)
+      newBudgetAmount:SetValue(v["budget"] * 100)
+
+      function newBudgetAmount:Paint(w, h)
+
+        surface.SetDrawColor(secondaryColor)
+        surface.DrawRect(0, 0, w, h)
+
+        draw.SimpleText(self:GetValue(), "mayor_font_small", 5, h / 2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+      end
+
+      budgetPanel:AddItem(newBudgetAmount)
+
+      local changeBudget = vgui.Create("DButton")
+
+      changeBudget:SetText("")
+      changeBudget:SetSize((menuw * .3) * .8, menuh * .05)
+
+      function changeBudget:Paint(w, h)
+
+        surface.SetDrawColor(secondaryColor)
+        surface.DrawRect(0, 0, w, h)
+
+        draw.SimpleText("Change budget", "mayor_font_small", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+      end
+
+      changeBudget.DoClick = function()
+
+        RunConsoleCommand("update_tax", k, newTaxAmount:GetValue())
+
+      end
+
+      budgetPanel:AddItem(changeBudget)
+
+    end
+
+    local budgetingView = self:Add("DButton")
+
+    budgetingView:SetText("")
+    budgetingView:Dock(TOP)
+    budgetingView:DockMargin(0, 20, 0, 20)
+
+    budgetingView.DoClick = function()
+
+      R_GOVERNMENT_CL.OpenBudgetView()
+
+    end
+
+    function budgetingView:Paint(w, h)
+
+      surface.SetDrawColor(contentBtnColor)
+      surface.DrawRect(0, 0, w, h)
+
+      draw.SimpleText("View budget expenses", "mayor_font", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
     end
 
@@ -663,97 +782,191 @@ end
 /                                                                            /
 ---------------------------------------------------------------------------*/
 
-  function R_GOVERNMENT_CL.OpenTaxIncomeView()
+function R_GOVERNMENT_CL.OpenTaxIncomeView()
 
-    if IsValid(R_GOVERNMENT_CL.taxIncomeView) then
+  if IsValid(R_GOVERNMENT_CL.taxIncomeView) then
 
-      R_GOVERNMENT_CL.taxIncomeView:Remove()
-
-    end
-
-    local scrw, scrh = ScrW(), ScrH()
-    local menuw, menuh = scrw * .15, scrh * .2
-
-    local primaryColor = Color(50, 50, 50)
-    local secondaryColor = Color(213, 100, 100)
-
-    R_GOVERNMENT_CL.taxIncomeView = cUtils.funcs.createMenu(0, 0, menuw, menuh, "", true, primaryColor)
-
-    local closeBtn = R_GOVERNMENT_CL.taxIncomeView:Add("DButton")
-
-    closeBtn:SetText("")
-    closeBtn:SetSize(menuw, menuh * .1)
-
-    function closeBtn:Paint(w, h)
-
-      surface.SetDrawColor(secondaryColor)
-      surface.DrawRect(0, 0, w, h)
-
-      draw.SimpleText("Close", "HudSelectionText", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-
-    end
-
-    closeBtn.DoClick = function()
-
-      R_GOVERNMENT_CL.taxIncomeView:Remove()
-
-    end
-
-    local playerTaxIncome = 0
-    local playersOnline = 0
-    local averageIncome = 0
-    local totalIncome = 0
-
-    local onlinePlayers = player.GetAll()
-
-    for _, v in ipairs(onlinePlayers) do
-
-      local plyJob = RPExtraTeams[v:Team()]
-
-      local playerWage = plyJob["salary"]
-
-      local playerTax = math.floor(playerWage * R_GOVERNMENT.playerTaxes["player_tax"]["tax"])
-
-      playerTaxIncome = playerTaxIncome + playerTax
-
-      playersOnline = playersOnline + 1
-
-      totalIncome = totalIncome + playerWage
-
-    end
-
-    averageIncome = math.floor(totalIncome / playersOnline) 
-    
-    local taxIncome = R_GOVERNMENT_CL.taxIncomeView:Add("DPanel")
-
-    taxIncome:Dock(TOP)
-    
-    function taxIncome:Paint(w, h)
-
-      draw.SimpleText("Wage Tax Income $"..REBELLION.numberFormat(playerTaxIncome), "HudSelectionText", 0, 0, color_white, TEXT_ALIGN_LEFT)
-
-    end 
-
-    local playersOnlinePanel = R_GOVERNMENT_CL.taxIncomeView:Add("DPanel")
-
-    playersOnlinePanel:Dock(TOP)
-    
-    function playersOnlinePanel:Paint(w, h)
-
-      draw.SimpleText("Players Online: "..playersOnline, "HudSelectionText", 0, 0, color_white, TEXT_ALIGN_LEFT)
-
-    end 
-
-    local averagePlayersWagePanel = R_GOVERNMENT_CL.taxIncomeView:Add("DPanel")
-
-    averagePlayersWagePanel:Dock(TOP)
-    
-    function averagePlayersWagePanel:Paint(w, h)
-
-      draw.SimpleText("Average Player Wage $"..REBELLION.numberFormat(averageIncome), "HudSelectionText", 0, 0, color_white, TEXT_ALIGN_LEFT)
-
-    end 
+    R_GOVERNMENT_CL.taxIncomeView:Remove()
 
   end
+
+  local scrw, scrh = ScrW(), ScrH()
+  local menuw, menuh = scrw * .15, scrh * .2
+
+  local primaryColor = Color(50, 50, 50)
+  local secondaryColor = Color(213, 100, 100)
+
+  R_GOVERNMENT_CL.taxIncomeView = cUtils.funcs.createMenu(0, 0, menuw, menuh, "", true, primaryColor)
+
+  local closeBtn = R_GOVERNMENT_CL.taxIncomeView:Add("DButton")
+
+  closeBtn:SetText("")
+  closeBtn:SetSize(menuw, menuh * .1)
+
+  function closeBtn:Paint(w, h)
+
+    surface.SetDrawColor(secondaryColor)
+    surface.DrawRect(0, 0, w, h)
+
+    draw.SimpleText("Close", "HudSelectionText", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+  end
+
+  closeBtn.DoClick = function()
+
+    R_GOVERNMENT_CL.taxIncomeView:Remove()
+
+  end
+
+  local playerTaxIncome = 0
+  local playersOnline = 0
+  local averageIncome = 0
+  local totalIncome = 0
+
+  local onlinePlayers = player.GetAll()
+
+  for _, v in ipairs(onlinePlayers) do
+
+    local plyJob = RPExtraTeams[v:Team()]
+
+    local playerWage = plyJob["salary"]
+
+    local playerTax = math.floor(playerWage * R_GOVERNMENT.playerTaxes["player_tax"]["tax"])
+
+    playerTaxIncome = playerTaxIncome + playerTax
+
+    playersOnline = playersOnline + 1
+
+    totalIncome = totalIncome + playerWage
+
+  end
+
+  averageIncome = math.floor(totalIncome / playersOnline) 
+  
+  local taxIncome = R_GOVERNMENT_CL.taxIncomeView:Add("DPanel")
+
+  taxIncome:Dock(TOP)
+  
+  function taxIncome:Paint(w, h)
+
+    draw.SimpleText("Wage Tax Income $"..REBELLION.numberFormat(playerTaxIncome), "HudSelectionText", 0, 0, color_white, TEXT_ALIGN_LEFT)
+
+  end 
+
+  local playersOnlinePanel = R_GOVERNMENT_CL.taxIncomeView:Add("DPanel")
+
+  playersOnlinePanel:Dock(TOP)
+  
+  function playersOnlinePanel:Paint(w, h)
+
+    draw.SimpleText("Players Online: "..playersOnline, "HudSelectionText", 0, 0, color_white, TEXT_ALIGN_LEFT)
+
+  end 
+
+  local averagePlayersWagePanel = R_GOVERNMENT_CL.taxIncomeView:Add("DPanel")
+
+  averagePlayersWagePanel:Dock(TOP)
+  
+  function averagePlayersWagePanel:Paint(w, h)
+
+    draw.SimpleText("Average Player Wage $"..REBELLION.numberFormat(averageIncome), "HudSelectionText", 0, 0, color_white, TEXT_ALIGN_LEFT)
+
+  end 
+
+end
+
+/*------------------------------------------------------------------------------
+/                                                                              /
+/             Budget View                                                     /
+/                                                                            /
+---------------------------------------------------------------------------*/
+
+function R_GOVERNMENT_CL.OpenBudgetView()
+
+  if IsValid(R_GOVERNMENT_CL.budgetExpensesView) then
+
+    R_GOVERNMENT_CL.budgetExpensesView:Remove()
+
+  end
+
+  local scrw, scrh = ScrW(), ScrH()
+  local menuw, menuh = scrw * .2, scrh * .2
+
+  local primaryColor = Color(50, 50, 50)
+  local secondaryColor = Color(213, 100, 100)
+
+  R_GOVERNMENT_CL.budgetExpensesView = cUtils.funcs.createMenu(0, 0, menuw, menuh, "", true, primaryColor)
+
+  local closeBtn = R_GOVERNMENT_CL.budgetExpensesView:Add("DButton")
+
+  closeBtn:SetText("")
+  closeBtn:SetSize(menuw, menuh * .1)
+
+  function closeBtn:Paint(w, h)
+
+    surface.SetDrawColor(secondaryColor)
+    surface.DrawRect(0, 0, w, h)
+
+    draw.SimpleText("Close", "HudSelectionText", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+  end
+
+  closeBtn.DoClick = function()
+
+    R_GOVERNMENT_CL.budgetExpensesView:Remove()
+
+  end
+
+  local expenses = {}
+  local avgGovernmentWage = 0
+  local governmentJobsCount = 0
+  local governmentJobsTotalWagesCombined = 0
+
+  for _, v in ipairs(RPExtraTeams) do
+
+    if v["category"] == "Law & Order" then
+
+      governmentJobsTotalWagesCombined = governmentJobsTotalWagesCombined + v["salary"]
+
+      governmentJobsCount = governmentJobsCount + 1
+
+    end
+
+  end
+
+  avgGovernmentWage = math.floor(governmentJobsTotalWagesCombined / governmentJobsCount)
+
+  for _, v in pairs(R_GOVERNMENT.budget) do
+
+    expenses[v["nicename"]] = math.floor(R_GOVERNMENT.funds * v["budget"])
+
+  end
+
+  for k, v in pairs(expenses) do
+
+    local expensePanel = R_GOVERNMENT_CL.budgetExpensesView:Add("DPanel")
+
+    expensePanel:SetSize(menuw, menuh * .1)
+    expensePanel:Dock(TOP)
+    expensePanel:DockMargin(0, 3, 0, 3)
+
+    function expensePanel:Paint(w, h)
+
+      local string = k..": $"..REBELLION.numberFormat(v)
+
+      if k == "Government Jobs" then
+        local canAffordStaff = math.floor(v / avgGovernmentWage)
+
+        string = string.."(can afford "..canAffordStaff.." salary's)"
+
+      end
+
+      draw.SimpleText(string, "HudSelectionText", 0, 0, color_white, TEXT_ALIGN_LEFT)
+
+    end
+
+  end
+
+end
 
 net.Receive("open_mayor_menu", R_GOVERNMENT_CL.OpenMayorMenu)

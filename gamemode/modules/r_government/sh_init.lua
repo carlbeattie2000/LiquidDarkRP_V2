@@ -138,27 +138,27 @@ R_GOVERNMENT.playerTaxes = {
 R_GOVERNMENT.budget = {
 
   ["police_force_jobs_budget"] = {
-    ["nicename"] = "",
+    ["nicename"] = "Government Jobs",
     ["budget"] = 0.25 -- 25%
   },
 
   ["police_force_equipment_budget"] = {
-    ["nicename"] = "",
+    ["nicename"] = "Government Equipment",
     ["budget"] = 0.25 -- 25%
   },
 
   ["national_lottery_funds"] = {
-    ["nicename"] = "",
+    ["nicename"] = "Lottery Funds",
     ["budget"] = 0.4 -- 40%
   },
 
   ["national_deposit"] = {
-    ["nicename"] = "",
+    ["nicename"] = "Reserves",
     ["budget"] = 0.07, -- 9%
   },
 
   ["mayors_salary"] = {
-    ["nicename"] = "",
+    ["nicename"] = "Mayor's Salary",
     ["budget"] = 0.03 -- 3%
   }
 
@@ -185,10 +185,6 @@ local meta = FindMetaTable("Player")
 if CLIENT then
 
   R_GOVERNMENT.funds = 0
-
-  R_GOVERNMENT.taxes = {}
-
-  R_GOVERNMENT.budget = {}
 
   R_GOVERNMENT.candidates = {}
   
