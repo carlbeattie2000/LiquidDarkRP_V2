@@ -751,6 +751,42 @@ net.Receive("request_client_gov_details", requestUpdatedGovernmentDetails)
 --/ SALARY TAX \--
 function handlePlayerSalaryPay(ply, salary)
 
+  if ply:isMayor() then
+
+    local mayorFundsBucket = R_GOVERNMENT.funds * R_GOVERNMENT.budget["mayors_salary"]["budget"]
+
+    salary = mayorFundsBucket * .1
+
+    if (mayorFundsBucket < salary) then
+
+      ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "Mr Mayor, the government cannot afford your paycheck...")
+
+      return
+
+    end
+
+    addGovernmentFunds(-salary)
+
+  end
+
+  if RPExtraTeams[ply:Team()]["category"] = "Law & Order" then
+
+    local governmentJobFundsBucket = R_GOVERNMENT.funds * R_GOVERNMENT.budget["police_force_jobs_budget"]["budget"]
+
+    if (governmentJobFundsBucket < salary) then
+
+      ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "We're sorry, but the government cannot afford your paycheck!")
+
+      return
+
+    end
+
+    addGovernmentFunds(-salary)
+
+  end
+
+
+
   local tax =  R_GOVERNMENT.playerTaxes["player_tax"]["tax"]
 
   local taxedAmount = math.floor(salary * tax)
