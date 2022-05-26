@@ -448,6 +448,12 @@ end)
 /                                                                            /
 ---------------------------------------------------------------------------*/
 
+surface.CreateFont("mayor_font", {
+  font = "HudSelectionText",
+  size = 22,
+  weight = 600,
+})
+
 function getUpdatedGovernmentData()
 
   net.Start("request_client_gov_details")
@@ -469,16 +475,28 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
 
   local menuw, menuh = scrw * .6, scrh * .6
 
-  R_GOVERNMENT_CL.mayorMenu = cUtils.funcs.createMenu(0, 0, menuw, menuh, true, Color(40, 40, 40))
+  local primaryColor = Color(40, 40, 40)
+  local secondaryColor = Color(105, 105, 105)
+
+  R_GOVERNMENT_CL.mayorMenu = cUtils.funcs.createMenu(0, 0, menuw, menuh, true, primaryColor)
 
   local closeBtn = R_GOVERNMENT_CL.mayorMenu:Add("DButton")
 
-  closeBtn:SetText("Close")
+  closeBtn:SetText("")
   closeBtn:Dock(BOTTOM)
 
   closeBtn.DoClick = function()
 
     R_GOVERNMENT_CL.mayorMenu:Remove()
+
+  end
+
+  function closeBtn:Paint(w, h)
+
+    surface.SetDrawColor(secondaryColor)
+    surface.DrawRect(0, 0, w, h)
+
+    draw.SimpleText("Close", "mayor_font", w / 2, h / 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
   end
 
