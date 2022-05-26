@@ -62,19 +62,11 @@ local voting = R_GOVERNMENT.Config.VotingSettings
 -- Reset Government Budget
 function resetGovernmentBudget()
 
-  R_GOVERNMENT.budget = {
-
-    ["police_force_jobs_budget"] = 0.25, -- 25%
-
-    ["police_force_equipment_budget"] = 0.25, -- 25%
-
-    ["national_lottery_funds"] = 0.4, -- 40%
-
-    ["national_deposit"] = 0.07, -- 9%
-
-    ["mayors_salary"] = 0.03 -- 3%
-
-  }
+  R_GOVERNMENT.budget["police_force_jobs_budget"]["budget"] = 0.25
+  R_GOVERNMENT.budget["police_force_equipment_budget"]["budget"] = 0.25
+  R_GOVERNMENT.budget["national_lottery_funds"] = 0.4
+  R_GOVERNMENT.budget["national_deposit"] = 0.07
+  R_GOVERNMENT.budget["mayors_salary"] = 0.03
 
   serverDataUpdated("government_values")
 
@@ -597,8 +589,6 @@ function changeTax(ply, _, args)
 
   if !ply:isMayor() then return end
 
-  print("Hi ?")
-
   if !args[1] or !args[2] then return end
 
   local taxName = args[1]
@@ -641,6 +631,10 @@ end
 
 concommand.Add("update_tax", changeTax)
 
+function updateGovernmentBudget()
+
+end
+
 function clientUpdateGovernmentDetails(ply)
 
   net.Start("update_client_gov_details")
@@ -651,11 +645,11 @@ function clientUpdateGovernmentDetails(ply)
     net.WriteFloat(R_GOVERNMENT.playerTaxes["trading_tax"]["tax"])
 
     -- Budget
-    net.WriteFloat(R_GOVERNMENT.budget["police_force_jobs_budget"])
-    net.WriteFloat(R_GOVERNMENT.budget["police_force_equipment_budget"])
-    net.WriteFloat(R_GOVERNMENT.budget["national_lottery_funds"])
-    net.WriteFloat(R_GOVERNMENT.budget["national_deposit"])
-    net.WriteFloat(R_GOVERNMENT.budget["mayors_salary"])
+    net.WriteFloat(R_GOVERNMENT.budget["police_force_jobs_budget"]["budget"])
+    net.WriteFloat(R_GOVERNMENT.budget["police_force_equipment_budget"]["budget"])
+    net.WriteFloat(R_GOVERNMENT.budget["national_lottery_funds"]["budget"])
+    net.WriteFloat(R_GOVERNMENT.budget["national_deposit"]["budget"])
+    net.WriteFloat(R_GOVERNMENT.budget["mayors_salary"]["budget"])
 
     -- Funds
     net.WriteDouble(R_GOVERNMENT.funds)
@@ -728,6 +722,14 @@ function handleItemSale(ply, itemName, itemPrice)
   addGovernmentFunds(taxedAmount)
 
   hook.Call("playerTaxed", GAMEMODE, ply, taxedAmount)
+
+end
+
+function handleClientStoreSale()
+
+end
+
+function handleClientTrading()
 
 end
 
