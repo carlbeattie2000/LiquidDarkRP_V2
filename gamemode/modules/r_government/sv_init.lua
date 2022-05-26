@@ -1,4 +1,4 @@
-function PrintConsoleTaggedMessage(msg)
+local function PrintConsoleTaggedMessage(msg)
 
   MsgC(R_GOVERNMENT.Config.chatTagColor, "["..R_GOVERNMENT.Config.chatTag.."]")
   MsgN(msg)
