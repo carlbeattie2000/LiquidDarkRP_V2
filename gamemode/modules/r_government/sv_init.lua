@@ -5,6 +5,18 @@ local function PrintConsoleTaggedMessage(msg)
 
 end
 
+local function broadcastMessage(msg)
+
+  local players = player.GetAll()
+
+  for _, v in ipairs(players) do
+
+    v:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, msg)
+
+  end
+
+end
+
 /*---------------------------------------------------------------------------
 
 Default R_GOVERNMENT Settings
@@ -506,6 +518,52 @@ function addGovernmentFunds(a)
   serverDataUpdated("government_values")
 
 end
+
+function changeTax(ply, _, args)
+
+  if !ply:isMayor() then return end
+
+  print("Hi ?")
+
+  if !args[1] or !args[2] then return end
+
+  local taxName = args[1]
+  local newTaxAmount = tonumber(args[2]) / 100
+
+  local taxDetails = R_GOVERNMENT.playerTaxes[taxName]
+
+  if taxDetails == nil then return end
+
+  print(taxDetails["min"] * 100)
+  print(taxDetails["max"] * 100)
+
+  if newTaxAmount < taxDetails["min"] or newTaxAmount > taxDetails["max"] then
+
+    local errorMessage = string.format("The tax amount you entered is incorrect, it must be no less than %d%% and no more than %d%%", (taxDetails["min"] * 100), (taxDetails["max"] * 100))
+
+    ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, errorMessage)
+
+    return
+
+  end
+
+  if newTaxAmount > taxDetails["tax"] then
+
+    broadcastMessage(string.format("The mayor has increased the %s too %d%% from %d%%", taxDetails["nicename"], newTaxAmount * 100, taxDetails["tax"] * 100))
+
+  else
+
+    broadcastMessage(string.format("The mayor has decreased the %s from %d%% too %d%%", taxDetails["nicename"], taxDetails["tax"] * 100, newTaxAmount * 100))
+
+  end
+
+  R_GOVERNMENT.playerTaxes[taxName]["tax"] = newTaxAmount
+
+  serverDataUpdated("government_values")
+
+end
+
+concommand.Add("update_tax", changeTax)
 
 function clientUpdateGovernmentDetails(ply)
 

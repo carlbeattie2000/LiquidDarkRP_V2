@@ -595,6 +595,12 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
 
       end
 
+      changeTax.DoClick = function()
+
+        RunConsoleCommand("update_tax", k, newTaxAmount:GetValue())
+
+      end
+
       taxPanel:AddItem(changeTax)
 
     end
