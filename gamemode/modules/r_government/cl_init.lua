@@ -659,6 +659,14 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
 
     end
 
+    local CL_budgetValues = {
+      ["police_force_jobs_budget"] = 25,
+      ["police_force_equipment_budget"] = 25,
+      ["national_lottery_funds"] = 40,
+      ["national_deposit"] = 7,
+      ["mayors_salary"] = 3
+    }
+
     for k, v in pairs(R_GOVERNMENT.budget) do
 
       local budgetPanel = self:Add("DGrid")
@@ -689,6 +697,12 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
       newBudgetAmount:SetMax(100)
       newBudgetAmount:SetValue(v["budget"] * 100)
 
+      newBudgetAmount.OnChange = function(self)
+
+        CL_budgetValues[k] = self:GetValue()
+
+      end
+
       function newBudgetAmount:Paint(w, h)
 
         surface.SetDrawColor(secondaryColor)
@@ -700,27 +714,34 @@ function R_GOVERNMENT_CL.OpenMayorMenu()
 
       budgetPanel:AddItem(newBudgetAmount)
 
-      local changeBudget = vgui.Create("DButton")
+    end
 
-      changeBudget:SetText("")
-      changeBudget:SetSize((menuw * .3) * .8, menuh * .05)
+    local changeBudget = self:Add("DButton")
 
-      function changeBudget:Paint(w, h)
+    changeBudget:SetText("")
+    changeBudget:SetSize((menuw * .3) * .8, menuh * .05)
+    changeBudget:Dock(TOP)
 
-        surface.SetDrawColor(secondaryColor)
-        surface.DrawRect(0, 0, w, h)
+    function changeBudget:Paint(w, h)
 
-        draw.SimpleText("Change budget", "mayor_font_small", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+      surface.SetDrawColor(secondaryColor)
+      surface.DrawRect(0, 0, w, h)
 
-      end
+      draw.SimpleText("Change budget", "mayor_font_small", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-      changeBudget.DoClick = function()
+    end
 
-        RunConsoleCommand("update_tax", k, newTaxAmount:GetValue())
+    changeBudget.DoClick = function()
 
-      end
+      net.Start("update_budget")
 
-      budgetPanel:AddItem(changeBudget)
+        net.WriteInt(CL_budgetValues["police_force_jobs_budget"] - 37, 7)
+        net.WriteInt(CL_budgetValues["police_force_equipment_budget"] - 37, 7)
+        net.WriteInt(CL_budgetValues["national_lottery_funds"] - 37, 7)
+        net.WriteInt(CL_budgetValues["national_deposit"] - 37, 7)
+        net.WriteInt(CL_budgetValues["mayors_salary"] - 37, 7)
+
+      net.SendToServer()
 
     end
 

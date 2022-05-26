@@ -31,6 +31,7 @@ util.AddNetworkString("election_ended")
 util.AddNetworkString("open_mayor_menu")
 util.AddNetworkString("update_client_gov_details")
 util.AddNetworkString("request_client_gov_details")
+util.AddNetworkString("update_budget")
 
 local meta = FindMetaTable("Player")
 
@@ -598,9 +599,6 @@ function changeTax(ply, _, args)
 
   if taxDetails == nil then return end
 
-  print(taxDetails["min"] * 100)
-  print(taxDetails["max"] * 100)
-
   if newTaxAmount < taxDetails["min"] or newTaxAmount > taxDetails["max"] then
 
     local errorMessage = string.format("The tax amount you entered is incorrect, it must be no less than %d%% and no more than %d%%", (taxDetails["min"] * 100), (taxDetails["max"] * 100))
@@ -631,9 +629,76 @@ end
 
 concommand.Add("update_tax", changeTax)
 
-function updateGovernmentBudget()
+-- This is very bad errr
+net.Receive("update_budget", function(len, ply)
 
-end
+  if !ply:isMayor() then return end
+
+  local tmpBudgetTable = {
+    ["police_force_jobs_budget"] = net.ReadInt(7) + 37,
+    ["police_force_equipment_budget"] = net.ReadInt(7) + 37,
+    ["national_lottery_funds"] = net.ReadInt(7) + 37,
+    ["national_deposit"] = net.ReadInt(7) + 37,
+    ["mayors_salary"] = net.ReadInt(7) + 37
+  }
+
+  local total = 0
+
+  for _, v in pairs(tmpBudgetTable) do
+
+    total = total + v
+
+  end
+
+  if total > 150 then
+
+    ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "Value's must total too 100%")
+
+    return
+
+  end
+
+  if total > 100 then
+
+    local dif = total - 100
+
+    for k, v in pairs(tmpBudgetTable) do
+
+      if v - dif < 0 then
+
+        continue
+
+      end
+
+      tmpBudgetTable[k] = v - dif
+
+    end
+
+  elseif total < 100 then
+
+    local remaining = 100 - total
+
+    tmpBudgetTable[1] = tmpBudgetTable[1] + remaining
+
+  end
+
+  R_GOVERNMENT.budget["police_force_jobs_budget"]["budget"] = tmpBudgetTable["police_force_jobs_budget"] / 100
+
+  R_GOVERNMENT.budget["police_force_equipment_budget"]["budget"] = tmpBudgetTable["police_force_equipment_budget"] / 100
+
+  R_GOVERNMENT.budget["national_lottery_funds"]["budget"] = tmpBudgetTable["national_lottery_funds"] / 100
+
+  R_GOVERNMENT.budget["national_deposit"]["budget"] = tmpBudgetTable["national_deposit"] / 100
+
+  R_GOVERNMENT.budget["mayors_salary"]["budget"] = tmpBudgetTable["mayors_salary"] / 100
+
+  serverDataUpdated("government_values")
+
+  broadcastMessage("The Mayor has changed his budget plan.")
+
+  hook.Call("governmentBudgetChanged", GAMEMODE, R_GOVERNMENT.budget)
+
+end)
 
 function clientUpdateGovernmentDetails(ply)
 
