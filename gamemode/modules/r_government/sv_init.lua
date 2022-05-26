@@ -511,9 +511,27 @@ end)
 Core R_GOVERNMENT functionally
 
 ---------------------------------------------------------------------------*/
+function GM:governmentFundsChanged(amountAdded, newTotalAmount)
+
+end
+
+function GM:governmentPlayerTaxesChanged(values)
+
+end
+
+function GM:governmentBudgetChanged(values)
+
+end
+
+function GM:playerTaxed(ply, amount)
+
+end
+
 function addGovernmentFunds(a)
 
   R_GOVERNMENT.funds = R_GOVERNMENT.funds + a
+
+  hook.Call("governmentFundsChanged", GAMEMODE, a, R_GOVERNMENT.funds)
 
   serverDataUpdated("government_values")
 
@@ -569,7 +587,11 @@ function customTaxHook(ply, direction, customTaxMsg, amount, tax_name, customTax
 
   addGovernmentFunds(taxedAmount)
 
+  hook.Call("playerTaxed", GAMEMODE, ply, taxedAmount)
+
 end
+
+hook.Add("r_customTaxCharge", "rGovernmentCustomTaxCharge", customTaxHook)
 
 function changeTax(ply, _, args)
 
@@ -612,6 +634,8 @@ function changeTax(ply, _, args)
   R_GOVERNMENT.playerTaxes[taxName]["tax"] = newTaxAmount
 
   serverDataUpdated("government_values")
+
+  hook.Call("governmentPlayerTaxesChanged", GAMEMODE, R_GOVERNMENT.playerTaxes)
 
 end
 
@@ -682,6 +706,8 @@ function handlePlayerSalaryPay(ply, salary)
   
   addGovernmentFunds(taxedAmount)
 
+  hook.Call("playerTaxed", GAMEMODE, ply, taxedAmount)
+
 end
 
 --/ F4 MENU SALES \--
@@ -700,6 +726,8 @@ function handleItemSale(ply, itemName, itemPrice)
   ply:AddMoney(-itemPrice)
 
   addGovernmentFunds(taxedAmount)
+
+  hook.Call("playerTaxed", GAMEMODE, ply, taxedAmount)
 
 end
 
