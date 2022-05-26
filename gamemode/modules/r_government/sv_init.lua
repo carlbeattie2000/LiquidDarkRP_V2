@@ -519,6 +519,58 @@ function addGovernmentFunds(a)
 
 end
 
+--/ Custom tax hook \--
+--/ direction = true(payment being made by player)/false(payment being made to player) \--
+--/ Either use a tax percentage from this module, or a custom one \--
+--/ Either use a custom message, or a default one \--
+function customTaxHook(ply, direction, customTaxMsg, amount, tax_name, customTaxPercentage)
+
+  local taxAmount = R_GOVERNMENT.playerTaxes[tax_name]["tax"] or customTaxPercentage
+
+  if taxAmount == nil then
+
+    PrintConsoleTaggedMessage(" Custom tax hook could not find a valid tax value.")
+
+  end
+  
+  if amount == nil or amount == 0 then
+
+    PrintConsoleTaggedMessage(" Invalid amount passed to custom tax hook.")
+
+  end
+
+  local taxedAmount = math.floor(amount * taxAmount)
+
+  local taxMsg = ""
+
+  if direction then
+
+    ply:AddMoney(-amount)
+
+    taxMsg = string.format("You have payed $%s, $%s of which was taken for taxes.", REBELLION.format_num(amount), REBELLION.format_num(taxedAmount))
+
+  else
+
+    local amountAfterTax = amount - taxedAmount
+
+    ply:AddMoney(amountAfterTax)
+
+    taxMsg = string.format("You have received $%s, and $%s was taken for tax.", REBELLION.format_num(amountAfterTax), REBELLION.format_num(taxedAmount))
+
+  end
+
+  if customTaxMsg != nil or customTaxMsg != "" then
+
+    taxMsg = customTaxMsg
+
+  end
+
+  ply:LiquidChat(REBELLION.Config.chatTag, REBELLION.Config.chatTagColor, taxMsg)
+
+  addGovernmentFunds(taxedAmount)
+
+end
+
 function changeTax(ply, _, args)
 
   if !ply:isMayor() then return end
