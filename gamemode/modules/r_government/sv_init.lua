@@ -769,7 +769,7 @@ function handlePlayerSalaryPay(ply, salary)
 
   end
 
-  if RPExtraTeams[ply:Team()]["category"] = "Law & Order" then
+  if RPExtraTeams[ply:Team()]["category"] == "Law & Order" then
 
     local governmentJobFundsBucket = R_GOVERNMENT.funds * R_GOVERNMENT.budget["police_force_jobs_budget"]["budget"]
 

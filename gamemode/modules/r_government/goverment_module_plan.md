@@ -36,3 +36,7 @@ GUI / Ent
   - Core LiquidRP (jobs. salary, laws, money)
   - Casino Vault
   - Lottery
+
+TODO
+=====
+Government funding needs to be separated into "buckets", so each budget category has it's own little bank for instance, and only combined for display purposes and the vault.
