@@ -33,7 +33,6 @@ util.AddNetworkString("election_ended")
 util.AddNetworkString("open_mayor_menu")
 util.AddNetworkString("update_client_gov_details")
 util.AddNetworkString("request_client_gov_details")
-util.AddNetworkString("update_budget")
 
 local meta = FindMetaTable("Player")
 
@@ -60,20 +59,6 @@ end
 
 -- Load default settings into action
 local voting = R_GOVERNMENT.Config.VotingSettings
-
-
--- Reset Government Budget
-function resetGovernmentBudget()
-
-  R_GOVERNMENT.budget["police_force_jobs_budget"]["budget"] = 0.25
-  R_GOVERNMENT.budget["police_force_equipment_budget"]["budget"] = 0.25
-  R_GOVERNMENT.budget["national_lottery_funds"]["budget"] = 0.4
-  R_GOVERNMENT.budget["national_deposit"]["budget"] = 0.07
-  R_GOVERNMENT.budget["mayors_salary"]["budget"] = 0.03
-
-  serverDataUpdated("government_values")
-
-end
 
 -- Reset Government Taxes
 function resetGovernmentTaxes()
@@ -514,10 +499,6 @@ function GM:governmentPlayerTaxesChanged(values)
 
 end
 
-function GM:governmentBudgetChanged(values)
-
-end
-
 function GM:playerTaxed(ply, amount)
 
 end
@@ -631,77 +612,6 @@ end
 
 concommand.Add("update_tax", changeTax)
 
--- This is very bad errr
-net.Receive("update_budget", function(len, ply)
-
-  if !ply:isMayor() then return end
-
-  local tmpBudgetTable = {
-    ["police_force_jobs_budget"] = net.ReadInt(7) + 37,
-    ["police_force_equipment_budget"] = net.ReadInt(7) + 37,
-    ["national_lottery_funds"] = net.ReadInt(7) + 37,
-    ["national_deposit"] = net.ReadInt(7) + 37,
-    ["mayors_salary"] = net.ReadInt(7) + 37
-  }
-
-  local total = 0
-
-  for _, v in pairs(tmpBudgetTable) do
-
-    total = total + v
-
-  end
-
-  if total > 150 then
-
-    ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "Value's must total too 100%")
-
-    return
-
-  end
-
-  if total > 100 then
-
-    local dif = total - 100
-
-    for k, v in pairs(tmpBudgetTable) do
-
-      if v - dif < 0 then
-
-        continue
-
-      end
-
-      tmpBudgetTable[k] = v - dif
-
-    end
-
-  elseif total < 100 then
-
-    local remaining = 100 - total
-
-    tmpBudgetTable[1] = tmpBudgetTable[1] + remaining
-
-  end
-
-  R_GOVERNMENT.budget["police_force_jobs_budget"]["budget"] = tmpBudgetTable["police_force_jobs_budget"] / 100
-
-  R_GOVERNMENT.budget["police_force_equipment_budget"]["budget"] = tmpBudgetTable["police_force_equipment_budget"] / 100
-
-  R_GOVERNMENT.budget["national_lottery_funds"]["budget"] = tmpBudgetTable["national_lottery_funds"] / 100
-
-  R_GOVERNMENT.budget["national_deposit"]["budget"] = tmpBudgetTable["national_deposit"] / 100
-
-  R_GOVERNMENT.budget["mayors_salary"]["budget"] = tmpBudgetTable["mayors_salary"] / 100
-
-  serverDataUpdated("government_values")
-
-  broadcastMessage("The Mayor has changed his budget plan.")
-
-  hook.Call("governmentBudgetChanged", GAMEMODE, R_GOVERNMENT.budget)
-
-end)
-
 function clientUpdateGovernmentDetails(ply)
 
   net.Start("update_client_gov_details")
@@ -710,13 +620,6 @@ function clientUpdateGovernmentDetails(ply)
     net.WriteFloat(R_GOVERNMENT.playerTaxes["player_tax"]["tax"])
     net.WriteFloat(R_GOVERNMENT.playerTaxes["sales_tax"]["tax"])
     net.WriteFloat(R_GOVERNMENT.playerTaxes["trading_tax"]["tax"])
-
-    -- Budget
-    net.WriteFloat(R_GOVERNMENT.budget["police_force_jobs_budget"]["budget"])
-    net.WriteFloat(R_GOVERNMENT.budget["police_force_equipment_budget"]["budget"])
-    net.WriteFloat(R_GOVERNMENT.budget["national_lottery_funds"]["budget"])
-    net.WriteFloat(R_GOVERNMENT.budget["national_deposit"]["budget"])
-    net.WriteFloat(R_GOVERNMENT.budget["mayors_salary"]["budget"])
 
     -- Funds
     net.WriteDouble(R_GOVERNMENT.funds)
@@ -755,11 +658,7 @@ function handlePlayerSalaryPay(ply, salary)
 
   if ply:isMayor() then
 
-    local mayorFundsBucket = R_GOVERNMENT.funds * R_GOVERNMENT.budget["mayors_salary"]["budget"]
-
-    salary = mayorFundsBucket * .1
-
-    if (mayorFundsBucket < salary) then
+    if (R_GOVERNMENT.funds < salary) then
 
       ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "Mr Mayor, the government cannot afford your paycheck...")
 
@@ -773,9 +672,7 @@ function handlePlayerSalaryPay(ply, salary)
 
   if RPExtraTeams[ply:Team()]["category"] == "Law & Order" then
 
-    local governmentJobFundsBucket = R_GOVERNMENT.funds * R_GOVERNMENT.budget["police_force_jobs_budget"]["budget"]
-
-    if (governmentJobFundsBucket < salary) then
+    if (R_GOVERNMENT.funds < salary) then
 
       ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "We're sorry, but the government cannot afford your paycheck!")
 
@@ -868,8 +765,6 @@ function rGovernmentInit()
     }
   
   end)
-
-  resetGovernmentBudget()
 
   resetGovernmentTaxes()
 

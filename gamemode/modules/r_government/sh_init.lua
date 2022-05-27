@@ -136,36 +136,6 @@ R_GOVERNMENT.playerTaxes = {
 
 }
 
--- The default budget percentage settings to use. Total will have to always equal 100%. NO MORE NO LESS
-R_GOVERNMENT.budget = {
-
-  ["police_force_jobs_budget"] = {
-    ["nicename"] = "Government Jobs",
-    ["budget"] = 0.25 -- 25%
-  },
-
-  ["police_force_equipment_budget"] = {
-    ["nicename"] = "Government Equipment",
-    ["budget"] = 0.25 -- 25%
-  },
-
-  ["national_lottery_funds"] = {
-    ["nicename"] = "Lottery Funds",
-    ["budget"] = 0.4 -- 40%
-  },
-
-  ["national_deposit"] = {
-    ["nicename"] = "Reserves",
-    ["budget"] = 0.07, -- 9%
-  },
-
-  ["mayors_salary"] = {
-    ["nicename"] = "Mayor's Salary",
-    ["budget"] = 0.03 -- 3%
-  }
-
-}
-
 R_GOVERNMENT.funds = 0
 
 if SERVER then
