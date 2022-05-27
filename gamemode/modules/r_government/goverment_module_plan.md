@@ -39,4 +39,10 @@ GUI / Ent
 
 TODO
 =====
-Government funding needs to be separated into "buckets", so each budget category has it's own little bank for instance, and only combined for display purposes and the vault.
+Government funding needs to be separated into "buckets", so each budget category has it's own little bank for instance, and only combined for display purposes and the vault. Maybe abandon the budget feature all together, and just use the funds, and have everything government related come out of it still.
+
+Things like lottery can be a % of the funds, if the funds are higher than x value.
+Mayor can purchase weapons for the vault if he wants
+If the government can't afford to pay wages, for example a police officers, then a % of the total wage will be payed form a "emergency fund", but the mayor won't be able to receive a paycheck at all.
+
+I was thinking, and this is suppose to be semi-serious role play, plus i don't like the messy code that's coming from it. Also the budgeting is not working as it's suppose to be, never mind i just noticed my logic is flawed, anyway still going to abandon this section. (I am still learning lua lol)

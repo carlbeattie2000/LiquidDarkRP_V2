@@ -10,10 +10,14 @@ R_ANTICHEAT.Config.Net = R_ANTICHEAT.Config.Net or {}
 
 R_ANTICHEAT.Config.ConVars = R_ANTICHEAT.Config.ConVars or {}
 
+R_ANTICHEAT.Config.Vpn = R_ANTICHEAT.Config.Vpn or {}
+
 -------------------------------------
 --         Enable/Disable          --
 -------------------------------------
 R_ANTICHEAT.Config.enabled = true
+
+R_ANTICHEAT.Config.vpnChecking = true
 
 -------------------------------------
 -- Networking anti spamming config --
@@ -54,6 +58,10 @@ R_ANTICHEAT.Config.ConVars.blacklisted = {
 	["mat_wireframe"] = 0,
 	["sv_cheats"] = 0
 }
+
+-------------------------------------
+-- Banned console commands         --
+-------------------------------------
 
 R_ANTICHEAT.Config.illegalCommands = {
   "lenny_menu",
@@ -643,4 +651,15 @@ R_ANTICHEAT.Config.illegalCommands = {
 	"x_menu",
 	"x_reload"
 }
+
+-------------------------------------
+--       VPN Checking Config       --
+-------------------------------------
+
+-- ban 
+R_ANTICHEAT.Config.Vpn.punishment = true
+
+R_ANTICHEAT.Config.Vpn.punishmentMessage = "You've been banned for using a VPN. Please contact us on discord(https://discord.gg/Qgcs56GjQK)"
+
+R_ANTICHEAT.Config.punishmentLength = 10 -- mins
 
