@@ -10,6 +10,8 @@ R_GOVERNMENT.Config.chatTagColor = Color(213, 100, 100)
 
 R_GOVERNMENT.Config.DefaultTeamID = 1
 
+R_GOVERNMENT.Config.moduleName = "r_government"
+
 -- Default job limits and roles city will default too if not enough funds, or players
 R_GOVERNMENT.Config.DefaultJobSettings = {
 

@@ -1,3 +1,5 @@
+if GM.Config.DisabledModules[R_GOVERNMENT.Config.moduleName] then return end
+
 local function PrintConsoleTaggedMessage(msg)
 
   MsgC(R_GOVERNMENT.Config.chatTagColor, "["..R_GOVERNMENT.Config.chatTag.."]")

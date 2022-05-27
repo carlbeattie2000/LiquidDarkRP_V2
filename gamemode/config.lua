@@ -279,7 +279,8 @@ GM.Config.DisabledModules = {
 	["events"] = false,
 	["hungermod"] = true,
 	["playerscale"] = false,
-	["sleep"] = true
+	["sleep"] = true,
+  ["r_government"] = true,
 }
 
 -- These are the default laws, they're unchangeable in-game.
