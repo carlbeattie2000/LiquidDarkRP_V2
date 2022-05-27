@@ -68,6 +68,20 @@ function REBELLION.format_num(amount, decimal, prefix, neg_prefix)
   return formatted
 end
 
+function REBELLION.tableLength(t)
+
+  local c = 0
+
+  for _ in pairs(t) do
+
+    c = c + 1
+
+  end
+
+  return c
+
+end
+
 include("modules/von.lua") --Temporary until I figure out how to officially bundle lua modules
 AddCSLuaFile("modules/von.lua")
 include("language_sh.lua") -- Had to move this

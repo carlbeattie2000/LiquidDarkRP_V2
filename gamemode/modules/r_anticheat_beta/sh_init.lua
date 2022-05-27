@@ -12,12 +12,21 @@ R_ANTICHEAT.Config.ConVars = R_ANTICHEAT.Config.ConVars or {}
 
 R_ANTICHEAT.Config.Vpn = R_ANTICHEAT.Config.Vpn or {}
 
+R_ANTICHEAT.Config.FamilyShare = R_ANTICHEAT.Config.FamilyShare or {}
+
+-------------------------------------
+--           ATTENTION             --
+-------------------------------------
+R_ANTICHEAT.Config.steamAPIKey = "" -- MUST ENTER YOUR OWN STEAM API KEY HERE
+
 -------------------------------------
 --         Enable/Disable          --
 -------------------------------------
 R_ANTICHEAT.Config.enabled = true
 
 R_ANTICHEAT.Config.vpnChecking = true
+
+R_ANTICHEAT.Config.familyShareChecking = true
 
 -------------------------------------
 -- Networking anti spamming config --
@@ -662,4 +671,14 @@ R_ANTICHEAT.Config.Vpn.punishment = true
 R_ANTICHEAT.Config.Vpn.punishmentMessage = "You've been banned for using a VPN. Please contact us on discord(https://discord.gg/Qgcs56GjQK)"
 
 R_ANTICHEAT.Config.punishmentLength = 10 -- mins
+
+-------------------------------------
+--      Family Share Config        --
+-------------------------------------
+
+R_ANTICHEAT.Config.FamilyShare.punishment = true
+
+R_ANTICHEAT.Config.FamilyShare.punishmentMessage = "We disallow family sharing on our servers. Reconnect on an account that owns the game directly."
+
+R_ANTICHEAT.Config.FamilyShare.punishmentLength = 0 -- mins (0 = permanent)
 
