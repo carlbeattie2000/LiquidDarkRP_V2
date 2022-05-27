@@ -10,11 +10,6 @@ CUR = "$"
 
 REBELLION = REBELLION or {}
 
--------------------------------------
---           ATTENTION             --
--------------------------------------
-REBELLION.steamAPIkey = "" -- MUST ENTER YOUR STEAM API KEY
-
 function comma_value(amount)
   local formatted = amount
   while true do  

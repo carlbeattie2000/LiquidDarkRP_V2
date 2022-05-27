@@ -36,14 +36,10 @@ function familyShareCheck( ply )
   end
 
   local _HttpUrl = string.format(
-    "http://api.steampowered.com/IPlayerService/IsPlayingSharedGame/v0001/?key=%s&format=json&steamid=%s&appid_playing=4000", 
-    R_ANTICHEAT.Config.steamAPIKey, ply:SteamID64())
+  "https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=%s&format=json&steamid=%s&appids_filter=4000", 
+  R_ANTICHEAT.Config.steamAPIKey, ply:SteamID64())
 
-    local _HttpUrl2 = string.format(
-    "https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=%s&format=json&steamid=%s&appids_filter=4000", 
-    R_ANTICHEAT.Config.steamAPIKey, ply:SteamID64())
-
-  http.Fetch(_HttpUrl2, 
+  http.Fetch(_HttpUrl, 
   function(body, _, _, code)
     
     if !body or code ~= 200 then return end

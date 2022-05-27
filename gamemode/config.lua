@@ -289,3 +289,5 @@ GM.Config.DefaultLaws = {
 	"Money printers/drugs are illegal.",
   "Owing a firearm without license is illegal."
 }
+
+GM.steamAPIKey = "" -- Set steam API key here
