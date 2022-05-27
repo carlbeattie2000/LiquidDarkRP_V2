@@ -14,10 +14,7 @@ R_ANTICHEAT.Config.Vpn = R_ANTICHEAT.Config.Vpn or {}
 
 R_ANTICHEAT.Config.FamilyShare = R_ANTICHEAT.Config.FamilyShare or {}
 
--------------------------------------
---           ATTENTION             --
--------------------------------------
-R_ANTICHEAT.Config.steamAPIKey = "" -- MUST ENTER YOUR OWN STEAM API KEY HERE
+R_ANTICHEAT.Config.steamAPIKey = REBELLION.steamAPIkey -- MUST ENTER YOUR OWN STEAM API KEY INSIDE init.lua
 
 -------------------------------------
 --         Enable/Disable          --
