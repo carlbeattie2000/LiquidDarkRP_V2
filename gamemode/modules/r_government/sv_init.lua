@@ -503,6 +503,10 @@ function GM:playerTaxed(ply, amount)
 
 end
 
+function GM:entSeized(owner, seizer)
+
+end
+
 function addGovernmentFunds(a)
 
   R_GOVERNMENT.funds = R_GOVERNMENT.funds + a
@@ -731,6 +735,39 @@ function handleClientTrading()
 
 end
 
+function governmentSeizeIllegalEntity(owner, ply, entName, entValue)
+  -- Owner will be made wanted from in here, once we have the new wanted system in place
+
+  if not IsValid(ply) then return end
+
+  -- Notify the ent owner
+  if IsValid(owner) then
+
+    owner:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, string.format("Your %s has been seized by the police!", entName))
+
+  end
+
+  -- Calculate the players reward, which will be used to work out total being added to government funds
+  local playersReward = entValue * R_GOVERNMENT.Config.entSeizingRewardPercentage
+
+  ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, string.format("You have been rewarded $%s for seizing an %s", REBELLION.format_num(playersReward), entName))
+
+  ply:AddMoney(playersReward)
+
+  local governmentEarnedAmount = entValue - playersReward
+
+  addGovernmentFunds(governmentEarnedAmount)
+
+  notifyMayor(string.format("The city has earned $%s from a %s being seized!", REBELLION.format_num(governmentEarnedAmount), entName))
+
+end
+
+function GM:getGovernmentFunds()
+
+  return R_GOVERNMENT.funds
+
+end
+
 /*---------------------------------------------------------------------------
 
 R_GOVERNMENT Init
@@ -780,6 +817,8 @@ function rGovernmentInit()
 
     hook.Add("r_government_payday", "rGovernmentSalary", handlePlayerSalaryPay)
     hook.Add("r_government_item_sale", "rGovernmentSale", handleItemSale)
+
+    hook.Add("r_government_ent_seize", "rGovernmentEntSeize", governmentSeizeIllegalEntity)
 
     InitFinished(status)
 

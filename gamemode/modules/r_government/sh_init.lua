@@ -94,6 +94,9 @@ R_GOVERNMENT.Config.DefaultPoliceEquipmentCanBuy = {
 
 }
 
+-- Percentage of reward from seizing entities that goes to the player who seized it.
+R_GOVERNMENT.Config.entSeizingRewardPercentage = 0.4 -- 40%
+
 R_GOVERNMENT.Config.VotingSettings = {
 
   ["min_candidates"] = 1,

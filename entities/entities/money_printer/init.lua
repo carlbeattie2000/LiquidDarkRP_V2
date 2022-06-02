@@ -125,9 +125,8 @@ end
 function ENT:Use(ply,call)
 	local EID = self:EntIndex()
 	if ply:Team() == TEAM_POLICE or ply:Team() == TEAM_CHIEF then
-		Notify(ply, 0, 4, "Gained $" .. LDRP_SH.ConfiscateCash .. " from confiscated printer.")
-		ply:AddMoney(LDRP_SH.ConfiscateCash)
-		self:Remove()
+		hook.Call("r_government_ent_seize", GAMEMODE, self:GetOwner(), ply, "Money Printer", 16000)
+    self:Remove()
 		return
 	end
 	
