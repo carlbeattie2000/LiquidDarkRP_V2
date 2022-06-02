@@ -684,8 +684,6 @@ function handlePlayerSalaryPay(ply, salary)
 
   end
 
-
-
   local tax =  R_GOVERNMENT.playerTaxes["player_tax"]["tax"]
 
   local taxedAmount = math.floor(salary * tax)

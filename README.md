@@ -19,3 +19,4 @@ NOTE: BUGS ARE PRESENT IN CURRENT BUILDS
 - Custom NPCs
 - Government System (Elections, Government Funds, Taxes)
 - Player Warns
+- Basic ant-cheat (Know commands + ConVar checking, familysharing, using vpns)

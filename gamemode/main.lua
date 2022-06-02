@@ -627,7 +627,8 @@ for k,v in pairs(DarkRPEntities) do
 			Notify(ply, 1, 4,  string.format(LANGUAGE.cant_afford, v.name))
 			return ""
 		end
-		ply:AddMoney(-price)
+		
+    hook.Call("r_government_item_sale", GAMEMODE, ply, v.name, price)
 		
 		local trace = {}
 		trace.start = ply:EyePos()
