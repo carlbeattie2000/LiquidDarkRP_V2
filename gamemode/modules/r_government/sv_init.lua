@@ -760,6 +760,8 @@ function governmentSeizeIllegalEntity(owner, ply, entName, entValue)
 
   notifyMayor(string.format("The city has earned $%s from a %s being seized!", REBELLION.format_num(governmentEarnedAmount), entName))
 
+  hook.Call("entSeized", GAMEMODE, owner, ply)
+
 end
 
 function GM:getGovernmentFunds()
