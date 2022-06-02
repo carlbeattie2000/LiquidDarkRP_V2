@@ -627,8 +627,12 @@ for k,v in pairs(DarkRPEntities) do
 			Notify(ply, 1, 4,  string.format(LANGUAGE.cant_afford, v.name))
 			return ""
 		end
-		
-    hook.Call("r_government_item_sale", GAMEMODE, ply, v.name, price)
+
+    if GM.Config.DisabledModules[R_GOVERNMENT.Config.moduleName] then
+      ply:AddMoney(-price)
+    else
+      hook.Call("r_government_item_sale", GAMEMODE, ply, v.name, price)
+    end
 		
 		local trace = {}
 		trace.start = ply:EyePos()

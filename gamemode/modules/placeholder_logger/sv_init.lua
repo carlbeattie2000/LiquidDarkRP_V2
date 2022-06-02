@@ -22,7 +22,9 @@ function writeEvent(content)
 
   end
 
-  local logContent = todayDate["hour"]..":"..todayDate["min"]..":"..todayDate["sec"].." "..content.."\n"
+  local timeNowString = todayDate["hour"]..":"..todayDate["min"]..":"..todayDate["sec"]
+
+  local logContent = "("..timeNowString..")".." "..content.."\n"
 
   local t_filename = "p_logger_"..todayDate["year"]..todayDate["month"]..todayDate["day"]..".txt"
 
@@ -137,7 +139,17 @@ hook.Add("PlayerWalletChanged", "logWalletChanged", function(ply, amount, wallet
 
   if IsValid(ply) then
 
-    local loggingText = string.format("$%s was added to %s's wallet, totaling $%s", REBELLION.format_num(amount), ply:Nick(), REBELLION.format_num(walletTotal))
+    local loggingText = ""
+
+    if amount < 0 then
+
+      loggingText = string.format("$%s was remove from %s's wallet, new value $%s", REBELLION.format_num(amount), ply:Nick(), REBELLION.format_num(walletTotal))
+
+    else
+
+      loggingText = string.format("$%s was added to %s's wallet, new value $%s", REBELLION.format_num(amount), ply:Nick(), REBELLION.format_num(walletTotal))
+
+    end
 
     writeEvent(loggingText)
 

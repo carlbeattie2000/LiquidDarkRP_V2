@@ -393,7 +393,11 @@ function meta:PayDay()
         local OldCheck = self.CurCheck
         self.CurCheck = (self:IsVIP() and math.Round(amount*1.5)) or amount
 
-        hook.Call("r_government_payday", nil, self, self.CurCheck)
+        if GM.Config.DisabledModules[R_GOVERNMENT.Config.moduleName] then
+          ply:AddMoney(CurCheck)
+        else
+          hook.Call("r_government_payday", nil, self, self.CurCheck)
+        end
         
         self.CurCheck = 0
         OldCheck = nil
