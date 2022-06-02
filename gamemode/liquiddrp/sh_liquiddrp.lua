@@ -543,6 +543,10 @@ LDRP.AddNPC("Bail NPC","models/police.mdl",nil,"Hello. I can bail you out of jai
 	["No thanks, I like jail"] = function() LocalPlayer():ChatPrint("Fuck that dipshit. What a shitty cop") end
 })
 
+------------------------------------
+--  Add Custom Simple NPC Bellow  --
+------------------------------------
+
 LDRP_SH.CarrotBuyPrice = 28
 
 LDRP_SH.CarrotSeedPrice = 50
