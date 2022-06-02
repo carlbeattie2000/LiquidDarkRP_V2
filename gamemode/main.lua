@@ -628,7 +628,7 @@ for k,v in pairs(DarkRPEntities) do
 			return ""
 		end
 
-    if GM.Config.DisabledModules[R_GOVERNMENT.Config.moduleName] then
+    if GM.Config.DisabledModules["r_government"] then
       ply:AddMoney(-price)
     else
       hook.Call("r_government_item_sale", GAMEMODE, ply, v.name, price)
