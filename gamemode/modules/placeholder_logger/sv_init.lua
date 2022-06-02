@@ -4,6 +4,24 @@ function writeEvent(content)
 
   local todayDate = os.date("*t")
 
+  if tonumber(todayDate["hour"]) < 10 then
+
+    todayDate["hour"] = "0"..tostring(todayDate["hour"])
+
+  end
+
+  if tonumber(todayDate["min"]) < 10 then
+
+    todayDate["min"] = "0"..tostring(todayDate["min"])
+
+  end
+
+  if tonumber(todayDate["sec"] < 10) then
+
+    todayDate["sec"] = "0"..tostring(todayDate["sec"])
+
+  end
+
   local logContent = todayDate["hour"]..":"..todayDate["min"]..":"..todayDate["sec"].." "..content.."\n"
 
   local t_filename = "p_logger_"..todayDate["year"]..todayDate["month"]..todayDate["day"]..".txt"
@@ -35,7 +53,7 @@ hook.Add("governmentFundsChanged", "logGFundsChanged", function(amountAdded, new
   local loggingText = string.format("$%s added to government funds. New total amount $%s", REBELLION.format_num(amountAdded), REBELLION.format_num(newTotalAmount))
 
   writeEvent(loggingText)
-  
+
 end)
 
 hook.Add("governmentPlayerTaxesChanged", "logGTaxesChanged", function(newValues)
