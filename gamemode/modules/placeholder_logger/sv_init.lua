@@ -35,6 +35,7 @@ hook.Add("governmentFundsChanged", "logGFundsChanged", function(amountAdded, new
   local loggingText = string.format("$%s added to government funds. New total amount $%s", REBELLION.format_num(amountAdded), REBELLION.format_num(newTotalAmount))
 
   writeEvent(loggingText)
+  
 end)
 
 hook.Add("governmentPlayerTaxesChanged", "logGTaxesChanged", function(newValues)
