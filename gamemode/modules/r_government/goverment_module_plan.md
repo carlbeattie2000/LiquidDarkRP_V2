@@ -45,4 +45,8 @@ Things like lottery can be a % of the funds, if the funds are higher than x valu
 Mayor can purchase weapons for the vault if he wants
 If the government can't afford to pay wages, for example a police officers, then a % of the total wage will be payed form a "emergency fund", but the mayor won't be able to receive a paycheck at all.
 
-I was thinking, and this is suppose to be semi-serious role play, plus i don't like the messy code that's coming from it. Also the budgeting is not working as it's suppose to be, never mind i just noticed my logic is flawed, anyway still going to abandon this section. (I am still learning lua lol)
+<s>I was thinking, and this is suppose to be semi-serious role play, plus i don't like the messy code that's coming from it. Also the budgeting is not working as it's suppose to be, never mind i just noticed my logic is flawed, anyway still going to abandon this section. (I am still learning lua lol)</s>
+
+<h5>I've picked the project back up, along with this section again. See</h5>
+
+[Readme](https://github.dev/carlbeattie2000/rebellionrp)
