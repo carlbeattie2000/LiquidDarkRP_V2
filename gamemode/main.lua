@@ -911,10 +911,11 @@ AddChatCommand("/jobswitch", SwitchJob)
 	
 
 local function DoTeamBan(ply, args, cmdargs)
-	if not args or args == "" then return "" end
+	if not args or cmdargs == "" then return "" end
 	
 	local ent = args
 	local Team = args
+  
 	if cmdargs then
 		if not cmdargs[1] then
 			ply:PrintMessage(HUD_PRINTNOTIFY, "rp_teamban [player name/ID] [team name/id] Use this to ban a player from a certain team")

@@ -614,7 +614,7 @@ if UseFadmin then
 				
 				Title:SetTextColor(color_black)
 				
-				local command = (button.TextLabel:GetText() == "Unban from job") and "rp_teamunban" or "rp_teamban"
+				local command = (button.TextLabel:GetText() == "Unban from job") and "rp_teamunban" or "rp_"
 
 				menu:AddPanel(Title)
 				

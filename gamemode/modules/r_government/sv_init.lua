@@ -657,53 +657,64 @@ end
 
 net.Receive("request_client_gov_details", requestUpdatedGovernmentDetails)
 
+function FailedGovermentPaycheckMessage(ply)
+  local message = ply:isMayor() and "Mr Mayor, the government cannot afford your paycheck..." or "We're sorry, but the government cannot afford your paycheck!"
+
+  ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, message)
+end
+
+function fireAllGovernmentEmployees()
+  for k, v in pairs(player.GetAll()) do
+    local playerIsGoverment = v:isMayor() or RPExtraTeams[v:Team()]["category"] == "Law & Order"
+    local firedChatMessage = v:isMayor() and "Mr. Mayor, you failed. The goverment has been shutdown. You've been relieved of your position for the foreseeable future." or "The goverment has shutdown, the mayor has run the fundings into the ground. You've been fired!"
+
+    if playerIsGoverment then
+      --/ Need to modify/change how this is handled, the not only should the current employees be team banned, but the roles should be un-joinable for x time --\
+      v:TeamBan()
+      v:ChangeTeam(TEAM_CITIZEN)
+      v:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, firedChatMessage)
+
+    else
+      v:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "The goverment has shutdown, the city is without Law and Order!!")
+    end
+  end
+end
+
 --/ SALARY TAX \--
 function handlePlayerSalaryPay(ply, salary)
-
-  if ply:isMayor() then
-
-    if (R_GOVERNMENT.funds < salary) then
-
-      ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "Mr Mayor, the government cannot afford your paycheck...")
-
-      return
-
-    end
-
-    addGovernmentFunds(-salary)
-
+  --/ TODO: Player salary modifier. VIPs could have a 2x perk, or could be tax exempt --\
+  if govermentPaychecksFailed > 5 then
+    fireAllGovernmentEmployees()
   end
 
-  if RPExtraTeams[ply:Team()]["category"] == "Law & Order" then
-
+  local playerIsGoverment = ply:isMayor() or RPExtraTeams[ply:Team()]["category"] == "Law & Order"
+  
+  if playerIsGoverment then
     if (R_GOVERNMENT.funds < salary) then
-
-      ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, "We're sorry, but the government cannot afford your paycheck!")
+      FailedGovermentPaycheckMessage(ply)
+      govermentPaychecksFailed = govermentPaychecksFailed + 1
 
       return
-
     end
-
-    addGovernmentFunds(-salary)
-
   end
 
-  local tax =  R_GOVERNMENT.playerTaxes["player_tax"]["tax"]
+  local taxPercentage =  R_GOVERNMENT.playerTaxes["player_tax"]["tax"]
+  local paycheckTaxAmount = math.floor(salary * taxPercentage)
+  local playerSalary = math.floor(salary - paycheckTaxAmount)
 
-  local taxedAmount = math.floor(salary * tax)
-
-  local playerTaxedSalary = math.floor(salary - taxedAmount)
-
-  local paycheckMsg = string.format("You have received a paycheck of $%s and was taxed $%s. It is now in your wallet", REBELLION.format_num(playerTaxedSalary), REBELLION.format_num(taxedAmount))
+  local paycheckMsg = string.format("You have received a paycheck of $%s and was taxed $%s. It is now in your wallet", REBELLION.format_num(playerSalary), REBELLION.format_num(paycheckTaxAmount))
 
   ply:LiquidChat(R_GOVERNMENT.Config.chatTag, R_GOVERNMENT.Config.chatTagColor, paycheckMsg)
+  ply:AddMoney(playerSalary)
 
-  ply:AddMoney(playerTaxedSalary)
-  
-  addGovernmentFunds(taxedAmount)
+  if playerIsGoverment then
+    addGovernmentFunds(-playerSalary + paycheckTaxAmount)
+    govermentPaychecksFailed = 0
+  else
+    addGovermentFunds(paycheckTaxAmount)
+  end
 
-  hook.Call("playerTaxed", GAMEMODE, ply, taxedAmount)
-
+  hook.Call("playerTaxed", GAMEMODE, ply, paycheckTaxAmount)
 end
 
 --/ F4 MENU SALES \--
