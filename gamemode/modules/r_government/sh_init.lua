@@ -48,6 +48,8 @@ R_GOVERNMENT.Config.DefaultJobSettings = {
 
 }
 
+R_GOVERNMENT.Config.DefaultFailedGovermentPaychecksLimit = 4
+
 -- Basically a "store" from which items can be purchased from the funds budgeted into the equipment section, and will be stored in a locker in the police department. They won't be stored in the players inventory, rather instantly equipped.
 -- ENT_NAME = {nicename, price, allowed_job(nil for all)}
 R_GOVERNMENT.Config.DefaultPoliceEquipmentCanBuy = {
