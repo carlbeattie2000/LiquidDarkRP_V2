@@ -1,13 +1,20 @@
-﻿--[[
-		confg.lua - Controls all aspects of this gamemode.
-		WARNING: This file *actually* doesn't do much right now. LiquidRP didn't
-			have this file originally, and I'm trying to integrate it from the
-			svn build of DarkRP to maintain compatibility. It's a slow process.
-]]
+--[[-------------------------------------------------------------------------
+DarkRP config settings.
+-----------------------------------------------------------------------------
+
+This is the settings file of DarkRP. Every DarkRP setting is listed here.
+
+Warning:
+If this file is missing settings (because of e.g. an update), DarkRP will assume default values for these settings.
+Don't worry about updating this file. If a new setting is added you can manually add them to this file.
+---------------------------------------------------------------------------]]
+
+
 --[[
-Toggle settings
-Set to true or false
+Toggle settings.
+Set to true or false.
 ]]
+
 -- voice3D - Enable/disable 3DVoice is enabled
 GM.Config.voice3D = true;
 -- adminnpcs - Whether or not NPCs should be admin only.

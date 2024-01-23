@@ -41,7 +41,7 @@ function REBELLION.format_num(amount, decimal, prefix, neg_prefix)
     formatted = formatted .. "." .. remain .. string.rep("0", decimal - string.len(remain));
   end
 
-  -- attach prefix string e.g '$' 
+  -- attach prefix string e.g '$'
   formatted = (prefix or "") .. formatted;
   -- if value is negative then format accordingly
   if amount < 0 then
@@ -342,7 +342,7 @@ for k, v in pairs(player.GetAll()) do
 end
 
 GM.Config = {}; -- config table
-include("config.lua");
+include("config/config.lua");
 include("sh_interfaceloader.lua");
 include("client/help.lua");
 include("language_sh.lua");
@@ -449,7 +449,8 @@ end
 
 usermessage.Hook("ToggleClicker", ToggleClicker);
 include("sh_commands.lua");
-include("shared.lua");
+include("config/jobrelated.lua");
+include("sh_dlc.lua");
 include("addentities.lua");
 include("ammotypes.lua");
 if UseFadmin then

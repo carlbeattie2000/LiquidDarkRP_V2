@@ -66,7 +66,8 @@ include("modules/von.lua"); --Temporary until I figure out how to officially bun
 AddCSLuaFile("modules/von.lua");
 include("language_sh.lua"); -- Had to move this
 include("MakeThings.lua"); -- this
-include("shared.lua"); -- and this up here to load before LDRP
+include("config/jobrelated.lua"); -- and this up here to load before LDRP
+include("sh_dlc.lua")
 AddCSLuaFile("client/help.lua");
 include("liquiddrp/sv_playerfuncs.lua"); -- Player functions for LiquidDRP; load it early rather than later
 include("liquiddrp/sh_liquiddrp.lua"); -- Same with shared LDRP
@@ -129,14 +130,18 @@ meta.GetName = meta.Name;
 -- End
 RPArrestedPlayers = {};
 DeriveGamemode("sandbox");
+
 AddCSLuaFile("libraries/fn.lua");
+AddCSLuaFile("libraries/mysqlite.lua");
+AddCSLuaFile("libraries/json.lua");
+
 AddCSLuaFile("sh_interfaceloader.lua");
-AddCSLuaFile("language_sh.lua");
 AddCSLuaFile("MakeThings.lua");
 AddCSLuaFile("addentities.lua");
 AddCSLuaFile("cl_init.lua");
-AddCSLuaFile("config.lua");
-AddCSLuaFile("shared.lua");
+AddCSLuaFile("config/jobrelated.lua");
+AddCSLuaFile("sh_dlc.lua")
+AddCSLuaFile("language_sh.lua")
 AddCSLuaFile("ammotypes.lua");
 AddCSLuaFile("cl_vgui.lua");
 AddCSLuaFile("showteamtabs.lua");
@@ -148,14 +153,23 @@ AddCSLuaFile("sh_animations.lua");
 AddCSLuaFile("Workarounds.lua");
 AddCSLuaFile("cl_hud.lua");
 AddCSLuaFile("shared/player_class.lua");
+
+AddCSLuaFile("config/config.lua");
+AddCSLuaFile("config/_MySQL.lua")
+
 game.ConsoleCommand("sv_alltalk 0\n");
+
 DB = DB or {};
 GM.Config = GM.Config or {};
 GM.NoLicense = GM.NoLicense or {};
-include("_MySQL.lua");
-include("mysqlite.lua");
-JSON = include("json.lua");
-include("config.lua");
+
+include("libraries/mysqlite.lua");
+include("libraries/fn.lua");
+include("libraries/json.lua")
+
+include("config/_MySQL.lua");
+include("config/config.lua");
+
 include("licenseweapons.lua");
 include("sh_interfaceloader.lua");
 include("chat.lua");
@@ -168,9 +182,7 @@ include("entity.lua");
 include("Workarounds.lua");
 include("addentities.lua");
 include("ammotypes.lua");
-include("libraries/fn.lua");
 include("server/database.lua");
-MySQLite.initialize();
 include("server/data.lua");
 include("sv_gamemode_functions.lua");
 include("main.lua");
@@ -179,6 +191,7 @@ include("questions.lua");
 include("util.lua");
 include("votes.lua");
 include("client/help.lua");
+
 LoadLiquidDarkRP(); -- Load before FPP and FAdmin because they're annoying
 -- Falco's prop protection
 local BlockedModelsExist = sql.QueryValue("SELECT COUNT(*) FROM FPP_BLOCKEDMODELS1;") ~= false;
@@ -192,6 +205,7 @@ AddCSLuaFile("fpp/sh_settings.lua");
 AddCSLuaFile("fpp/client/fpp_menu.lua");
 AddCSLuaFile("fpp/client/fpp_hud.lua");
 AddCSLuaFile("fpp/client/fpp_buddies.lua");
+
 if UseFadmin then
   AddCSLuaFile("fadmin_darkrp.lua");
   include("fadmin_darkrp.lua");
@@ -254,3 +268,6 @@ glon.encode_types["Vehicle"] = glon.encode_types["Vehicle"] or {10, function(o)
 for k, v in pairs(LDRP_DLC.SV) do
   if v == "after" then include(k); end
 end
+
+
+MySQLite.initialize();

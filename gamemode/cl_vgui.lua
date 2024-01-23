@@ -2,6 +2,7 @@
 include("menu_content_tabs.lua");
 AddCSLuaFile("showteamtabs.lua");
 AddCSLuaFile("menu_content_tabs.lua");
+
 local VoteVGUI = {};
 local QuestionVGUI = {};
 local PanelNum = 0;
@@ -234,7 +235,7 @@ MENU_CONFIG.tabButtons = {
   },
   [2] = {
     ["name"] = "Jobs",
-    ["descritpion"] = "Choose your carrer",
+    ["descritpion"] = "Choose your carrer", -- I really made this spelling mistake? Dam
     ["loadtab"] = TabsJobs
   },
   [3] = {
