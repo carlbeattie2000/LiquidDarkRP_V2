@@ -1,14 +1,15 @@
-AddCSLuaFile("cl_init.lua")
-AddCSLuaFile("shared.lua")
-include("shared.lua")
-
+﻿AddCSLuaFile("cl_init.lua");
+AddCSLuaFile("shared.lua");
+include("shared.lua");
 function ENT:Initialize()
-	self:PhysicsInit(SOLID_VPHYSICS)
-	self:SetMoveType(MOVETYPE_VPHYSICS)
-	self:SetSolid(SOLID_VPHYSICS)
+  self:PhysicsInit(SOLID_VPHYSICS);
+  self:SetMoveType(MOVETYPE_VPHYSICS);
+  self:SetSolid(SOLID_VPHYSICS);
+  local phys = self:GetPhysicsObject();
+  if phys and phys:IsValid() then
+    phys:EnableMotion(false);
+    phys:Wake();
+  end
 
-	local phys = self:GetPhysicsObject()
-	if phys and phys:IsValid() then phys:EnableMotion(false) phys:Wake() end
-	
-	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS)
+  self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS);
 end

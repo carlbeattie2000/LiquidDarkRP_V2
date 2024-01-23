@@ -1,4 +1,4 @@
-/*---------------------------------------------------------------------------
+﻿--[[---------------------------------------------------------------------------
 -- Custom ammo types
 
 -- Add your custom ammo types in this file. Here's the syntax:
@@ -25,33 +25,22 @@
 -- 		ply: the player who is trying to buy the ammo
 
 -- Examples are below!
----------------------------------------------------------------------------*/
-
+---------------------------------------------------------------------------]]
 local permissions = {
-	[ "pistol" ] = { TEAM_GUN, TEAM_POLICE, TEAM_CHIEF },
-	[ "buckshot" ] = { TEAM_GUN },
-	[ "smg1" ] = { TEAM_GUN }
-}
+  ["pistol"] = {TEAM_GUN, TEAM_POLICE, TEAM_CHIEF},
+  ["buckshot"] = {TEAM_GUN},
+  ["smg1"] = {TEAM_GUN}
+};
 
-local function PermCheck( ply, ammo )
-	local good = false
-	table.foreachi( permissions[ ammo ], function( _, v )
-		if ply:Team() == v then
-			good = true
-		end
-	end )
-
-	return good
+local function PermCheck(ply, ammo)
+  local good = false;
+  table.foreachi(permissions[ammo], function(_, v) if ply:Team() == v then good = true; end end);
+  return good;
 end
 
 -- Pistol ammo type. Used by p228, desert eagle and all other pistols
-GM:AddAmmoType("pistol", "Pistol ammo", "models/Items/BoxSRounds.mdl", 30, 24,
-	function( ply ) return PermCheck( ply, "pistol" ) end )
-
+GM:AddAmmoType("pistol", "Pistol ammo", "models/Items/BoxSRounds.mdl", 30, 24, function(ply) return PermCheck(ply, "pistol"); end);
 -- Buckshot ammo, used by the shotguns
-GM:AddAmmoType("buckshot", "Shotgun ammo", "models/Items/BoxBuckshot.mdl", 50, 8,
-	function( ply ) return PermCheck( ply, "buckshot" ) end)
-
+GM:AddAmmoType("buckshot", "Shotgun ammo", "models/Items/BoxBuckshot.mdl", 50, 8, function(ply) return PermCheck(ply, "buckshot"); end);
 -- Rifle ammo, usually used by assault rifles
-GM:AddAmmoType("smg1", "Rifle ammo", "models/Items/BoxMRounds.mdl", 80, 30,
-	function( ply ) return PermCheck( ply, "smg1" ) end)
+GM:AddAmmoType("smg1", "Rifle ammo", "models/Items/BoxMRounds.mdl", 80, 30, function(ply) return PermCheck(ply, "smg1"); end);

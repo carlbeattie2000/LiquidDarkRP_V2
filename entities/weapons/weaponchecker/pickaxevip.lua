@@ -1,11 +1,6 @@
-if SERVER then AddCSLuaFile() end
-
-SWEP.Base = "pickaxe_base"
-
-SWEP.PrintName = "Pickaxe"
-
-SWEP.OreMultipler = 0
-
-SWEP.MiningTimeReducer = 1
-
-SWEP.ChanceMultipler = .5
+﻿if SERVER then AddCSLuaFile(); end
+SWEP.Base = "pickaxe_base";
+SWEP.PrintName = "Pickaxe";
+SWEP.OreMultipler = 0;
+SWEP.MiningTimeReducer = 1;
+SWEP.ChanceMultipler = .5;

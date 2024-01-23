@@ -1,4 +1,4 @@
-/*include("menu/getmaps.lua")
+﻿--[[include("menu/getmaps.lua")
 include("menu/maplist_iconview.lua")
 include("menu/map_icon.lua")
 
@@ -14,4 +14,4 @@ FAdmin.StartHooks["ChangeLevel"] = function()
 		Changelevel:Center()
 		Changelevel:MakePopup()
 	end)
-end*/
+end]]

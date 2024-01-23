@@ -1,11 +1,10 @@
-include('shared.lua')
-
-function ENT:Draw()	
-	self:DrawModel();
+﻿include('shared.lua');
+function ENT:Draw()
+  self:DrawModel();
 end
 
-function ENT:Think()	
+function ENT:Think()
 end
 
-function ENT:Initialize()	
+function ENT:Initialize()
 end
