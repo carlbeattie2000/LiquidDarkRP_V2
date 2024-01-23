@@ -22,7 +22,7 @@
     "lint_spaceBetweenParens": false,
     "lint_spaceBetweenBrackets": false,
     "lint_spaceBetweenBraces": false,
-    "lint_ignoreFiles": ["./gamemode/*.lua"],
+    "lint_ignoreFiles": ["./gamemode/language_sh.lua"],
     "lint_spaceBeforeComma": false,
     "lint_spaceAfterComma": false,
     "lint_maxLineLength": 0,
