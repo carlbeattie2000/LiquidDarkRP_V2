@@ -83,27 +83,27 @@ function SWEP:PrimaryAttack()
 	local ply = self.Owner
 
 	if ply:Team() != TEAM_MINER then ply:LiquidChat("Mining", Color(100,100,100), "You need to be the miner job to use this. (remember to holster the pick first)") return end
-	
+
 	if ply.Picking then return end
-	
+
 	local ent = ply:GetEyeTrace().Entity
-	
+
 	ply:EmitSound("weapons/iceaxe/iceaxe_swing1.wav")
-	
+
 	if ent:GetClass() != "rock_base" or ply:GetEyeTrace().HitPos:Distance(ply:GetPos()) > 100 then return end
 
 	ply:EmitSound("physics/glass/glass_bottle_impact_hard" .. math.random(1,3) .. ".wav")
-	
+
 	local RockType = ent.RockType
 
 	local Tbl = LDRP_SH.Rocks[RockType]
 
 	local Lvl = ply.Character.Skills["Mining"].lvl
-	
+
 	if Tbl.lvl > Lvl then ply:LiquidChat("Mining", Color(100,100,100), "You need a higher level mining to mine this.") return
 
 	elseif !ply:CanCarry(Tbl.picked,Tbl.pickedam*self.OreMultipler) then ply:LiquidChat("Mining", Color(100,100,100), "You need to free up inventory space before mining this.") return
-	
+
 	elseif Tbl.required then ply:LiquidChat("Mining", Color(100,100,100), "This rock requires a better pickaxe.") end
 
 	local plyid = ply:UniqueID()
@@ -135,24 +135,24 @@ function SWEP:PrimaryAttack()
 	timer.Create("Mining_" .. plyid, 1, Picktime, function()
 
 		if !ent:IsValid() or !ply:IsValid() or ply:GetActiveWeapon() != self.Weapon or ply:GetEyeTrace().Entity != ent or ply:GetEyeTrace().HitPos:Distance(ply:GetPos()) > 100 then
-			
+
 			umsg.Start("CancelMeter",ply)
-			
+
 			umsg.End()
-			
+
 			if ply:IsValid() then ply.Picking = nil end
-			
+
 			timer.Remove("Mining_" .. plyid)
-			
+
 			return
 		end
 
 		ply:EmitSound(Sound("physics/glass/glass_bottle_impact_hard"..tostring(math.random(1,3))..".wav"))
-		
+
 		self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
-		
+
 		Picked = Picked+1
-		
+
 		if SERVER and Picked == Picktime then
 
 			ply.Picking = false
@@ -184,7 +184,7 @@ function SWEP:PrimaryAttack()
 			self:PrimaryAttack()
 
 		end
-		
+
 	end)
 
 end
