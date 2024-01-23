@@ -41,7 +41,7 @@ function REBELLION.format_num(amount, decimal, prefix, neg_prefix)
     formatted = formatted .. "." .. remain .. string.rep("0", decimal - string.len(remain));
   end
 
-  -- attach prefix string e.g '$' 
+  -- attach prefix string e.g '$'
   formatted = (prefix or "") .. formatted;
   -- if value is negative then format accordingly
   if amount < 0 then
@@ -153,6 +153,8 @@ DB = DB or {};
 GM.Config = GM.Config or {};
 GM.NoLicense = GM.NoLicense or {};
 include("_MySQL.lua");
+include("mysqlite.lua");
+JSON = include("json.lua");
 include("config.lua");
 include("licenseweapons.lua");
 include("sh_interfaceloader.lua");
