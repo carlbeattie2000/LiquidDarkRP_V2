@@ -4,7 +4,7 @@
 GM.Version = "1";
 GM.Name = "Rebbelion DarkRP";
 GM.Author = "Rebbelion and Darkrp/LiquidRP Creators";
-CUR = "$";
+CUR = "$"; -- I'm a little confused as to why this is set here and in GM.Config
 REBELLION = REBELLION or {};
 function comma_value(amount)
   local formatted = amount;
@@ -62,6 +62,7 @@ function REBELLION.tableLength(t)
   return c;
 end
 
+include("modules/r_utils/sv_utils.lua")
 include("modules/von.lua"); --Temporary until I figure out how to officially bundle lua modules
 AddCSLuaFile("modules/von.lua");
 include("language_sh.lua"); -- Had to move this
@@ -160,6 +161,7 @@ AddCSLuaFile("config/_MySQL.lua")
 game.ConsoleCommand("sv_alltalk 0\n");
 
 DB = DB or {};
+
 GM.Config = GM.Config or {};
 GM.NoLicense = GM.NoLicense or {};
 

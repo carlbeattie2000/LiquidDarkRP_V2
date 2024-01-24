@@ -14,7 +14,6 @@ Don't worry about updating this file. If a new setting is added you can manually
 Toggle settings.
 Set to true or false.
 ]]
-
 -- voice3D - Enable/disable 3DVoice is enabled
 GM.Config.voice3D = true;
 -- adminnpcs - Whether or not NPCs should be admin only.
