@@ -1,13 +1,12 @@
-# LiquidRP V2
-I've copied this over to the current main branch as i'm currently working on rebuilding/upgrading the orignal LiquidRP to DarkRP 2.7.0.
+# LiquidDRP V2
+I've copied this over to the current main branch as i'm currently working on rebuilding/upgrading the orignal LiquidDRP to DarkRP 2.7.0.
 When I first started this project I failed to notice the DarkRP version it was running was nearly 10 years old. It will be much easier
-this way, I will have the latest DarkRP as the base, and will be able to rewrite the LiquidRP gamemode with updated standards, while also modernizing it.
+this way, I will have the latest DarkRP as the base, and will be able to rewrite the LiquidDRP gamemode with updated standards, while also modernizing it.
 This will be my hobby project until S&Box is released, then I'll port this over to S&Box.
 
 The original Liquid DarkRP by Jackool and then Deadman123, updated for Garry's Mod 13, now being updated to DarkRP 2.7.0.
 
-# DarkRP ![run-glualint](https://github.com/FPtje/DarkRP/workflows/run-glualint/badge.svg?branch=master)
-A roleplay gamemode for Garry's Mod.
+# Based on DarkRP ![run-glualint](https://github.com/FPtje/DarkRP/workflows/run-glualint/badge.svg?branch=master)
 
 # Description
 As it stands right now, Liquid DarkRP (shortened to LiquidDRP, or LDRP) is a modification of FPtje's DarkRP gamemode (https://github.com/FPtje/DarkRP) for Garry's Mod.
