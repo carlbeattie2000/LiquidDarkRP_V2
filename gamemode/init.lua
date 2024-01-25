@@ -9,7 +9,7 @@ DEFINE_BASECLASS("gamemode_sandbox")
 
 GM.Sandbox = BaseClass
 
-
+AddCSLuaFile("libraries/imgui.lua")
 AddCSLuaFile("libraries/sh_cami.lua")
 AddCSLuaFile("libraries/simplerr.lua")
 AddCSLuaFile("libraries/interfaceloader.lua")
