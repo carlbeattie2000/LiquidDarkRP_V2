@@ -1,31 +1,27 @@
-LiquidRP (Rebellion RP)
-========
-<h2>Important Information: RebellionRP's future</h1>
+# LiquidRP V2
+I'm copied this over the current main branch, I'm currently working on rebuilding/upgrading the orignal LiquidRP to DarkRP 2.7.0.
+When I first started this project I failed to notice the DarkRP version it was running was nearly 10 years old. It will be much easier
+this way, I will have the latest DarkRP as the base, and will be able to rewrite the LiquidRP gamemode with updated standards, while also modernizing it.
+This will be my hobby project until S&Box is released, then I'll port this over to S&Box.
 
+The original Liquid DarkRP by Jackool and then Deadman123, updated for Garry's Mod 13, now being updated to DarkRP 2.7.0.
 
-Last year I abandoned this project. I found myself spending too much of my "should be" development time, learning/ researching fundamental CS principles that I should've learned already, and fighting with how I was structuring the project and my code. I've spent some time since then just focusing on improving my fundamental CS knowledge. 
+# DarkRP ![run-glualint](https://github.com/FPtje/DarkRP/workflows/run-glualint/badge.svg?branch=master)
+A roleplay gamemode for Garry's Mod.
 
-So over the last few weeks I've been creating a 2D game engine and this project has popped into my head at least 100 times. I remembered trying to learn LUA when I was 13 nearly ten years ago desperate to make Dark RP add-ons and a clone of some popular modified Dark RP based game modes. I was struggling to get a simple script to run, I had high expectations and had skipped learning the basics like variables, conditionals, and loops, not to mention my inability to read and comprehend documentation back then. The project is back in development, and I'm unsure if I will rewrite everything from the ground up or continue where I left off. 
+# Description
+As it stands right now, Liquid DarkRP (shortened to LiquidDRP, or LDRP) is a modification of FPtje's DarkRP gamemode (https://github.com/FPtje/DarkRP) for Garry's Mod.
+It was originally hosted on Google Code (https://code.google.com/p/liquid-darkrp/), after which it was brought up to date for Garry's Mod 13, and then moved to GitHub where it is now.
+Most, if not all of the bugs have been ironed out, and this particular project should be as close to the original LDRP as it was pre-GMod 13.
 
-I think the best bet is to have an experiment with the project in its current state, and then decide what I will do. This time I will pace out the time spent on the project, and not have it as my main focus. 
+This is where I come in, I was fixing and adding new features before I realised how outdated it was from the current DarkRP version and was a big mess.
+I'm hoping to rebuild the gamemode starting with the latest version of DarkRP as the base.
 
-TLDR;
-This is a passion project, I want to complete it, either rewrite everything from the ground up, not using Liquid RP as the base, or continue where I left off, either way, It will be functional with what I originally planned.
+You can view my previous mess on the other branches.
 
-### Brief
-`A Modification of the gamemode DarkRP, Liquid DarkRP by Jackool and then Deadman123, updated for Garry's Mod 13, Now RebellionRP being updated by carlbeattie2000.`
+This is what I said three months ago.
+`I think the best bet is to have an experiment with the project in its current state, and then decide what I will do. This time I will pace out the time spent on the project, and not have it as my main focus.`
+Well I have revistied it, played around, tried rebuilding a feature that already exists, but easier to work and have now come to the decision it will just be better to rewrite from the base.
 
-### Description
-`NOTE: BUGS ARE PRESENT IN CURRENT BUILDS`
-
-#### Current Features
-- Trading
-- Mining
-- Crafting
-- Skill leveling (crafting, mining, inventory weight, etc)
-- Inventory
-- Banking
-- Custom NPCs
-- Government System (Elections, Government Funds, Taxes)
-- Player Warns
-- Basic ant-cheat (Know commands + ConVar checking, familysharing, using vpns)
+I was using Windows while I was playing around rebuilding the feature, that was adding to my frustration. Spaming Alt-Tab twenty times to get to the window I want is unpleasant. Setting up my glua dev
+environment will be my first priority.
