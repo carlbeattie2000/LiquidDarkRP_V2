@@ -1,5 +1,5 @@
 # LiquidRP V2
-I'm copied this over the current main branch, I'm currently working on rebuilding/upgrading the orignal LiquidRP to DarkRP 2.7.0.
+I've copied this over to the current main branch as i'm currently working on rebuilding/upgrading the orignal LiquidRP to DarkRP 2.7.0.
 When I first started this project I failed to notice the DarkRP version it was running was nearly 10 years old. It will be much easier
 this way, I will have the latest DarkRP as the base, and will be able to rewrite the LiquidRP gamemode with updated standards, while also modernizing it.
 This will be my hobby project until S&Box is released, then I'll port this over to S&Box.
