@@ -1,149 +1,139 @@
-if SERVER then
-	AddCSLuaFile("shared.lua")
-end
+AddCSLuaFile()
 
 if CLIENT then
-	SWEP.PrintName = "Arrest Baton"
-	SWEP.Slot = 1
-	SWEP.SlotPos = 3
-	SWEP.DrawAmmo = false
-	SWEP.DrawCrosshair = false
+    SWEP.Slot = 1
+    SWEP.SlotPos = 3
 end
 
-SWEP.Base = "weapon_cs_base2"
+DEFINE_BASECLASS("stick_base")
 
-SWEP.Author = "Rick Darkaliono, philxyz"
-SWEP.Instructions = "Left or right click to arrest"
-SWEP.Contact = ""
-SWEP.Purpose = ""
-SWEP.IconLetter = ""
+SWEP.Instructions = "Left click to arrest\nRight click to switch batons"
+SWEP.IsDarkRPArrestStick = true
 
-SWEP.ViewModelFOV = 62
-SWEP.ViewModelFlip = false
-SWEP.AnimPrefix = "stunstick"
+SWEP.PrintName = "Arrest Baton"
+SWEP.Spawnable = true
+SWEP.Category = "DarkRP (Utility)"
 
-SWEP.Spawnable = false
-SWEP.AdminSpawnable = true
+SWEP.StickColor = Color(255, 0, 0)
 
-SWEP.NextStrike = 0
+SWEP.Switched = true
 
-SWEP.ViewModel = Model("models/weapons/v_stunbaton.mdl")
-SWEP.WorldModel = Model("models/weapons/w_stunbaton.mdl")
+DarkRP.hookStub{
+    name = "canArrest",
+    description = "Whether someone can arrest another player.",
+    parameters = {
+        {
+            name = "arrester",
+            description = "The player trying to arrest someone.",
+            type = "Player"
+        },
+        {
+            name = "arrestee",
+            description = "The player being arrested.",
+            type = "Player"
+        }
+    },
+    returns = {
+        {
+            name = "canArrest",
+            description = "A yes or no as to whether the arrester can arrest the arestee.",
+            type = "boolean"
+        },
+        {
+            name = "message",
+            description = "The message that is shown when they can't arrest the player.",
+            type = "string"
+        }
+    },
+    realm = "Server"
+}
 
-SWEP.Sound = Sound("weapons/stunstick/stunstick_swing1.wav")
-
-SWEP.Primary.ClipSize = -1
-SWEP.Primary.DefaultClip = 0
-SWEP.Primary.Automatic = false
-SWEP.Primary.Ammo = ""
-
-SWEP.Secondary.ClipSize = -1
-SWEP.Secondary.DefaultClip = 0
-SWEP.Secondary.Automatic = false
-SWEP.Secondary.Ammo = ""
-
-function SWEP:Initialize()
-	self:SetWeaponHoldType("normal")
-end
+DarkRP.hookStub{
+    name = "setArrestStickTime",
+    description = "Sets arrest time for an arrest made via the arrest stick",
+    parameters = {
+        {
+            name = "arrest_stick",
+            description = "The arrest strick weapon with which the arrestee was arrested.",
+            type = "Weapon"
+        },
+        {
+            name = "arrester",
+            description = "The player trying to arrest someone.",
+            type = "Player"
+        },
+        {
+            name = "arrestee",
+            description = "The player being arrested.",
+            type = "Player"
+        }
+    },
+    returns = {
+        {
+            name = "time",
+            description = "The time to arrest the player.",
+            type = "integer"
+        }
+    },
+    realm = "Server"
+}
 
 function SWEP:Deploy()
-	if CLIENT or not IsValid(self:GetOwner()) then return end
-	self:SetColor(Color(255,0,0,255))
-	self:SetMaterial("models/shiny")
-	SendUserMessage("StunStickColour", self:GetOwner(), 255,0,0, "models/shiny")
-	return true
+    self.Switched = true
+    return BaseClass.Deploy(self)
 end
-
-function SWEP:Holster()
-	if CLIENT or not IsValid(self:GetOwner()) then return end
-	SendUserMessage("StunStickColour", self:GetOwner(), 255, 255, 255, "")
-	return true
-end
-
-function SWEP:OnRemove()
-	if SERVER and IsValid(self:GetOwner()) then
-		SendUserMessage("StunStickColour", self:GetOwner(), 255, 255, 255, "")
-	end
-end
-
-usermessage.Hook("StunStickColour", function(um)
-	local viewmodel = LocalPlayer():GetViewModel()
-	local r,g,b,a = um:ReadLong(), um:ReadLong(), um:ReadLong(), 255
-	viewmodel:SetColor(Color(r,g,b,a))
-	viewmodel:SetMaterial(um:ReadString())
-end)
 
 function SWEP:PrimaryAttack()
-	if CurTime() < self.NextStrike then return end
+    BaseClass.PrimaryAttack(self)
 
-	self:SetWeaponHoldType("melee")
-	timer.Simple(0.3, function() if self:IsValid() then self:SetWeaponHoldType("normal") end end)
+    if CLIENT then return end
 
-	self.Owner:SetAnimation(PLAYER_ATTACK1)
-	self.Weapon:EmitSound(self.Sound)
-	self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
+    local Owner = self:GetOwner()
 
-	self.NextStrike = CurTime() + .4
+    if not IsValid(Owner) then return end
 
-	if CLIENT then return end
+    Owner:LagCompensation(true)
+    local trace = util.QuickTrace(Owner:EyePos(), Owner:GetAimVector() * 90, {Owner})
+    Owner:LagCompensation(false)
 
-	local trace = self.Owner:GetEyeTrace()
+    local ent = trace.Entity
+    if IsValid(ent) and ent.onArrestStickUsed then
+        ent:onArrestStickUsed(Owner)
+        return
+    end
 
-	if IsValid(trace.Entity) and trace.Entity:IsPlayer() and trace.Entity:IsCP() and not GAMEMODE.Config.cpcanarrestcp then
-		GAMEMODE:Notify(self.Owner, 1, 5, "You can not arrest other CPs!")
-		return
-	end
+    ent = Owner:getEyeSightHitEntity(nil, nil, function(p) return p ~= Owner and p:IsPlayer() and p:Alive() and p:IsSolid() end)
 
-	if trace.Entity:GetClass() == "prop_ragdoll" then
-		for k,v in pairs(player.GetAll()) do
-			if trace.Entity.OwnerINT and trace.Entity.OwnerINT == v:EntIndex() and GAMEMODE.KnockoutToggle then
-				GAMEMODE:KnockoutToggle(v, true)
-				return
-			end
-		end
-	end
+    local stickRange = self.stickRange * self.stickRange
+    if not IsValid(ent) or (Owner:EyePos():DistToSqr(ent:GetPos()) > stickRange) or not ent:IsPlayer() then
+        return
+    end
 
-	if not IsValid(trace.Entity) or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 115) or (not trace.Entity:IsPlayer() and not trace.Entity:IsNPC()) then
-		return
-	end
+    local canArrest, message = hook.Call("canArrest", DarkRP.hooks, Owner, ent)
+    if not canArrest then
+        if message then DarkRP.notify(Owner, 1, 5, message) end
+        return
+    end
 
-	if not GAMEMODE.Config.npcarrest and trace.Entity:IsNPC() then
-		return
-	end
+    local time = hook.Call("setArrestStickTime", DarkRP.hooks, self, Owner, ent)
+    ent:arrest(time, Owner)
+    DarkRP.notify(ent, 0, 20, DarkRP.getPhrase("youre_arrested_by", Owner:Nick()))
 
-	if GAMEMODE.Config.needwantedforarrest and not trace.Entity:IsNPC() and not trace.Entity.DarkRPVars.wanted then
-		GAMEMODE:Notify(self.Owner, 1, 5, "The player must be wanted in order to be able to arrest them.")
-		return
-	end
-
-	if FAdmin and trace.Entity:IsPlayer() and trace.Entity:FAdmin_GetGlobal("fadmin_jailed") then
-		GAMEMODE:Notify(self.Owner, 1, 5, "You cannot arrest a player who has been jailed by an admin.")
-		return
-	end
-
-	local jpc = DB.CountJailPos()
-
-	if not jpc or jpc == 0 then
-		GAMEMODE:Notify(self.Owner, 1, 4, "You cannot arrest people since there are no jail positions set!")
-	else
-		-- Send NPCs to Jail
-		if trace.Entity:IsNPC() then
-			trace.Entity:SetPos(DB.RetrieveJailPos())
-		else
-			if not trace.Entity.Babygod then
-				trace.Entity:arrest()
-				GAMEMODE:Notify(trace.Entity, 0, 20, "You've been arrested by " .. self.Owner:Nick())
-
-				if self.Owner.SteamName then
-					DB.Log(self.Owner:Nick().." ("..self.Owner:SteamID()..") arrested "..trace.Entity:Nick(), nil, Color(0, 255, 255))
-				end
-			else
-				GAMEMODE:Notify(self.Owner, 1, 4, "You can't arrest players who are spawning.")
-			end
-		end
-	end
+    if Owner.SteamName then
+        DarkRP.log(Owner:Nick() .. " (" .. Owner:SteamID() .. ") arrested " .. ent:Nick(), Color(0, 255, 255))
+    end
 end
 
-function SWEP:SecondaryAttack()
-	self:PrimaryAttack()
+function SWEP:startDarkRPCommand(usrcmd)
+    local Owner = self:GetOwner()
+    if not IsValid(Owner) then return end
+
+    if game.SinglePlayer() and CLIENT then return end
+    if usrcmd:KeyDown(IN_ATTACK2) then
+        if not self.Switched and Owner:HasWeapon("unarrest_stick") then
+            usrcmd:SelectWeapon(Owner:GetWeapon("unarrest_stick"))
+        end
+    else
+        self.Switched = false
+    end
 end

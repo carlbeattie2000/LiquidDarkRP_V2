@@ -1,14 +1,17 @@
-"Gamemode"
+"darkrp"
 {
-	"base"			"sandbox"
-    "title"			"DarkRP"
-	"maps"			"^rp_"
-	"category"      "rp"
-	"menusystem"	"1"
+    "base"          "sandbox"
+    "title"         "DarkRP"
+    "version"       "2.7.0"
+    "category"      "rp"
+    "menusystem"    "1"
+    "workshopid"    "248302805"
 
-	"author_name"   "Rebellion/DarkRP/LiquidRP"
+    "author_name"   "FPtje Falco et al."
+    "author_email"  ""
+    "author_url"    "https://github.com/FPtje/DarkRP"
 
-	"icon"  ""
-	"info"  ""
-	"hide"  0
+    "icon"  ""
+    "info"  ""
+    "hide"  "0"
 }

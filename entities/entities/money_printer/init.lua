@@ -2,177 +2,143 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
+ENT.SpawnOffset = Vector(15, 0, 15)
+
+local function PrintMore(ent)
+    if not IsValid(ent) then return end
+
+    ent.sparking = true
+    timer.Simple(3, function()
+        if not IsValid(ent) then return end
+        ent:CreateMoneybag()
+    end)
+end
+
+function ENT:StartSound()
+    self.sound = CreateSound(self, Sound("ambient/levels/labs/equipment_printer_loop1.wav"))
+    self.sound:SetSoundLevel(52)
+    self.sound:PlayEx(1, 100)
+end
+
+function ENT:PostInit()
+    --Dumb things what you want to run on printer spawn
+end
+
 function ENT:Initialize()
-	local z = LDRP_SH.Printers[LDRP_SH.First]
-	
-	self:SetNWString("Upgrade",LDRP_SH.First)
-	self:SetModel(z.mdl)
-	self:SetMaterial(z.mat)
-	self:SetColor(z.clr)
-	self:PhysicsInit(SOLID_VPHYSICS)
-	self:SetMoveType(MOVETYPE_VPHYSICS)
-	self:SetSolid(SOLID_VPHYSICS)
-	
-	local phys = self:GetPhysicsObject()
-	if phys:IsValid() then phys:Wake() end
-	self.sparking = false
-	self.damage = 100
-	self.IsMoneyPrinter = true
-	timer.Simple(27, function() if IsValid( self ) then self:PrintMore() end end)
+    self:initVars()
+    self:SetModel(self.model)
+    DarkRP.ValidatedPhysicsInit(self, SOLID_VPHYSICS)
+    self:SetMoveType(MOVETYPE_VPHYSICS)
+    self:SetSolid(SOLID_VPHYSICS)
+
+    local phys = self:GetPhysicsObject()
+
+    if phys:IsValid() then
+        phys:Wake()
+    end
+
+    timer.Simple(math.random(self.MinTimer, self.MaxTimer), function() PrintMore(self) end)
+    self:StartSound()
+    self:PostInit()
 end
 
-function ENT:OnTakeDamage( dmg )
-	if self.burningup then return end
+function ENT:OnTakeDamage(dmg)
+    self:TakePhysicsDamage(dmg)
 
-	self.damage = (self.damage or 100) - dmg:GetDamage()
-	if self.damage <= 0 then
-		local rnd = math.random(1, 10)
-		if rnd < 3 then
-			self:BurstIntoFlames()
-		else
-			self:Destruct()
-			self:Remove()
-		end
-	end
-end
+    if self.burningup then return end
 
---local physColData = nil
-
-local speedFloor = 225 --The minimum speed to consider damaging the printer. This seems to be about a 4 foot drop.
-local multiplier = 4 --When the damage is calculated, how much should it be scaled relative to the speed over the speed floor?
-local collSounds = {
-	"physics/metal/metal_box_break1.wav",
-	"physics/metal/metal_box_break2.wav",
-	"physics/metal/metal_barrel_impact_hard1.wav",
-	"physics/metal/metal_sheet_impact_hard6.wav"
-}
-
-function ENT:PhysicsCollide( colData )
-
-	--DeltaTime always seems to cap at 1 if the entity hasn't been damaged recently (recently being within a few moments)
-	if colData.DeltaTime == 1 and colData.Speed >= speedFloor then
-		local soundChoice = math.random( 1, #collSounds )
-		self:EmitSound( collSounds[ soundChoice ], 75, 100 )
-		self:TakeDamage( (colData.Speed * multiplier) / speedFloor, colData.HitEntity, nil )
-	end
+    self.damage = (self.damage or 100) - dmg:GetDamage()
+    if self.damage <= 0 then
+        local rnd = math.random(1, 10)
+        if rnd < 3 then
+            self:BurstIntoFlames()
+        else
+            self:Destruct()
+            self:Remove()
+        end
+    end
 end
 
 function ENT:Destruct()
-	self:Ignite( 0, 0 )
-	local vPoint = self:GetPos()
-	local effectdata = EffectData()
-	effectdata:SetStart(vPoint)
-	effectdata:SetOrigin(vPoint)
-	effectdata:SetScale(1)
-	util.Effect("Explosion", effectdata)
-	Notify(self.dt.owning_ent, 1, 4, "Your money printer has exploded!")
+    local vPoint = self:GetPos()
+    local effectdata = EffectData()
+    effectdata:SetStart(vPoint)
+    effectdata:SetOrigin(vPoint)
+    effectdata:SetScale(1)
+    util.Effect("Explosion", effectdata)
+    if IsValid(self:Getowning_ent()) then DarkRP.notify(self:Getowning_ent(), 1, 4, DarkRP.getPhrase("money_printer_exploded")) end
 end
 
 function ENT:BurstIntoFlames()
-	if self.HasCooler then
-		self.CoolerUses = self.CoolerUses-1
-		if self.CoolerUses <= 0 then
-			Notify(self.dt.owning_ent, 0, 4, "Your money printer was saved by a cooler, but your cooler exploded!")
-			if self.HasCooler:IsValid() then self.HasCooler:Remove() end
-			self.HasCooler = nil
-			self.HadCooler = true
-		else
-			Notify(self.dt.owning_ent, 0, 4, "Your money printer was saved by a cooler (" .. self.CoolerUses .. " uses left)")
-		end
-		return
-	end
-	Notify(self.dt.owning_ent, 0, 4, "Your money printer is overheating!")
-	self.burningup = true
-	local burntime = math.random(8, 18)
-	self:Ignite(burntime, 0)
-	timer.Simple(burntime, function( ) self:Fireball() end )
+    if hook.Run("moneyPrinterCatchFire", self) == true then return end
+
+    if IsValid(self:Getowning_ent()) then DarkRP.notify(self:Getowning_ent(), 0, 4, DarkRP.getPhrase("money_printer_overheating")) end
+    self.burningup = true
+    local burntime = math.random(8, 18)
+    self:Ignite(burntime, 0)
+    timer.Simple(burntime, function() self:Fireball() end)
 end
 
 function ENT:Fireball()
-	if not self:IsOnFire() then self.burningup = false return end
-	local dist = math.random(20, 280) -- Explosion radius
-	self:Destruct()
-	for k, v in pairs(ents.FindInSphere(self:GetPos(), dist)) do
-		if not v:IsPlayer() and not v.IsMoneyPrinter then v:Ignite(math.random(5, 22), 0) end
-	end
-	self:Remove()
-end
-
-function ENT:PrintMore()
-	if IsValid(self) then
-		self.sparking = true
-		timer.Simple(3, function() if IsValid( self ) then self:CreateMoneybag() end end)
-	end
+    if not self:IsOnFire() then self.burningup = false return end
+    local dist = math.random(20, 280) -- Explosion radius
+    self:Destruct()
+    for k, v in ipairs(ents.FindInSphere(self:GetPos(), dist)) do
+        if not v:IsPlayer() and not v:IsWeapon() and v:GetClass() ~= "predicted_viewmodel" and not v.IsMoneyPrinter then
+            v:Ignite(math.random(5, 22), 0)
+        elseif v:IsPlayer() then
+            local distance = v:GetPos():Distance(self:GetPos())
+            v:TakeDamage(distance / dist * 100, self, self)
+        end
+    end
+    self:Remove()
 end
 
 function ENT:CreateMoneybag()
-	if not IsValid(self) then return end
-	if self:IsOnFire() then return end
+    if self:IsOnFire() then return end
 
-	if math.random(1, 22) == 3 then self:BurstIntoFlames() end
-	
-	local amount = 0
-	if LDRP_SH.Printers[self:GetNWString("Upgrade")].prnt then
-		amount = LDRP_SH.Printers[self:GetNWString("Upgrade")].prnt
-	end
-	
-	self.dt.holding = math.Clamp(self.dt.holding+amount,0,1500)
-	self.sparking = false
+    local amount = self.MoneyCount or (GAMEMODE.Config.mprintamount ~= 0 and GAMEMODE.Config.mprintamount or 250)
+    local prevent, hookAmount = hook.Run("moneyPrinterPrintMoney", self, amount)
+    if prevent == true then return end
 
-	timer.Simple(math.random(200, 350), function( ) if IsValid( self ) then self:PrintMore() end end)
-end
+    local MoneyPos = self:GetPos() + self.SpawnOffset
+    amount = hookAmount or amount
 
-function ENT:Use(ply,call)
-	local EID = self:EntIndex()
-	if ply:Team() == TEAM_POLICE or ply:Team() == TEAM_CHIEF then
-		hook.Call("r_government_ent_seize", GAMEMODE, self:GetOwner(), ply, "Money Printer", 16000)
-    self:Remove()
-		return
-	end
-	
-	if timer.Exists("StealPrinter_" .. EID) then return end
-	
-	if self.dt.owning_ent != ply then
-		umsg.Start("SendMeter",ply)
-			umsg.String("Stealing...")
-			umsg.Float(30)
-		umsg.End()
-		
-		local sec = 0
-		timer.Create("StealPrinter_" .. EID,1,0,function()
-			if !ply or !ply:IsValid() then timer.Remove("StealPrinter_" .. EID) return end
-			if !self or !self:IsValid() or !ply:GetEyeTrace().Entity or !ply:GetEyeTrace().Entity:IsValid() or ply:GetEyeTrace().Entity != self.Entity then
-				umsg.Start("CancelMeter",ply) umsg.End()
-				timer.Remove("StealPrinter_" .. EID)
-				return
-			end
-			self:EmitSound("ambient/alarms/klaxon1.wav",60,120)
-			sec = sec+1
-			if sec > 29 then
-				self.dt.owning_ent = ply
-				Notify(ply, 0, 4, "You have succesfully stolen a printer.")
-				timer.Remove("StealPrinter_" .. EID)
-			end
-		end)
-	
-		return
-	end
-	
-	if self.dt.holding > 0 then
-		local Gain = self.dt.holding
-		self.dt.holding = 0
-		ply:AddMoney(Gain)
-		Notify(ply, 0, 4, "Gained $" .. Gain .. " from looting money printer.")
-	end
+    if self.OverheatChance and self.OverheatChance > 0 then
+        local overheatchance
+        if self.OverheatChance <= 3 then
+            overheatchance = 22
+        else
+            overheatchance = self.OverheatChance or 22
+        end
+        if math.random(1, overheatchance) == 3 then self:BurstIntoFlames() end
+    end
+
+    local moneybag = DarkRP.createMoneyBag(MoneyPos, amount)
+    hook.Run("moneyPrinterPrinted", self, moneybag)
+    self.sparking = false
+    timer.Simple(math.random(self.MinTimer, self.MaxTimer), function() PrintMore(self) end)
 end
 
 function ENT:Think()
-	if not self.sparking then return end
+    if self:WaterLevel() > 0 then
+        self:Destruct()
+        self:Remove()
+        return
+    end
+    self:StartSound()
+    if not self.sparking then return end
 
-	local effectdata = EffectData()
-	effectdata:SetOrigin(self:GetPos())
-	effectdata:SetMagnitude(1)
-	effectdata:SetScale(1)
-	effectdata:SetRadius(2)
-	util.Effect("Sparks", effectdata)
+    local effectdata = EffectData()
+    effectdata:SetOrigin(self:GetPos())
+    effectdata:SetMagnitude(1)
+    effectdata:SetScale(1)
+    effectdata:SetRadius(2)
+    util.Effect("Sparks", effectdata)
+end
+
+function ENT:OnRemove()
+    if self.sound then
+        self.sound:Stop()
+    end
 end
