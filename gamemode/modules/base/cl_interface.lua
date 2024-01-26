@@ -1,4 +1,4 @@
-DarkRP.PLAYER.isInRoom = DarkRP.stub{
+﻿DarkRP.PLAYER.isInRoom = DarkRP.stub{
     name = "isInRoom",
     description = "Whether the player is in the same room as the LocalPlayer.",
     parameters = {},
@@ -83,8 +83,7 @@ DarkRP.setPreferredJobModel = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -125,7 +124,5 @@ DarkRP.hookStub{
             type = "number"
         }
     },
-    returns = {
-
-    }
+    returns = {}
 }

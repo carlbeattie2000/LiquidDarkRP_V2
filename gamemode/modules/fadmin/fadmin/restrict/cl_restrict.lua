@@ -1,6 +1,5 @@
-local function FillMenu(menu, SpawnName, GroupName)
+﻿local function FillMenu(menu, SpawnName, GroupName)
     menu:AddOption("unrestrict", function() RunConsoleCommand("_FAdmin", "UnRestrictWeapon", SpawnName) end)
-
     menu:AddSpacer("")
     for k in SortedPairsByMemberValue(FAdmin.Access.Groups, "ADMIN", true) do
         menu:AddOption(k, function() RunConsoleCommand("_FAdmin", "RestrictWeapon", SpawnName, k) end)
@@ -14,7 +13,6 @@ local function RestrictWeaponMenu()
     frame:Center()
     frame:SetVisible(true)
     frame:MakePopup()
-
     local WeaponMenu = vgui.Create("FAdmin_weaponPanel", frame)
     WeaponMenu.HideAmmo = true
     function WeaponMenu:DoGiveWeapon(SpawnName)
@@ -23,8 +21,9 @@ local function RestrictWeaponMenu()
         FillMenu(menu, SpawnName)
         menu:Open()
     end
+
     WeaponMenu:BuildList()
-    WeaponMenu:StretchToParent(0,25,0,0)
+    WeaponMenu:StretchToParent(0, 25, 0, 0)
 end
 
 FAdmin.StartHooks["Restrict"] = function()

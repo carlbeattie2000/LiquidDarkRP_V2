@@ -1,5 +1,8 @@
-local function God(ply, cmd, args)
-    if not FAdmin.Access.PlayerHasPrivilege(ply, "God") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return false end
+﻿local function God(ply, cmd, args)
+    if not FAdmin.Access.PlayerHasPrivilege(ply, "God") then
+        FAdmin.Messages.SendMessage(ply, 5, "No access!")
+        return false
+    end
 
     local targets = FAdmin.FindPlayer(args[1])
     if not targets or #targets == 1 and not IsValid(targets[1]) then
@@ -13,13 +16,16 @@ local function God(ply, cmd, args)
             target:GodEnable()
         end
     end
-    FAdmin.Messages.FireNotification("god", ply, targets)
 
+    FAdmin.Messages.FireNotification("god", ply, targets)
     return true, targets
 end
 
 local function Ungod(ply, cmd, args)
-    if not FAdmin.Access.PlayerHasPrivilege(ply, "God") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return false end
+    if not FAdmin.Access.PlayerHasPrivilege(ply, "God") then
+        FAdmin.Messages.SendMessage(ply, 5, "No access!")
+        return false
+    end
 
     local targets = FAdmin.FindPlayer(args[1])
     if not targets or #targets == 1 and not IsValid(targets[1]) then
@@ -33,8 +39,8 @@ local function Ungod(ply, cmd, args)
             target:GodDisable()
         end
     end
-    FAdmin.Messages.FireNotification("ungod", ply, targets)
 
+    FAdmin.Messages.FireNotification("ungod", ply, targets)
     return true, targets
 end
 
@@ -55,12 +61,7 @@ FAdmin.StartHooks["God"] = function()
 
     FAdmin.Commands.AddCommand("God", God)
     FAdmin.Commands.AddCommand("Ungod", Ungod)
-
     FAdmin.Access.AddPrivilege("God", 2)
 end
 
-hook.Add("PlayerSpawn", "FAdmin_God", function(ply)
-    if ply:FAdmin_GetGlobal("FAdmin_godded") then
-        ply:GodEnable()
-    end
-end)
+hook.Add("PlayerSpawn", "FAdmin_God", function(ply) if ply:FAdmin_GetGlobal("FAdmin_godded") then ply:GodEnable() end end)

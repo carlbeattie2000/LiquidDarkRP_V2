@@ -1,10 +1,9 @@
-ENT.Type = "anim"
+﻿ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
 ENT.PrintName = "fadmin MOTD"
 ENT.Information = "Place this MOTD somewhere, freeze it and it will be saved automatically"
 ENT.Author = "FPtje"
 ENT.Spawnable = false
-
 function ENT:CanTool(ply, trace, tool)
     if ply:IsAdmin() and tool == "remover" then
         self.CanRemove = true

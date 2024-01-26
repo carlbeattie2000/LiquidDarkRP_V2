@@ -1,8 +1,7 @@
-DarkRP.PLAYER.isWanted = DarkRP.stub{
+﻿DarkRP.PLAYER.isWanted = DarkRP.stub{
     name = "isWanted",
     description = "Whether this player is wanted",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "answer",
@@ -16,8 +15,7 @@ DarkRP.PLAYER.isWanted = DarkRP.stub{
 DarkRP.PLAYER.getWantedReason = DarkRP.stub{
     name = "getWantedReason",
     description = "Get the reason why someone is wanted",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "answer",
@@ -31,8 +29,7 @@ DarkRP.PLAYER.getWantedReason = DarkRP.stub{
 DarkRP.PLAYER.isArrested = DarkRP.stub{
     name = "isArrested",
     description = "Whether this player is arrested",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "answer",
@@ -46,8 +43,7 @@ DarkRP.PLAYER.isArrested = DarkRP.stub{
 DarkRP.PLAYER.isCP = DarkRP.stub{
     name = "isCP",
     description = "Whether this player is part of the police force (mayor, cp, chief).",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "answer",
@@ -61,8 +57,7 @@ DarkRP.PLAYER.isCP = DarkRP.stub{
 DarkRP.PLAYER.isMayor = DarkRP.stub{
     name = "isMayor",
     description = "Whether this player is a mayor.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "answer",
@@ -76,8 +71,7 @@ DarkRP.PLAYER.isMayor = DarkRP.stub{
 DarkRP.PLAYER.isChief = DarkRP.stub{
     name = "isChief",
     description = "Whether this player is a Chief.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "answer",
@@ -87,7 +81,6 @@ DarkRP.PLAYER.isChief = DarkRP.stub{
     },
     metatable = DarkRP.PLAYER
 }
-
 
 DarkRP.hookStub{
     name = "canRequestWarrant",

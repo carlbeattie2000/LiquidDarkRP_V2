@@ -1,4 +1,4 @@
-DarkRP.addChatReceiver = DarkRP.stub{
+﻿DarkRP.addChatReceiver = DarkRP.stub{
     name = "addChatReceiver",
     description = "Add a chat command with specific receivers",
     parameters = {
@@ -50,7 +50,5 @@ DarkRP.hookStub{
             type = "Player"
         }
     },
-    returns = {
-
-    }
+    returns = {}
 }

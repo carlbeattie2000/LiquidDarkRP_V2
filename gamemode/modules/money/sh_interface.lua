@@ -1,4 +1,4 @@
-DarkRP.PLAYER.canAfford = DarkRP.stub{
+﻿DarkRP.PLAYER.canAfford = DarkRP.stub{
     name = "canAfford",
     description = "Whether the player can afford the given amount of money",
     parameters = {
@@ -22,9 +22,7 @@ DarkRP.PLAYER.canAfford = DarkRP.stub{
 DarkRP.ENTITY.isMoneyBag = DarkRP.stub{
     name = "isMoneyBag",
     description = "Whether this entity is a money bag",
-    parameters = {
-
-    },
+    parameters = {},
     returns = {
         {
             name = "answer",

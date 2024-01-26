@@ -1,17 +1,16 @@
-local QuestionVGUI = {}
+﻿local QuestionVGUI = {}
 local PanelNum = 0
 local VoteVGUI = {}
 local function MsgDoVote(msg)
     local _, chatY = chat.GetChatBoxPos()
-
     local question = msg:ReadString()
     local voteid = msg:ReadShort()
     local timeleft = msg:ReadFloat()
-    if timeleft == 0 then
-        timeleft = 100
-    end
+    if timeleft == 0 then timeleft = 100 end
     local OldTime = CurTime()
-    if not IsValid(LocalPlayer()) then return end -- Sent right before player initialisation
+    if not IsValid(LocalPlayer()) then -- Sent right before player initialisation
+        return
+    end
 
     LocalPlayer():EmitSound("Town.d1_town_02_elevbell1", 100, 100)
     local panel = vgui.Create("DFrame")
@@ -26,7 +25,6 @@ local function MsgDoVote(msg)
     function panel:Close()
         PanelNum = PanelNum - 140
         VoteVGUI[voteid .. "vote"] = nil
-
         local num = 0
         for _, v in SortedPairs(VoteVGUI) do
             v:SetPos(num, ScrH() / 2 - 50)
@@ -37,36 +35,31 @@ local function MsgDoVote(msg)
             v:SetPos(num, ScrH() / 2 - 50)
             num = num + 300
         end
+
         self:Remove()
     end
 
     function panel:Think()
         self:SetTitle(DarkRP.getPhrase("time", math.Clamp(math.ceil(timeleft - (CurTime() - OldTime)), 0, 9999)))
-        if timeleft - (CurTime() - OldTime) <= 0 then
-            panel:Close()
-        end
+        if timeleft - (CurTime() - OldTime) <= 0 then panel:Close() end
     end
 
     panel:SetKeyboardInputEnabled(false)
     panel:SetMouseInputEnabled(true)
     panel:SetVisible(true)
-
     local label = vgui.Create("DLabel")
     label:SetParent(panel)
     label:SetPos(5, 25)
     label:SetText(DarkRP.textWrap(DarkRP.deLocalise(question), "DermaDefault", 130))
     label:SizeToContents()
     label:SetVisible(true)
-
     local nextHeight = label:GetTall() > 78 and label:GetTall() - 78 or 0 -- Make panel taller for divider and buttons
     panel:SetTall(panel:GetTall() + nextHeight)
-
     local divider = vgui.Create("Divider")
     divider:SetParent(panel)
     divider:SetPos(2, panel:GetTall() - 30)
     divider:SetSize(180, 2)
     divider:SetVisible(true)
-
     local ybutton = vgui.Create("Button")
     ybutton:SetParent(panel)
     ybutton:SetPos(25, panel:GetTall() - 25)
@@ -93,26 +86,20 @@ local function MsgDoVote(msg)
     VoteVGUI[voteid .. "vote"] = panel
     panel:SetSkin(GAMEMODE.Config.DarkRPSkin)
 end
-usermessage.Hook("DoVote", MsgDoVote)
 
+usermessage.Hook("DoVote", MsgDoVote)
 local function KillVoteVGUI(msg)
     local id = msg:ReadShort()
-
-    if VoteVGUI[id .. "vote"] and VoteVGUI[id .. "vote"]:IsValid() then
-        VoteVGUI[id .. "vote"]:Close()
-    end
+    if VoteVGUI[id .. "vote"] and VoteVGUI[id .. "vote"]:IsValid() then VoteVGUI[id .. "vote"]:Close() end
 end
-usermessage.Hook("KillVoteVGUI", KillVoteVGUI)
 
+usermessage.Hook("KillVoteVGUI", KillVoteVGUI)
 local function MsgDoQuestion(msg)
     if not IsValid(LocalPlayer()) then return end
-
     local question = msg:ReadString()
     local quesid = msg:ReadString()
     local timeleft = msg:ReadFloat()
-    if timeleft == 0 then
-        timeleft = 100
-    end
+    if timeleft == 0 then timeleft = 100 end
     local OldTime = CurTime()
     LocalPlayer():EmitSound("Town.d1_town_02_elevbell1", 100, 100)
     local panel = vgui.Create("DFrame")
@@ -125,7 +112,6 @@ local function MsgDoQuestion(msg)
     panel:SetKeyboardInputEnabled(false)
     panel:SetMouseInputEnabled(true)
     panel:SetVisible(true)
-
     function panel:Close()
         PanelNum = PanelNum - 300
         QuestionVGUI[quesid .. "ques"] = nil
@@ -145,9 +131,7 @@ local function MsgDoQuestion(msg)
 
     function panel:Think()
         self:SetTitle(DarkRP.getPhrase("time", math.Clamp(math.ceil(timeleft - (CurTime() - OldTime)), 0, 9999)))
-        if timeleft - (CurTime() - OldTime) <= 0 then
-            panel:Close()
-        end
+        if timeleft - (CurTime() - OldTime) <= 0 then panel:Close() end
     end
 
     local label = vgui.Create("DLabel")
@@ -156,13 +140,11 @@ local function MsgDoQuestion(msg)
     label:SetSize(380, 40)
     label:SetText(DarkRP.deLocalise(question))
     label:SetVisible(true)
-
     local divider = vgui.Create("Divider")
     divider:SetParent(panel)
     divider:SetPos(2, 80)
     divider:SetSize(380, 2)
     divider:SetVisible(true)
-
     local ybutton = vgui.Create("DButton")
     ybutton:SetParent(panel)
     ybutton:SetPos(105, 100)
@@ -187,26 +169,20 @@ local function MsgDoQuestion(msg)
 
     PanelNum = PanelNum + 300
     QuestionVGUI[quesid .. "ques"] = panel
-
     panel:SetSkin(GAMEMODE.Config.DarkRPSkin)
 end
-usermessage.Hook("DoQuestion", MsgDoQuestion)
 
+usermessage.Hook("DoQuestion", MsgDoQuestion)
 local function KillQuestionVGUI(msg)
     local id = msg:ReadString()
-
-    if QuestionVGUI[id .. "ques"] and QuestionVGUI[id .. "ques"]:IsValid() then
-        QuestionVGUI[id .. "ques"]:Close()
-    end
+    if QuestionVGUI[id .. "ques"] and QuestionVGUI[id .. "ques"]:IsValid() then QuestionVGUI[id .. "ques"]:Close() end
 end
-usermessage.Hook("KillQuestionVGUI", KillQuestionVGUI)
 
+usermessage.Hook("KillQuestionVGUI", KillQuestionVGUI)
 local function DoVoteAnswerQuestion(ply, cmd, args)
     if not args[1] then return end
-
     local vote = 0
     if tonumber(args[1]) == 1 or string.lower(args[1]) == "yes" or string.lower(args[1]) == "true" then vote = 1 end
-
     for k, v in pairs(VoteVGUI) do
         if IsValid(v) then
             local ID = string.sub(k, 1, -5)
@@ -225,4 +201,5 @@ local function DoVoteAnswerQuestion(ply, cmd, args)
         end
     end
 end
+
 concommand.Add("rp_vote", DoVoteAnswerQuestion)

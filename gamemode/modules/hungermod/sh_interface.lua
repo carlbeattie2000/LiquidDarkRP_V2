@@ -1,4 +1,4 @@
-DarkRP.createFood = DarkRP.stub{
+﻿DarkRP.createFood = DarkRP.stub{
     name = "createFood",
     description = "Create food for DarkRP.",
     parameters = {
@@ -15,12 +15,11 @@ DarkRP.createFood = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
-AddFoodItem = DarkRP.createFood
 
+AddFoodItem = DarkRP.createFood
 DarkRP.removeFoodItem = DarkRP.stub{
     name = "removeFoodItem",
     description = "Remove a food item from DarkRP. NOTE: Must be called from BOTH server AND client to properly get it removed!",
@@ -32,8 +31,7 @@ DarkRP.removeFoodItem = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -52,15 +50,13 @@ DarkRP.hookStub{
             type = "table"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 DarkRP.PLAYER.isCook = DarkRP.stub{
     name = "isCook",
     description = "Whether this player is a cook. This function is only available if hungermod is enabled.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "answer",
@@ -74,9 +70,7 @@ DarkRP.PLAYER.isCook = DarkRP.stub{
 DarkRP.getFoodItems = DarkRP.stub{
     name = "getFoodItems",
     description = "Get all food items.",
-    parameters = {
-
-    },
+    parameters = {},
     returns = {
         {
             name = "set",

@@ -1,10 +1,13 @@
-local function SortedPairsByFunction(Table, Sorted, SortDown)
+﻿local function SortedPairsByFunction(Table, Sorted, SortDown)
     local CopyTable = {}
     for _, v in pairs(Table) do
-        table.insert(CopyTable, {NAME = tostring(v:Nick()), PLY = v})
+        table.insert(CopyTable, {
+            NAME = tostring(v:Nick()),
+            PLY = v
+        })
     end
-    table.SortByMember(CopyTable, "NAME", SortDown)
 
+    table.SortByMember(CopyTable, "NAME", SortDown)
     local SortedTable = {}
     for _, v in ipairs(CopyTable) do
         if not IsValid(v.PLY) or not v.PLY[Sorted] then continue end
@@ -24,7 +27,6 @@ local function SortedPairsByFunction(Table, Sorted, SortDown)
             table.insert(CopyTable, b)
         end
     end
-
     return ipairs(CopyTable)
 end
 
@@ -35,7 +37,6 @@ function FAdmin.ScoreBoard.Main.PlayerListView(Sorted, SortDown)
         Row:SetPlayer(ply)
         Row:Dock(TOP)
         Row:InvalidateLayout()
-
         FAdmin.ScoreBoard.Main.Controls.FAdminPanelList:AddItem(Row)
     end
 end

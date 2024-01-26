@@ -1,31 +1,26 @@
-surface.CreateFont("F1AddressBar", {
-        size = 14,
-        weight = 400,
-        antialias = true,
-        shadow = false,
-        font = "Coolvetica",
-        extended = true,
-    })
+﻿surface.CreateFont("F1AddressBar", {
+    size = 14,
+    weight = 400,
+    antialias = true,
+    shadow = false,
+    font = "Coolvetica",
+    extended = true,
+})
 
 local PANEL = {}
-
 -- Remove any Javascript warnings
-function PANEL:ConsoleMessage() end
+function PANEL:ConsoleMessage()
+end
 
 function PANEL:Init()
     self.BaseClass.Init(self)
-
     self.history = {}
     self.currentIndex = 0
-
-    self:AddFunction("darkrp", "urlLoaded", function(url)
-        self:urlLoaded(url)
-    end)
+    self:AddFunction("darkrp", "urlLoaded", function(url) self:urlLoaded(url) end)
 end
 
 function PANEL:Think()
     self.BaseClass.Think(self)
-
     if self.loaded and self:IsLoading() then
         self.loaded = false
     elseif not self.loaded and not self:IsLoading() then
@@ -36,17 +31,17 @@ end
 
 function PANEL:OpenURL(url, noHistory)
     self.noHistory = noHistory == nil and false or noHistory
-
     self.BaseClass.OpenURL(self, url)
 end
 
 function PANEL:urlLoaded(url)
     if not self.noHistory and self.history[self.currentIndex] ~= url then
         if #self.history > self.currentIndex then
-            for i = self.currentIndex + 1, #self.history, 1 do
+            for i = self.currentIndex + 1, #self.history do
                 self.history[i] = nil
             end
         end
+
         self.currentIndex = self.currentIndex + 1
         self.history[self.currentIndex] = url
     end
@@ -68,14 +63,15 @@ function PANEL:HTMLForward()
 end
 
 function PANEL:Refresh()
-    if not self.URL then return end -- refreshed before the URL is set
+    if not self.URL then -- refreshed before the URL is set
+        return
+    end
+
     self:OpenURL(self.URL, true)
 end
 
 derma.DefineControl("F1HTML", "HTML Derma is fucking broken. Let's fix that.", PANEL, "DHTML")
-
 PANEL = {}
-
 function PANEL:Init()
     self.BackButton:SetDisabled(true)
     self.ForwardButton:SetDisabled(true)
@@ -104,7 +100,6 @@ function PANEL:SetHTML(html)
     self.BaseClass.SetHTML(self, html)
     self.HTML.OpeningURL = oldOpeningURL
     self.HTML.FinishedURL = oldFinishedURL
-
     local oldUrlLoaded = self.HTML.urlLoaded
     self.HTML.urlLoaded = function(panel, url)
         if oldUrlLoaded then oldUrlLoaded(panel, url) end

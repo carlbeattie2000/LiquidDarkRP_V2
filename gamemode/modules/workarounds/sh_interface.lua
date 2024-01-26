@@ -1,8 +1,7 @@
-DarkRP.getAvailableVehicles = DarkRP.stub{
+﻿DarkRP.getAvailableVehicles = DarkRP.stub{
     name = "getAvailableVehicles",
     description = "Get the available vehicles that DarkRP supports.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "vehicles",

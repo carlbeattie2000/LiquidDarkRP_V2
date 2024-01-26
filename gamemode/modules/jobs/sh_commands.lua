@@ -1,5 +1,4 @@
-local plyMeta = FindMetaTable("Player")
-
+﻿local plyMeta = FindMetaTable("Player")
 DarkRP.declareChatCommand{
     command = "job",
     description = "Change your job name",

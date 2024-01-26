@@ -1,5 +1,4 @@
-if not CAMI then return end
-
+﻿if not CAMI then return end
 CAMI.RegisterPrivilege{
     Name = "FSpectate",
     MinAccess = "admin"

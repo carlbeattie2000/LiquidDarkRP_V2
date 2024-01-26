@@ -1,12 +1,10 @@
-local minHull = Vector(-16, -16, 0)
-
+﻿local minHull = Vector(-16, -16, 0)
 local function setScale(ply, scale)
     ply:SetModelScale(scale, 0)
-
     ply:SetHull(minHull, Vector(16, 16, 72 * scale))
     umsg.Start("darkrp_playerscale")
-        umsg.Entity(ply)
-        umsg.Float(scale)
+    umsg.Entity(ply)
+    umsg.Float(scale)
     umsg.End()
 end
 
@@ -18,7 +16,7 @@ local function onLoadout(ply)
     end
 
     local modelScale = tonumber(RPExtraTeams[Team].modelScale)
-
     setScale(ply, modelScale)
 end
+
 hook.Add("PlayerLoadout", "playerScale", onLoadout)

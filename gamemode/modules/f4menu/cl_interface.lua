@@ -1,38 +1,31 @@
-DarkRP.openF4Menu = DarkRP.stub{
+﻿DarkRP.openF4Menu = DarkRP.stub{
     name = "openF4Menu",
     description = "Open the F4 menu.",
-    parameters = {
-    },
-    returns = {
-    },
+    parameters = {},
+    returns = {},
     metatable = DarkRP
 }
 
 DarkRP.closeF4Menu = DarkRP.stub{
     name = "closeF4Menu",
     description = "Close the F4 menu if it's open.",
-    parameters = {
-    },
-    returns = {
-    },
+    parameters = {},
+    returns = {},
     metatable = DarkRP
 }
 
 DarkRP.toggleF4Menu = DarkRP.stub{
     name = "toggleF4Menu",
     description = "Toggle the state of the F4 menu (open or closed).",
-    parameters = {
-    },
-    returns = {
-    },
+    parameters = {},
+    returns = {},
     metatable = DarkRP
 }
 
 DarkRP.getF4MenuPanel = DarkRP.stub{
     name = "getF4MenuPanel",
     description = "Get the F4 menu panel.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "panel",
@@ -87,8 +80,7 @@ DarkRP.removeF4MenuTab = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -109,16 +101,13 @@ DarkRP.switchTabOrder = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
 DarkRP.hookStub{
     name = "F4MenuTabs",
     description = "Called when tabs are generated. Add and remove tabs in this hook.",
-    parameters = {
-    },
-    returns = {
-    }
+    parameters = {},
+    returns = {}
 }

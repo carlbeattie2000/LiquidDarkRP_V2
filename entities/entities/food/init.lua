@@ -1,28 +1,19 @@
-AddCSLuaFile("shared.lua")
-
+﻿AddCSLuaFile("shared.lua")
 include("shared.lua")
-
 function ENT:Initialize()
     self:SetModel("models/props_junk/garbage_takeoutcarton001a.mdl")
     DarkRP.ValidatedPhysicsInit(self, SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
-
     local phys = self:GetPhysicsObject()
-
-    if phys:IsValid() then
-        phys:Wake()
-    end
-
+    if phys:IsValid() then phys:Wake() end
     self.damage = 10
 end
 
 function ENT:OnTakeDamage(dmg)
     self:TakePhysicsDamage(dmg)
-
     self.damage = self.damage - dmg:GetDamage()
-
-    if (self.damage <= 0) then
+    if self.damage <= 0 then
         local effectdata = EffectData()
         effectdata:SetOrigin(self:GetPos())
         effectdata:SetMagnitude(2)
@@ -43,7 +34,6 @@ function ENT:Use(activator, caller)
     caller:setSelfDarkRPVar("Energy", 100)
     umsg.Start("AteFoodIcon", caller)
     umsg.End()
-
     self:Remove()
     activator:EmitSound(self.EatSound, 100, 100)
 end

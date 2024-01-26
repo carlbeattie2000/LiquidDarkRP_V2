@@ -1,8 +1,7 @@
---[[---------------------------------------------------------------------------
+﻿--[[---------------------------------------------------------------------------
 Category header
 ---------------------------------------------------------------------------]]
 local PANEL = {}
-
 function PANEL:Init()
     self:SetContentAlignment(4)
     self:SetTextInset(5, 0)
@@ -14,7 +13,8 @@ function PANEL:Paint(w, h)
     draw.RoundedBox(4, 0, 0, w, h, self.category.color)
 end
 
-function PANEL:UpdateColours() end
+function PANEL:UpdateColours()
+end
 
 function PANEL:SetCategory(cat)
     self.category = cat
@@ -22,19 +22,16 @@ function PANEL:SetCategory(cat)
 end
 
 derma.DefineControl("F4MenuCategoryHeader", "", PANEL, "DCategoryHeader")
-
 --[[---------------------------------------------------------------------------
 Contents of category headers
 ---------------------------------------------------------------------------]]
 PANEL = {}
-
 function PANEL:Init()
     self:EnableVerticalScrollbar()
 end
 
 function PANEL:Rebuild()
     if table.IsEmpty(self.Items) then return end
-
     local height = 0
     local k = 0
     for _, item in pairs(self.Items) do
@@ -44,25 +41,24 @@ function PANEL:Rebuild()
         item:SetPos(5, height)
         height = height + item:GetTall() + 2
     end
+
     self:GetCanvas():SetTall(height)
     self:SetTall(height)
 end
-
 
 function PANEL:Refresh()
     for _, v in pairs(self.Items) do
         if v.Refresh then v:Refresh() end
     end
+
     self:InvalidateLayout()
 end
 
 derma.DefineControl("F4MenuCategoryContents", "", PANEL, "DPanelList")
-
 --[[---------------------------------------------------------------------------
 Category panel
 ---------------------------------------------------------------------------]]
 PANEL = {}
-
 function PANEL:Init()
     if self.Header then self.Header:Remove() end
     self.Header = vgui.Create("F4MenuCategoryHeader", self)
@@ -76,12 +72,10 @@ function PANEL:Init()
     self:SetPaintBackgroundEnabled(false)
     self:DockMargin(0, 0, 0, 10)
     self:DockPadding(0, 0, 0, 10)
-
     self:SetContents(vgui.Create("F4MenuCategoryContents", self))
 end
 
 function PANEL:Paint()
-
 end
 
 function PANEL:SetButtonFactory(f)
@@ -118,11 +112,9 @@ end
 
 function PANEL:Refresh()
     if IsValid(self.Contents) then self.Contents:Refresh() end
-
     if not self.category then return end
     local canSee = table.IsEmpty(self.category.members) or isfunction(self.category.canSee) and not self.category.canSee(LocalPlayer())
     self:SetVisible(not canSee)
-
     self:InvalidateLayout()
 end
 

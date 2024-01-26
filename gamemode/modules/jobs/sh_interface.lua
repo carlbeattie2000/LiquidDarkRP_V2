@@ -1,4 +1,4 @@
-DarkRP.hookStub{
+﻿DarkRP.hookStub{
     name = "OnPlayerChangedTeam",
     description = "When your team (job) is changed.",
     parameters = {
@@ -18,7 +18,5 @@ DarkRP.hookStub{
             type = "number"
         }
     },
-    returns = {
-
-    }
+    returns = {}
 }

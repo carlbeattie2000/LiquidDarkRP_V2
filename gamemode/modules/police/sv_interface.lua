@@ -1,4 +1,4 @@
-DarkRP.lockdown = DarkRP.stub{
+﻿DarkRP.lockdown = DarkRP.stub{
     name = "lockdown",
     description = "Start a lockdown.",
     parameters = {
@@ -63,8 +63,7 @@ DarkRP.PLAYER.requestWarrant = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
@@ -85,8 +84,7 @@ DarkRP.PLAYER.warrant = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
@@ -101,8 +99,7 @@ DarkRP.PLAYER.unWarrant = DarkRP.stub{
             optional = true
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
@@ -129,8 +126,7 @@ DarkRP.PLAYER.wanted = DarkRP.stub{
             optional = true
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
@@ -145,8 +141,7 @@ DarkRP.PLAYER.unWanted = DarkRP.stub{
             optional = true
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
@@ -167,8 +162,7 @@ DarkRP.PLAYER.arrest = DarkRP.stub{
             optional = true
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
@@ -183,16 +177,14 @@ DarkRP.PLAYER.unArrest = DarkRP.stub{
             optional = true
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
 DarkRP.iterateArrestedPlayers = DarkRP.stub{
     name = "iterateArrestedPlayers",
     description = "An iterator that walks over the arrested players. Use as follows: for arrestedPlayer in DarkRP.iterateArrestedPlayers() do print(arrestedPlayer) end",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "arrestedPlayer",
@@ -207,8 +199,7 @@ DarkRP.iterateArrestedPlayers = DarkRP.stub{
 DarkRP.arrestedPlayers = DarkRP.stub{
     name = "arrestedPlayers",
     description = "Returns a table that contains all arrested players. NOTE: This function is defined using DarkRP.iterateArrestedPlayers. It might be more efficient to use that function instead, because this function builds the table anew.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "arrestedPlayers",
@@ -223,8 +214,7 @@ DarkRP.arrestedPlayers = DarkRP.stub{
 DarkRP.arrestedPlayerCount = DarkRP.stub{
     name = "arrestedPlayerCount",
     description = "Returns the amount of players that are currently arrested.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "arrestedPlayerCount",
@@ -256,8 +246,7 @@ DarkRP.hookStub{
             type = "Player"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -275,8 +264,7 @@ DarkRP.hookStub{
             type = "Player"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -415,78 +403,73 @@ DarkRP.hookStub{
 }
 
 DarkRP.hookStub{
-        name = "playerEnteredLottery",
-        description = "When a player has entered the lottery.",
-        parameters = {
-                {
-                        name = "ply",
-                        description = "The player.",
-                        type = "Player"
-                }
-        },
-        returns = {
+    name = "playerEnteredLottery",
+    description = "When a player has entered the lottery.",
+    parameters = {
+        {
+            name = "ply",
+            description = "The player.",
+            type = "Player"
         }
+    },
+    returns = {}
 }
 
 DarkRP.hookStub{
-        name = "lotteryEnded",
-        description = "When a lottery has ended.",
-        parameters = {
-                {
-                        name = "participants",
-                        description = "The participants of the lottery. An empty table when no one entered the lottery.",
-                        type = "table"
-                },
-                {
-                        name = "chosen",
-                        description = "The winner of the lottery.",
-                        type = "Player"
-                },
-                {
-                        name = "amount",
-                        description = "The amount won by the winner.",
-                        type = "number"
-                }
+    name = "lotteryEnded",
+    description = "When a lottery has ended.",
+    parameters = {
+        {
+            name = "participants",
+            description = "The participants of the lottery. An empty table when no one entered the lottery.",
+            type = "table"
         },
-        returns = {
+        {
+            name = "chosen",
+            description = "The winner of the lottery.",
+            type = "Player"
+        },
+        {
+            name = "amount",
+            description = "The amount won by the winner.",
+            type = "number"
         }
+    },
+    returns = {}
 }
-
 
 DarkRP.hookStub{
-        name = "lotteryStarted",
-        description = "When a lottery has started.",
-        parameters = {
-                {
-                        name = "ply",
-                        description = "The player who started the lottery.",
-                        type = "Player"
-                },
-                {
-                        name = "price",
-                        description = "The amount of money people have to pay to enter.",
-                        type = "number"
-                }
+    name = "lotteryStarted",
+    description = "When a lottery has started.",
+    parameters = {
+        {
+            name = "ply",
+            description = "The player who started the lottery.",
+            type = "Player"
         },
-        returns = {
+        {
+            name = "price",
+            description = "The amount of money people have to pay to enter.",
+            type = "number"
         }
+    },
+    returns = {}
 }
-
 
 DarkRP.hookStub{
     name = "canGiveLicense",
     description = "Whether a player is allowed to give another player a license.",
     parameters = {
-            {
-                    name = "ply",
-                    description = "The player who tries to give the license.",
-                    type = "Player"
-            },
-            {
-                    name = "target",
-                    description = "The player who should receive the license.",
-                    type = "Player"
-            }
+        {
+            name = "ply",
+            description = "The player who tries to give the license.",
+            type = "Player"
+        },
+        {
+            name = "target",
+            description = "The player who should receive the license.",
+            type = "Player"
+        }
     },
     returns = {
         {

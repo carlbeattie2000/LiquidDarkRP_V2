@@ -1,18 +1,12 @@
-AddCSLuaFile("shared.lua")
-
+﻿AddCSLuaFile("shared.lua")
 include("shared.lua")
-
 function ENT:Initialize()
     DarkRP.ValidatedPhysicsInit(self, SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
     self:SetUseType(SIMPLE_USE)
-
     local phys = self:GetPhysicsObject()
-
-    if phys:IsValid() then
-        phys:Wake()
-    end
+    if phys:IsValid() then phys:Wake() end
 end
 
 function ENT:OnTakeDamage(dmg)
@@ -27,18 +21,15 @@ function ENT:Use(activator, caller)
     end
 
     local override = self.foodItem.onEaten and self.foodItem.onEaten(self, activator, self.foodItem)
-
     if override then
         self:Remove()
         return
     end
 
     hook.Call("playerAteFood", nil, activator, self.foodItem, self)
-
     activator:setSelfDarkRPVar("Energy", math.Clamp((activator:getDarkRPVar("Energy") or 100) + (self.FoodEnergy or 1), 0, 100))
     umsg.Start("AteFoodIcon", activator)
     umsg.End()
-
     self:Remove()
     activator:EmitSound(self.EatSound, 100, 100)
 end
@@ -63,6 +54,5 @@ DarkRP.hookStub{
             type = "Entity"
         },
     },
-    returns = {
-    },
+    returns = {},
 }

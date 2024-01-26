@@ -1,5 +1,4 @@
-AddCSLuaFile()
-
+﻿AddCSLuaFile()
 DarkRP.declareChatCommand{
     command = "drop",
     description = "Drop the weapon you're holding.",

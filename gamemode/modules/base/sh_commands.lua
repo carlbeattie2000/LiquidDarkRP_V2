@@ -1,4 +1,4 @@
-DarkRP.declareChatCommand{
+﻿DarkRP.declareChatCommand{
     command = "rpname",
     description = "Set your RP name",
     delay = 1.5
@@ -20,10 +20,7 @@ DarkRP.declareChatCommand{
     command = "buy",
     description = "Buy a pistol",
     delay = 1.5,
-    condition = fn.FAnd {
-        fn.Compose{fn.Curry(fn.GetValue, 2)("enablebuypistol"), fn.Curry(fn.GetValue, 2)("Config"), gmod.GetGamemode},
-        fn.Compose{fn.Not, fn.Curry(fn.GetValue, 2)("noguns"), fn.Curry(fn.GetValue, 2)("Config"), gmod.GetGamemode}
-    }
+    condition = fn.FAnd{fn.Compose{fn.Curry(fn.GetValue, 2)("enablebuypistol"), fn.Curry(fn.GetValue, 2)("Config"), gmod.GetGamemode}, fn.Compose{fn.Not, fn.Curry(fn.GetValue, 2)("noguns"), fn.Curry(fn.GetValue, 2)("Config"), gmod.GetGamemode}}
 }
 
 DarkRP.declareChatCommand{

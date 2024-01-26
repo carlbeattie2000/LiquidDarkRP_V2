@@ -1,8 +1,6 @@
-local PANEL = {}
-
+﻿local PANEL = {}
 local green = Color(0, 150, 0)
 local red = Color(160, 20, 20)
-
 function PANEL:Init()
     self:SetFont("DarkRPHUD2")
     self:SetColor(green)
@@ -33,7 +31,6 @@ function PANEL:refresh()
 
     local succeeded, returnValue = pcall(self.chatCommand.condition, LocalPlayer())
     if not succeeded then ErrorNoHalt(string.format(chatCommandError, self.chatCommand.command, returnValue)) end
-
     self:SetColor(succeeded and not returnValue and red or green)
 end
 

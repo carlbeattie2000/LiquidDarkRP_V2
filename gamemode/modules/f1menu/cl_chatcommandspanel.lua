@@ -1,5 +1,4 @@
-local PANEL = {}
-
+﻿local PANEL = {}
 function PANEL:Init()
     self:SetBackgroundColor(color_transparent)
     self:EnableVerticalScrollbar()

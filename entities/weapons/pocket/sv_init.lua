@@ -1,5 +1,4 @@
-local meta = FindMetaTable("Player")
-
+﻿local meta = FindMetaTable("Player")
 --[[---------------------------------------------------------------------------
 Stubs
 ---------------------------------------------------------------------------]]
@@ -14,8 +13,7 @@ DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = meta
 }
 
@@ -30,8 +28,7 @@ DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = meta
 }
 
@@ -46,8 +43,7 @@ DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = meta
 }
 
@@ -100,8 +96,7 @@ DarkRP.hookStub{
             type = "table"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -153,8 +148,7 @@ DarkRP.hookStub{
             type = "number"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 --[[---------------------------------------------------------------------------
@@ -164,31 +158,22 @@ Functions
 local function getDTVars(ent)
     if not ent.GetNetworkVars then return nil end
     local name, value = debug.getupvalue(ent.GetNetworkVars, 1)
-    if name ~= "datatable" then
-        ErrorNoHalt("Warning: Datatable cannot be stored properly in pocket. Tell a developer!")
-    end
-
+    if name ~= "datatable" then ErrorNoHalt("Warning: Datatable cannot be stored properly in pocket. Tell a developer!") end
     local res = {}
-
-    for k,v in pairs(value) do
+    for k, v in pairs(value) do
         res[k] = v.GetFunc(ent, v.index)
     end
-
     return res
 end
 
 local function serialize(ent)
     local serialized = duplicator.CopyEntTable(ent)
     serialized.DT = getDTVars(ent)
-
     -- this function is also called in duplicator.CopyEntTable, but some
     -- entities change the DT vars of a copied entity (e.g. Lexic's moneypot)
     -- That is undone with the getDTVars function call.
     -- Re-call OnEntityCopyTableFinish assuming its implementation is pure.
-    if ent.OnEntityCopyTableFinish then
-        ent:OnEntityCopyTableFinish(serialized)
-    end
-
+    if ent.OnEntityCopyTableFinish then ent:OnEntityCopyTableFinish(serialized) end
     return serialized
 end
 
@@ -197,35 +182,21 @@ local function deserialize(ply, item)
     duplicator.DoGeneric(ent, item)
     ent:Spawn()
     ent:Activate()
-
     duplicator.DoGenericPhysics(ent, ply, item)
     table.Merge(ent:GetTable(), item)
-
     if ent:IsWeapon() and ent.Weapon ~= nil and not ent.Weapon:IsValid() then ent.Weapon = ent end
     if ent.Entity ~= nil and not ent.Entity:IsValid() then ent.Entity = ent end
-
     local trace = {}
     trace.start = ply:EyePos()
     trace.endpos = trace.start + ply:GetAimVector() * 85
     trace.filter = ply
-
     local tr = util.TraceLine(trace)
-
     ent:SetPos(tr.HitPos)
-
     DarkRP.placeEntity(ent, tr, ply)
-
     local phys = ent:GetPhysicsObject()
     timer.Simple(0, function() if phys:IsValid() then phys:Wake() end end)
-
-    if ent.OnDuplicated then
-        ent:OnDuplicated(item)
-    end
-
-    if ent.PostEntityPaste then
-        ent:PostEntityPaste(ply, ent, {ent})
-    end
-
+    if ent.OnDuplicated then ent:OnDuplicated(item) end
+    if ent.PostEntityPaste then ent:PostEntityPaste(ply, ent, {ent}) end
     return ent
 end
 
@@ -238,31 +209,24 @@ end
 util.AddNetworkString("DarkRP_Pocket")
 local function sendPocketItems(ply)
     net.Start("DarkRP_Pocket")
-        net.WriteTable(ply:getPocketItems())
+    net.WriteTable(ply:getPocketItems())
     net.Send(ply)
 end
 
 util.AddNetworkString("DarkRP_PocketMenu")
-
 --[[---------------------------------------------------------------------------
 Interface functions
 ---------------------------------------------------------------------------]]
 function meta:addPocketItem(ent)
     if not IsValid(ent) then DarkRP.error("Entity not valid", 2) end
     if ent.USED then return end
-
     -- This item cannot be used until it has been removed
     ent.USED = true
-
     local serialized = serialize(ent)
-
     hook.Call("onPocketItemAdded", nil, self, ent, serialized)
-
     ent.IsPocketing = true
     ent:Remove()
-
     self.darkRPPocket = self.darkRPPocket or {}
-
     local id = table.insert(self.darkRPPocket, serialized)
     sendPocketItems(self)
     return id
@@ -270,33 +234,25 @@ end
 
 function meta:removePocketItem(item)
     if not self.darkRPPocket or not self.darkRPPocket[item] then DarkRP.error("Player does not contain " .. item .. " in their pocket.", 2) end
-
     hook.Call("onPocketItemRemoved", nil, self, item)
-
     self.darkRPPocket[item] = nil
     sendPocketItems(self)
 end
 
 function meta:dropPocketItem(item)
     if not self.darkRPPocket or not self.darkRPPocket[item] then DarkRP.error("Player does not contain " .. item .. " in their pocket.", 2) end
-
     local id = self.darkRPPocket[item]
     local ent = deserialize(self, id)
-
     -- reset USED status
     ent.USED = nil
-
     hook.Call("onPocketItemDropped", nil, self, ent, item, id)
-
     self:removePocketItem(item)
-
     return ent
 end
 
 -- serverside implementation
 function meta:getPocketItems()
     self.darkRPPocket = self.darkRPPocket or {}
-
     local res = {}
     for k, v in pairs(self.darkRPPocket) do
         res[k] = {
@@ -304,7 +260,6 @@ function meta:getPocketItems()
             class = v.Class
         }
     end
-
     return res
 end
 
@@ -321,6 +276,7 @@ net.Receive("DarkRP_spawnPocket", function(len, ply)
         sendPocketItems(ply)
         return
     end
+
     ply:dropPocketItem(item)
 end)
 
@@ -330,7 +286,6 @@ Hooks
 function GAMEMODE:canPocket(ply, item)
     if not IsValid(item) then return false end
     local class = item:GetClass()
-
     if item.Removed then return false, DarkRP.getPhrase("cannot_pocket_x") end
     if not item:CPPICanPickup(ply) then return false, DarkRP.getPhrase("cannot_pocket_x") end
     if item.jailWall then return false, DarkRP.getPhrase("cannot_pocket_x") end
@@ -344,24 +299,18 @@ function GAMEMODE:canPocket(ply, item)
     -- The simple solution is to disallow pocketing entities that are being
     -- held.
     if item.DarkRPBeingGravGunHeldBy ~= nil then return false, DarkRP.getPhrase("cannot_pocket_gravgunned") end
-
     local trace = ply:GetEyeTrace()
     if ply:EyePos():DistToSqr(trace.HitPos) > 22500 then return false end
-
     local ent = trace.Entity
     local phys = ent:GetPhysicsObject()
     if not phys:IsValid() then return false end
-
     local mass = ent.RPOriginalMass and ent.RPOriginalMass or phys:GetMass()
     if mass > 100 then return false, DarkRP.getPhrase("object_too_heavy") end
-
     local job = ply:Team()
     local max = RPExtraTeams[job].maxpocket or GAMEMODE.Config.pocketitems
     if table.Count(ply.darkRPPocket or {}) >= max then return false, DarkRP.getPhrase("pocket_full") end
-
     return true
 end
-
 
 -- Drop pocket items on death
 hook.Add("PlayerDeath", "DropPocketItems", function(ply)

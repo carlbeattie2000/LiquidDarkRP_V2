@@ -1,8 +1,7 @@
-DarkRP.PLAYER.isHitman = DarkRP.stub{
+﻿DarkRP.PLAYER.isHitman = DarkRP.stub{
     name = "isHitman",
     description = "Whether this player is a hitman.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "answer",
@@ -16,8 +15,7 @@ DarkRP.PLAYER.isHitman = DarkRP.stub{
 DarkRP.PLAYER.hasHit = DarkRP.stub{
     name = "hasHit",
     description = "Whether this hitman has a hit.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "answer",
@@ -31,8 +29,7 @@ DarkRP.PLAYER.hasHit = DarkRP.stub{
 DarkRP.PLAYER.getHitTarget = DarkRP.stub{
     name = "getHitTarget",
     description = "Get the target of a hitman.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "target",
@@ -46,8 +43,7 @@ DarkRP.PLAYER.getHitTarget = DarkRP.stub{
 DarkRP.PLAYER.getHitPrice = DarkRP.stub{
     name = "getHitPrice",
     description = "Get the price the hitman demands for his work.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "price",
@@ -69,16 +65,14 @@ DarkRP.addHitmanTeam = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
 DarkRP.getHitmanTeams = DarkRP.stub{
     name = "getHitmanTeams",
     description = "Get all the hitman teams.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "tbl",
@@ -153,9 +147,7 @@ DarkRP.hookStub{
             type = "Player"
         }
     },
-    returns = {
-
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -178,9 +170,7 @@ DarkRP.hookStub{
             type = "Player"
         }
     },
-    returns = {
-
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -203,7 +193,5 @@ DarkRP.hookStub{
             type = "string"
         }
     },
-    returns = {
-
-    }
+    returns = {}
 }

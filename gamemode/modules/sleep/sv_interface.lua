@@ -1,4 +1,4 @@
-DarkRP.toggleSleep = DarkRP.stub{
+﻿DarkRP.toggleSleep = DarkRP.stub{
     name = "toggleSleep",
     description = "Old function to toggle sleep. I'm not proud of it.",
     parameters = {

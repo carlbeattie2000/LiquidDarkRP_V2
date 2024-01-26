@@ -1,4 +1,4 @@
-DarkRP.addPlayerGesture = DarkRP.stub{
+﻿DarkRP.addPlayerGesture = DarkRP.stub{
     name = "addPlayerGesture",
     description = "Add a player gesture to the DarkRP animations menu (the one that opens with the keys weapon.). Note: This function must be called BOTH serverside AND clientside!",
     parameters = {
@@ -15,8 +15,7 @@ DarkRP.addPlayerGesture = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -31,7 +30,6 @@ DarkRP.removePlayerGesture = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }

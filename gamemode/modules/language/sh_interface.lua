@@ -1,4 +1,4 @@
-DarkRP.addLanguage = DarkRP.stub{
+﻿DarkRP.addLanguage = DarkRP.stub{
     name = "addLanguage",
     description = "Create a language/translation.",
     parameters = {
@@ -15,8 +15,7 @@ DarkRP.addLanguage = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -43,8 +42,7 @@ DarkRP.addPhrase = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -146,8 +144,7 @@ DarkRP.addChatCommandsLanguage = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 

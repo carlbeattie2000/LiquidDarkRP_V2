@@ -1,15 +1,12 @@
-ENT.Type = "anim"
+﻿ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
 ENT.PrintName = "DarkRP billboard"
 ENT.Instructions = "Shows advertisements."
 ENT.Author = "FPtje"
-
 ENT.Spawnable = false
 ENT.Editable = true
 ENT.IsDarkRPBillboard = true
-
 cleanup.Register("advert_billboards")
-
 function ENT:SetupDataTables()
     self:NetworkVar("String", 0, "TopText", {
         KeyName = "toptext",

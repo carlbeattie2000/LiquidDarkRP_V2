@@ -1,4 +1,4 @@
-local function AutoComplete(command, args)
+﻿local function AutoComplete(command, args)
     local autocomplete = {}
     args = string.Explode(" ", args)
     table.remove(args, 1) --Remove the first space
@@ -15,14 +15,12 @@ local function AutoComplete(command, args)
         end
     elseif not args[3] and FAdmin.Commands.List[string.lower(args[1])] and FAdmin.Commands.List[string.lower(args[1])].ExtraArgs[1] == "<Player>" then
         for _, v in ipairs(player.GetAll()) do
-            if args[2] == "" or table.HasValue(FAdmin.FindPlayer(args[2]) or {}, v) then
-                table.insert(autocomplete, command .. " " .. args[1] .. " " .. v:Nick())
-            end
+            if args[2] == "" or table.HasValue(FAdmin.FindPlayer(args[2]) or {}, v) then table.insert(autocomplete, command .. " " .. args[1] .. " " .. v:Nick()) end
         end
     end
+
     table.sort(autocomplete)
     return autocomplete
 end
-concommand.Add("FAdmin", function(ply, cmd, args)
-    RunConsoleCommand("_" .. cmd, unpack(args))
-end, AutoComplete)
+
+concommand.Add("FAdmin", function(ply, cmd, args) RunConsoleCommand("_" .. cmd, unpack(args)) end, AutoComplete)

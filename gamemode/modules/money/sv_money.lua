@@ -1,4 +1,4 @@
---[[---------------------------------------------------------------------------
+﻿--[[---------------------------------------------------------------------------
 functions
 ---------------------------------------------------------------------------]]
 local meta = FindMetaTable("Player")
@@ -7,9 +7,7 @@ function meta:addMoney(amount)
     if not amount then return false end
     local total = self:getDarkRPVar("money") + amount
     total = hook.Call("playerWalletChanged", GAMEMODE, self, amount, self:getDarkRPVar("money")) or total
-
     self:setDarkRPVar("money", total)
-
     if self.DarkRPUnInitialized then return end
     DarkRP.storeMoney(self, total)
 end
@@ -25,7 +23,6 @@ function meta:payDay()
             amount = math.floor(amount or GAMEMODE.Config.normalsalary)
             local suppress, message, hookAmount = hook.Call("playerGetSalary", GAMEMODE, self, amount)
             amount = hookAmount or amount
-
             if amount == 0 or not amount then
                 if not suppress then DarkRP.notify(self, 4, 4, message or DarkRP.getPhrase("payday_unemployed")) end
             else
@@ -44,9 +41,7 @@ function DarkRP.createMoneyBag(pos, amount)
     moneybag:Setamount(math.Min(amount, 2147483647))
     moneybag:Spawn()
     moneybag:Activate()
-    if GAMEMODE.Config.moneyRemoveTime and GAMEMODE.Config.moneyRemoveTime ~= 0 then
-        timer.Create("RemoveEnt" .. moneybag:EntIndex(), GAMEMODE.Config.moneyRemoveTime, 1, fn.Partial(SafeRemoveEntity, moneybag))
-    end
+    if GAMEMODE.Config.moneyRemoveTime and GAMEMODE.Config.moneyRemoveTime ~= 0 then timer.Create("RemoveEnt" .. moneybag:EntIndex(), GAMEMODE.Config.moneyRemoveTime, 1, fn.Partial(SafeRemoveEntity, moneybag)) end
     return moneybag
 end
 
@@ -60,7 +55,6 @@ local function GiveMoney(ply, args)
     end
 
     local amount = DarkRP.toInt(args)
-
     if not amount then
         DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("invalid_x", DarkRP.getPhrase("arguments"), ""))
         return ""
@@ -68,7 +62,6 @@ local function GiveMoney(ply, args)
 
     local trace = ply:GetEyeTrace()
     local ent = trace.Entity
-
     if not IsValid(ent) or not ent:IsPlayer() or ent:GetPos():DistToSqr(ply:GetPos()) >= 22500 then
         DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("must_be_looking_at", DarkRP.getPhrase("player")))
         return ""
@@ -81,12 +74,10 @@ local function GiveMoney(ply, args)
 
     if not ply:canAfford(amount) then
         DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("cant_afford", ""))
-
         return ""
     end
 
     ply:DoAnimationEvent(ACT_GMOD_GESTURE_ITEM_GIVE)
-
     timer.Simple(1.2, function()
         if not IsValid(ply) then
             DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("unable", "/give", ""))
@@ -100,22 +91,17 @@ local function GiveMoney(ply, args)
 
         local trace2 = ply:GetEyeTrace()
         local ent2 = trace2.Entity
-
         if not IsValid(ent2) or not ent2:IsPlayer() or ent2:GetPos():DistToSqr(ply:GetPos()) >= 22500 then return end
-
         DarkRP.payPlayer(ply, ent2, amount)
-
         hook.Call("playerGaveMoney", nil, ply, ent2, amount)
-
         DarkRP.notify(ent2, 0, 4, DarkRP.getPhrase("has_given", ply:Nick(), DarkRP.formatMoney(amount)))
         DarkRP.notify(ply, 0, 4, DarkRP.getPhrase("you_gave", ent2:Nick(), DarkRP.formatMoney(amount)))
         DarkRP.log(ply:Nick() .. " (" .. ply:SteamID() .. ") has given " .. DarkRP.formatMoney(amount) .. " to " .. ent2:Nick() .. " (" .. ent2:SteamID() .. ")")
     end)
-
     return ""
 end
-DarkRP.defineChatCommand("give", GiveMoney, 0.2)
 
+DarkRP.defineChatCommand("give", GiveMoney, 0.2)
 local function DropMoney(ply, args)
     if args == "" then
         DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("invalid_x", DarkRP.getPhrase("arguments"), ""))
@@ -123,7 +109,6 @@ local function DropMoney(ply, args)
     end
 
     local amount = DarkRP.toInt(args)
-
     if not amount then
         DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("invalid_x", DarkRP.getPhrase("arguments"), ""))
         return ""
@@ -141,40 +126,31 @@ local function DropMoney(ply, args)
 
     if not ply:canAfford(amount) then
         DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("cant_afford", ""))
-
         return ""
     end
 
     ply:addMoney(-amount)
     ply:DoAnimationEvent(ACT_GMOD_GESTURE_ITEM_DROP)
-
     timer.Simple(1, function()
         if not IsValid(ply) then return end
-
         local trace = {}
         trace.start = ply:EyePos()
         trace.endpos = trace.start + ply:GetAimVector() * 85
         trace.filter = ply
-
         local tr = util.TraceLine(trace)
-
         local moneybag = DarkRP.createMoneyBag(tr.HitPos, amount)
-
         DarkRP.placeEntity(moneybag, tr, ply)
-
         hook.Call("playerDroppedMoney", nil, ply, amount, moneybag)
         DarkRP.log(ply:Nick() .. " (" .. ply:SteamID() .. ") has dropped " .. DarkRP.formatMoney(amount))
     end)
-
     return ""
 end
+
 DarkRP.defineChatCommand("dropmoney", DropMoney, 0.3)
 DarkRP.defineChatCommand("moneydrop", DropMoney, 0.3)
-
 local function CreateCheque(ply, args)
     local recipient = DarkRP.findPlayer(args[1])
     local amount = DarkRP.toInt(args[2]) or 0
-
     local chequeTable = {
         cmd = "cheque",
         max = GAMEMODE.Config.maxCheques
@@ -192,24 +168,17 @@ local function CreateCheque(ply, args)
 
     if not ply:canAfford(amount) then
         DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("cant_afford", ""))
-
         return ""
     end
 
     if ply:customEntityLimitReached(chequeTable) then
         DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("limit", GAMEMODE.Config.chatCommandPrefix .. "cheque"))
-
         return ""
     end
 
     ply:addCustomEntity(chequeTable)
-
-    if IsValid(ply) and IsValid(recipient) then
-        ply:addMoney(-amount)
-    end
-
+    if IsValid(ply) and IsValid(recipient) then ply:addMoney(-amount) end
     ply:DoAnimationEvent(ACT_GMOD_GESTURE_ITEM_DROP)
-
     timer.Simple(1, function()
         if not IsValid(ply) then return end
         if not IsValid(recipient) then
@@ -221,70 +190,57 @@ local function CreateCheque(ply, args)
         trace.start = ply:EyePos()
         trace.endpos = trace.start + ply:GetAimVector() * 85
         trace.filter = ply
-
         local tr = util.TraceLine(trace)
-
         local Cheque = ents.Create("darkrp_cheque")
         Cheque.DarkRPItem = chequeTable
         Cheque:SetPos(tr.HitPos)
         Cheque:Setowning_ent(ply)
         Cheque:Setrecipient(recipient)
-
         local min_amount = math.Min(amount, 2147483647)
         Cheque:Setamount(min_amount)
         Cheque:Spawn()
-
         DarkRP.placeEntity(Cheque, tr, ply)
-
         hook.Call("playerDroppedCheque", nil, ply, recipient, min_amount, Cheque)
     end)
     return ""
 end
+
 DarkRP.defineChatCommand("cheque", CreateCheque, 0.3)
 DarkRP.defineChatCommand("check", CreateCheque, 0.3) -- for those of you who can't spell
-
 local function ccSetMoney(ply, args)
     local amount = DarkRP.toInt(args[2])
-
     if not amount then
         DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("invalid_x", DarkRP.getPhrase("arguments"), ""))
         return
     end
 
     local target = DarkRP.findPlayer(args[1])
-
     if not target then
         DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("could_not_find", tostring(args[1])))
         return
     end
 
     amount = hook.Call("playerWalletChanged", GAMEMODE, target, amount - target:getDarkRPVar("money"), target:getDarkRPVar("money")) or amount
-
     DarkRP.storeMoney(target, amount)
     target:setDarkRPVar("money", amount)
-
     DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("you_set_x_money", target:Nick(), DarkRP.formatMoney(amount), ""))
-
     DarkRP.notify(target, 0, 4, DarkRP.getPhrase("x_set_your_money", ply:EntIndex() == 0 and "Console" or ply:Nick(), DarkRP.formatMoney(amount), ""))
-
     if ply:EntIndex() == 0 then
         DarkRP.log("Console set " .. target:SteamName() .. "'s money to " .. DarkRP.formatMoney(amount), Color(30, 30, 30))
     else
         DarkRP.log(ply:Nick() .. " (" .. ply:SteamID() .. ") set " .. target:SteamName() .. "'s money to " .. DarkRP.formatMoney(amount), Color(30, 30, 30))
     end
 end
-DarkRP.definePrivilegedChatCommand("setmoney", "DarkRP_SetMoney", ccSetMoney)
 
+DarkRP.definePrivilegedChatCommand("setmoney", "DarkRP_SetMoney", ccSetMoney)
 local function ccAddMoney(ply, args)
     local amount = DarkRP.toInt(args[2])
-
     if not amount then
         DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("invalid_x", DarkRP.getPhrase("arguments"), ""))
         return
     end
 
     local target = DarkRP.findPlayer(args[1])
-
     if not target then
         DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("could_not_find", tostring(args[1])))
         return
@@ -292,9 +248,7 @@ local function ccAddMoney(ply, args)
 
     if target then
         target:addMoney(amount)
-
         DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("you_gave", target:Nick(), DarkRP.formatMoney(amount)))
-
         DarkRP.notify(target, 0, 4, DarkRP.getPhrase("x_set_your_money", ply:EntIndex() == 0 and "Console" or ply:Nick(), DarkRP.formatMoney(target:getDarkRPVar("money")), ""))
         if ply:EntIndex() == 0 then
             DarkRP.log("Console added " .. DarkRP.formatMoney(amount) .. " to " .. target:SteamName() .. "'s wallet", Color(30, 30, 30))
@@ -305,8 +259,8 @@ local function ccAddMoney(ply, args)
         DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("could_not_find", args[1]))
     end
 end
-DarkRP.definePrivilegedChatCommand("addmoney", "DarkRP_SetMoney", ccAddMoney)
 
+DarkRP.definePrivilegedChatCommand("addmoney", "DarkRP_SetMoney", ccAddMoney)
 DarkRP.hookStub{
     name = "playerGaveMoney",
     description = "Called when a player gives another player money.",
@@ -327,8 +281,7 @@ DarkRP.hookStub{
             type = "number"
         }
     },
-    returns = {
-    },
+    returns = {},
     realm = "Server"
 }
 
@@ -352,8 +305,7 @@ DarkRP.hookStub{
             type = "Entity"
         }
     },
-    returns = {
-    },
+    returns = {},
     realm = "Server"
 }
 
@@ -382,7 +334,6 @@ DarkRP.hookStub{
             type = "Entity"
         }
     },
-    returns = {
-    },
+    returns = {},
     realm = "Server"
 }

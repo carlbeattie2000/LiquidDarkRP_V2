@@ -1,8 +1,7 @@
-DarkRP.PLAYER.isMedic = DarkRP.stub{
+﻿DarkRP.PLAYER.isMedic = DarkRP.stub{
     name = "isMedic",
     description = "Whether this player is a medic.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "answer",

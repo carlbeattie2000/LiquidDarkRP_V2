@@ -1,5 +1,4 @@
-local PLAYER_CLASS = {}
-
+﻿local PLAYER_CLASS = {}
 -- Value of -1 = set to config value, if a corresponding setting exists
 PLAYER_CLASS.DisplayName = "DarkRP Base Player Class"
 PLAYER_CLASS.WalkSpeed = -1
@@ -8,7 +7,6 @@ PLAYER_CLASS.DuckSpeed = 0.3
 PLAYER_CLASS.UnDuckSpeed = 0.3
 PLAYER_CLASS.TeammateNoCollide = false
 PLAYER_CLASS.StartHealth = -1
-
 function PLAYER_CLASS:Loadout()
     -- Let gamemode decide
 end

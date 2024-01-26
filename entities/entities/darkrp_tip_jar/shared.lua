@@ -1,18 +1,15 @@
-ENT.Type = "anim"
+﻿ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
 ENT.PrintName = "Tip Jar"
 ENT.Author = "FPtje"
 ENT.Spawnable = false
 ENT.IsTipjar = true
-
 function ENT:initVars()
     self.model = "models/props_lab/jar01a.mdl"
     self.damage = 100
     self.callOnRemoveId = "tipjar_activedonation_" .. self:EntIndex() .. "_"
-
     self.activeDonations = {}
     self.madeDonations = {}
-
     self.PlayerUse = true
 end
 
@@ -23,12 +20,9 @@ end
 function ENT:UpdateActiveDonation(ply, amount)
     local old = self.activeDonations[ply]
     self.activeDonations[ply] = amount
-
     self:PruneActiveDonations()
-
     ply:CallOnRemove(self.callOnRemoveId .. ply:UserID(), function()
         if not IsValid(self) then return end
-
         self:ExitActiveDonation(ply)
     end)
 
@@ -37,12 +31,9 @@ end
 
 function ENT:ExitActiveDonation(ply)
     local old = self.activeDonations[ply]
-
     self.activeDonations[ply] = nil
-
     self:PruneActiveDonations()
     hook.Call("tipjarExitActiveDonation", DarkRP.hooks, self, ply, old)
-
     self:RemoveCallOnRemove(self.callOnRemoveId .. ply:UserID())
 end
 
@@ -59,7 +50,6 @@ end
 
 function ENT:AddDonation(name, amount)
     local lastDonation = self.madeDonations[#self.madeDonations]
-
     if lastDonation and lastDonation.name == name then
         lastDonation.amount = lastDonation.amount + amount
     else
@@ -67,12 +57,12 @@ function ENT:AddDonation(name, amount)
             name = name,
             amount = amount,
         })
-   end
+    end
 
-   -- Enforce maximum of 100 donations
-   while #self.madeDonations > 100 do
-       table.remove(self.madeDonations, 1)
-   end
+    -- Enforce maximum of 100 donations
+    while #self.madeDonations > 100 do
+        table.remove(self.madeDonations, 1)
+    end
 end
 
 function ENT:ClearDonations()

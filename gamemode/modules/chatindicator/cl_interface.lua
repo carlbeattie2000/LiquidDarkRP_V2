@@ -1,4 +1,4 @@
-DarkRP.hookStub{
+﻿DarkRP.hookStub{
     name = "DrawChatIndicator",
     description = "Call when the Chat Indicator is drawn. Return to overwrite.",
     parameters = {

@@ -1,4 +1,4 @@
-DarkRP.log = DarkRP.stub{
+﻿DarkRP.log = DarkRP.stub{
     name = "log",
     description = "Log a message in DarkRP",
     parameters = {

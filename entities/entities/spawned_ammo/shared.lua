@@ -1,4 +1,4 @@
-ENT.Type = "anim"
+﻿ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
 ENT.PrintName = "Spawned Ammo"
 ENT.Author = "FPtje"

@@ -1,8 +1,7 @@
---[[---------------------------------------------------------------------------
+﻿--[[---------------------------------------------------------------------------
 Vote/become job button
 ---------------------------------------------------------------------------]]
 local PANEL = {}
-
 function PANEL:Init()
     self.BaseClass.Init(self)
     self:SetFont("F4MenuFont02")
@@ -30,18 +29,15 @@ function PANEL:Paint(w, h)
 end
 
 derma.DefineControl("F4MenuJobBecomeButton", "", PANEL, "DButton")
-
 --[[---------------------------------------------------------------------------
 Icon for the model choose panel
 ---------------------------------------------------------------------------]]
 PANEL = {}
-
 AccessorFunc(PANEL, "selected", "Selected", FORCE_BOOL)
 AccessorFunc(PANEL, "depressed", "Depressed", FORCE_BOOL)
 function PANEL:Init()
     self:SetSize(60, 60)
     self:SetText("")
-
     self.model = self.model or vgui.Create("ModelImage", self)
     self.model:SetSize(60, 60)
     self.model:SetPos(0, 0)
@@ -56,6 +52,7 @@ function PANEL:Paint(w, h)
         draw.RoundedBox(4, 3, 3, w - 6, h - 6, gray)
         return
     end
+
     local depressed = self:GetDepressed()
     local x, y = depressed and 3 or 0, depressed and 3 or 0
     w, h = depressed and w - 6 or w, depressed and h - 6 or h
@@ -84,21 +81,18 @@ function PANEL:updateInfo(job, model, host)
 end
 
 derma.DefineControl("F4MenuChooseJobModelIcon", "", PANEL, "DButton")
-
 --[[---------------------------------------------------------------------------
 Choose model panel
 ---------------------------------------------------------------------------]]
 PANEL = {}
-
 function PANEL:Rebuild()
     if table.IsEmpty(self.iconList.Items) then return end
-
     local x = 0
     for _, item in pairs(self.iconList.Items) do
         item:SetPos(x)
-
         x = x + item:GetWide() + 2
     end
+
     self.iconList:GetCanvas():SetWide(x)
 end
 
@@ -111,10 +105,8 @@ function PANEL:setScroll(scroll)
     local x, y = canvas:GetPos()
     local minScroll = 0
     local maxScroll = math.Max(self.iconList:GetWide(), canvas:GetWide()) - self.iconList:GetWide()
-
     self.scroll = math.Max(0, scroll)
     local scrollPos = math.Clamp(scroll * -62, -maxScroll, -minScroll)
-
     if scrollPos == x then
         self.scroll = math.Max(self.scroll - 1, 0)
         return
@@ -126,25 +118,20 @@ end
 function PANEL:Init()
     self:SetTall(70)
     self:StretchRightTo(self:GetParent())
-
     self.scroll = 0
-
     self.leftButton = vgui.Create("F4MenuJobBecomeButton", self)
     self.leftButton:SetText("<")
     self.leftButton:SetWide(40)
     self.leftButton:Dock(LEFT)
     self.leftButton.DoClick = function(btn) self:setScroll(self:getScroll() - 1) end
     self.leftButton.DoDoubleClick = self.leftButton.DoClick
-
     self.rightButton = vgui.Create("F4MenuJobBecomeButton", self)
     self.rightButton:SetText(">")
     self.rightButton:SetWide(40)
     self.rightButton:Dock(RIGHT)
     self.rightButton.DoClick = function(btn) self:setScroll(self:getScroll() + 1) end
     self.rightButton.DoDoubleClick = self.rightButton.DoClick
-
     self.iconList = vgui.Create("DPanelList", self)
-
     self.iconList:EnableHorizontal(true)
     self.iconList.PerformLayout = fn.Partial(self.PerformLayout, self)
     self.iconList.Rebuild = fn.Curry(self.Rebuild, 2)(self)
@@ -162,7 +149,7 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:onSelected(item)
-    for _,v in pairs(self.iconList.Items) do
+    for _, v in pairs(self.iconList.Items) do
         if v == item then continue end
         v:SetSelected(false)
         v.model:SetSize(60, 60)
@@ -173,7 +160,6 @@ end
 function PANEL:updateInfo(job)
     self.iconList:Clear()
     if not istable(job.model) then return end
-
     local preferredModel = DarkRP.getPreferredJobModel(job.team)
     for _, mdl in ipairs(job.model) do
         local btn = vgui.Create("F4MenuChooseJobModelIcon", self.iconList)
@@ -183,6 +169,7 @@ function PANEL:updateInfo(job)
             btn.model:SetSize(50, 50)
             btn.model:SetPos(5, 5)
         end
+
         self.iconList:AddItem(btn)
     end
 
@@ -190,12 +177,10 @@ function PANEL:updateInfo(job)
 end
 
 derma.DefineControl("F4MenuChooseJobModel", "", PANEL, "DPanel")
-
 --[[---------------------------------------------------------------------------
 Left panel for the jobs
 ---------------------------------------------------------------------------]]
 PANEL = {}
-
 function PANEL:Init()
     self:SetBackgroundColor(color_transparent)
     self:EnableVerticalScrollbar()
@@ -206,9 +191,10 @@ function PANEL:Init()
 end
 
 function PANEL:Refresh()
-    for _,v in pairs(self.Items) do
+    for _, v in pairs(self.Items) do
         if v.Refresh then v:Refresh() end
     end
+
     self:InvalidateLayout()
 end
 
@@ -218,53 +204,41 @@ function PANEL:Paint(w, h)
 end
 
 derma.DefineControl("F4EmptyPanel", "", PANEL, "DPanelList")
-
 --[[---------------------------------------------------------------------------
 Right panel for the jobs
 ---------------------------------------------------------------------------]]
 PANEL = {}
-
 function PANEL:Init()
     self.BaseClass.Init(self)
-
     self:SetPadding(10)
     self:DockPadding(5, 5, 5, 5)
-
     self.innerPanel = vgui.Create("F4EmptyPanel", self)
     self.innerPanel:SetPos(0, 0)
-
     self.lblTitle = vgui.Create("DLabel")
     self.lblTitle:SetFont("F4MenuFont02")
     self.innerPanel:AddItem(self.lblTitle)
-
     self.lblDescription = vgui.Create("DLabel")
     self.lblDescription:SetWide(self:GetWide() - 20)
     self.lblDescription:SetFont("Roboto Light")
     self.lblDescription:SetAutoStretchVertical(true)
     self.innerPanel:AddItem(self.lblDescription)
-
     self.filler = VGUIRect(0, 0, 0, 20)
     self.filler:SetColor(color_transparent)
     self.innerPanel:AddItem(self.filler)
-
     self.lblWeapons = vgui.Create("DLabel")
     self.lblWeapons:SetFont("F4MenuFont02")
     self.lblWeapons:SetText(DarkRP.getPhrase("F4guns"))
     self.lblWeapons:SizeToContents()
     self.lblWeapons:SetTall(50)
     self.innerPanel:AddItem(self.lblWeapons)
-
     self.lblSweps = vgui.Create("DLabel")
     self.lblSweps:SetAutoStretchVertical(true)
     self.lblSweps:SetFont("Roboto Light")
     self.innerPanel:AddItem(self.lblSweps)
-
     self.btnGetJob = vgui.Create("F4MenuJobBecomeButton", self)
     self.btnGetJob:Dock(BOTTOM)
-
     self.pnlChooseMdl = vgui.Create("F4MenuChooseJobModel", self)
     self.pnlChooseMdl:Dock(BOTTOM)
-
     self.job = {}
 end
 
@@ -279,10 +253,8 @@ local getWeaponNames = fn.Curry(fn.Map, 2)(getWepName)
 local weaponString = fn.Compose{fn.Curry(fn.Flip(table.concat), 2)("\n"), fn.Curry(fn.Seq, 2)(table.sort), getWeaponNames, table.Copy}
 function PANEL:updateInfo(job)
     self.job = job
-
     self.lblTitle:SetText(job.name and DarkRP.deLocalise(job.name) or (job.team and "" or "No jobs available"))
     self.lblTitle:SizeToContents()
-
     local weps
     if not job.weapons then
         self.lblWeapons:SetText("")
@@ -293,9 +265,7 @@ function PANEL:updateInfo(job)
     end
 
     self.lblSweps:SetText(weps)
-
     self.btnGetJob:setJob(job, fn.Partial(self:GetParent():GetParent().Hide, self:GetParent():GetParent()))
-
     if istable(job.model) and #job.model > 1 and (not isfunction(job.PlayerSetModel) or not job.PlayerSetModel(LocalPlayer())) then
         self.pnlChooseMdl:updateInfo(job)
         self.pnlChooseMdl:SetVisible(true)
@@ -311,7 +281,6 @@ function PANEL:PerformLayout()
     surface.SetFont("Roboto Light")
     local _, h = surface.GetTextSize(text)
     self.BaseClass.PerformLayout(self)
-
     self.innerPanel:SetPos(3, 3)
     self.innerPanel:SetSize(self:GetWide() - 6, self:GetTall() - self.pnlChooseMdl:GetTall() - self.btnGetJob:GetTall() - 13)
     self.innerPanel:InvalidateLayout()
@@ -320,20 +289,15 @@ function PANEL:PerformLayout()
 end
 
 derma.DefineControl("F4JobsPanelRight", "", PANEL, "F4EmptyPanel")
-
-
 --[[---------------------------------------------------------------------------
 Jobs panel
 ---------------------------------------------------------------------------]]
 PANEL = {}
-
 function PANEL:Init()
     self.pnlLeft = vgui.Create("F4EmptyPanel", self)
     self.pnlLeft:Dock(LEFT)
-
     self.pnlRight = vgui.Create("F4JobsPanelRight", self)
     self.pnlRight:Dock(RIGHT)
-
     self:fillData()
 end
 
@@ -344,15 +308,15 @@ function PANEL:PerformLayout()
 end
 
 PANEL.Paint = fn.Id
-
 function PANEL:Refresh()
     self.pnlLeft:Refresh()
-
-    if not self.pnlLeft.Items then self.pnlRight:updateInfo({}) return end
+    if not self.pnlLeft.Items then
+        self.pnlRight:updateInfo({})
+        return
+    end
 
     -- don't refresh if still valid
     if not table.IsEmpty(self.pnlRight.job) then return end
-
     local job
     for _, cat in ipairs(self.pnlLeft:GetItems()) do
         for _, v in pairs(cat:GetItems()) do
@@ -361,29 +325,24 @@ function PANEL:Refresh()
             goto break2
         end
     end
+
     ::break2::
     self.pnlRight:updateInfo(job or {})
 end
 
 function PANEL:fillData()
     local categories = DarkRP.getCategories().jobs
-
     for _, cat in pairs(categories) do
         local dCat = vgui.Create("F4MenuCategory", self)
-
         dCat:SetButtonFactory(function(item, ui)
             local pnl = vgui.Create("F4MenuJobButton", ui)
             pnl:setDarkRPItem(item)
             pnl.DoClick = fc{fp{self.pnlRight.updateInfo, self.pnlRight}, fp{fn.GetValue, "DarkRPItem", pnl}}
-
             pnl:Refresh()
             return pnl
         end)
 
-        dCat:SetPerformLayout(function(contents)
-
-        end)
-
+        dCat:SetPerformLayout(function(contents) end)
         dCat:SetCategory(cat)
         self.pnlLeft:AddItem(dCat)
     end

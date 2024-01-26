@@ -1,8 +1,7 @@
-DarkRP.ENTITY.getDoorData = DarkRP.stub{
+﻿DarkRP.ENTITY.getDoorData = DarkRP.stub{
     name = "getDoorData",
     description = "Internal function to get the door/vehicle data.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "doordata",
@@ -16,8 +15,7 @@ DarkRP.ENTITY.getDoorData = DarkRP.stub{
 DarkRP.ENTITY.isKeysOwnable = DarkRP.stub{
     name = "isKeysOwnable",
     description = "Whether this door can be bought.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "answer",
@@ -31,8 +29,7 @@ DarkRP.ENTITY.isKeysOwnable = DarkRP.stub{
 DarkRP.ENTITY.isDoor = DarkRP.stub{
     name = "isDoor",
     description = "Whether this entity is considered a door in DarkRP.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "answer",
@@ -46,8 +43,7 @@ DarkRP.ENTITY.isDoor = DarkRP.stub{
 DarkRP.ENTITY.isKeysOwned = DarkRP.stub{
     name = "isKeysOwned",
     description = "Whether this door is owned by someone.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "answer",
@@ -61,8 +57,7 @@ DarkRP.ENTITY.isKeysOwned = DarkRP.stub{
 DarkRP.ENTITY.getDoorOwner = DarkRP.stub{
     name = "getDoorOwner",
     description = "Get the owner of a door.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "owner",
@@ -139,8 +134,7 @@ DarkRP.ENTITY.isKeysAllowedToOwn = DarkRP.stub{
 DarkRP.ENTITY.getKeysNonOwnable = DarkRP.stub{
     name = "getKeysNonOwnable",
     description = "Whether ownability of this door/vehicle is disabled.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "title",
@@ -154,8 +148,7 @@ DarkRP.ENTITY.getKeysNonOwnable = DarkRP.stub{
 DarkRP.ENTITY.getKeysTitle = DarkRP.stub{
     name = "getKeysTitle",
     description = "Get the title of this door or vehicle.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "title",
@@ -169,8 +162,7 @@ DarkRP.ENTITY.getKeysTitle = DarkRP.stub{
 DarkRP.ENTITY.getKeysDoorGroup = DarkRP.stub{
     name = "getKeysDoorGroup",
     description = "The door group of a door if it exists.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "group",
@@ -184,8 +176,7 @@ DarkRP.ENTITY.getKeysDoorGroup = DarkRP.stub{
 DarkRP.ENTITY.getKeysDoorTeams = DarkRP.stub{
     name = "getKeysDoorTeams",
     description = "The teams that are allowed to open this door.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "teams",
@@ -199,8 +190,7 @@ DarkRP.ENTITY.getKeysDoorTeams = DarkRP.stub{
 DarkRP.ENTITY.getKeysAllowedToOwn = DarkRP.stub{
     name = "getKeysAllowedToOwn",
     description = "The list of people of which the master door owner has added as allowed to own.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "players",
@@ -214,8 +204,7 @@ DarkRP.ENTITY.getKeysAllowedToOwn = DarkRP.stub{
 DarkRP.ENTITY.getKeysCoOwners = DarkRP.stub{
     name = "getKeysCoOwners",
     description = "The list of people who co-own the door.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "players",
@@ -291,17 +280,14 @@ DarkRP.registerDoorVar = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
 DarkRP.getDoorVars = DarkRP.stub{
     name = "getDoorVars",
     description = "Internal function, retrieves all the registered door variables.",
-    parameters = {
-
-    },
+    parameters = {},
     returns = {
         {
             name = "doorvars",
@@ -315,9 +301,7 @@ DarkRP.getDoorVars = DarkRP.stub{
 DarkRP.getDoorVarsByName = DarkRP.stub{
     name = "getDoorVarsByName",
     description = "Internal function, retrieves all the registered door variables, indeded by their names.",
-    parameters = {
-
-    },
+    parameters = {},
     returns = {
         {
             name = "doorvars",

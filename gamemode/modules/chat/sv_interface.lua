@@ -1,4 +1,4 @@
-DarkRP.defineChatCommand = DarkRP.stub{
+﻿DarkRP.defineChatCommand = DarkRP.stub{
     name = "defineChatCommand",
     description = "Create a chat command that calls the function",
     parameters = {
@@ -71,9 +71,7 @@ DarkRP.hookStub{
             type = "boolean"
         }
     },
-    returns = {
-
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{

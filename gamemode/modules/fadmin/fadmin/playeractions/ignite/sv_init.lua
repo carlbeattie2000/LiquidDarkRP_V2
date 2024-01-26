@@ -1,4 +1,4 @@
-local function Ignite(ply, cmd, args)
+﻿local function Ignite(ply, cmd, args)
     local targets = FAdmin.FindPlayer(args[1])
     if not targets or #targets == 1 and not IsValid(targets[1]) then
         FAdmin.Messages.SendMessage(ply, 1, "Player not found")
@@ -6,20 +6,20 @@ local function Ignite(ply, cmd, args)
     end
 
     local time = tonumber(args[2]) or 10
-
     for _, target in pairs(targets) do
-        if not FAdmin.Access.PlayerHasPrivilege(ply, "Ignite", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return false end
+        if not FAdmin.Access.PlayerHasPrivilege(ply, "Ignite", target) then
+            FAdmin.Messages.SendMessage(ply, 5, "No access!")
+            return false
+        end
+
         if IsValid(target) then
             target:Ignite(time, 0)
             target:FAdmin_SetGlobal("FAdmin_ignited", true)
-
-            timer.Simple(time, function()
-                if IsValid(target) then target:FAdmin_SetGlobal("FAdmin_ignited", false) end
-            end)
+            timer.Simple(time, function() if IsValid(target) then target:FAdmin_SetGlobal("FAdmin_ignited", false) end end)
         end
     end
-    FAdmin.Messages.FireNotification("ignite", ply, targets, {time})
 
+    FAdmin.Messages.FireNotification("ignite", ply, targets, {time})
     return true, targets
 end
 
@@ -31,10 +31,13 @@ local function UnIgnite(ply, cmd, args)
     end
 
     for _, target in pairs(targets) do
-        if not FAdmin.Access.PlayerHasPrivilege(ply, "Ignite") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return false end
+        if not FAdmin.Access.PlayerHasPrivilege(ply, "Ignite") then
+            FAdmin.Messages.SendMessage(ply, 5, "No access!")
+            return false
+        end
+
         if IsValid(target) then
             target:Extinguish()
-
             target:FAdmin_SetGlobal("FAdmin_ignited", false)
         end
     end
@@ -42,7 +45,6 @@ local function UnIgnite(ply, cmd, args)
     FAdmin.Messages.FireNotification("unignite", ply, targets)
     return true, targets
 end
-
 
 FAdmin.StartHooks["Ignite"] = function()
     FAdmin.Messages.RegisterNotification{
@@ -62,6 +64,5 @@ FAdmin.StartHooks["Ignite"] = function()
 
     FAdmin.Commands.AddCommand("Ignite", Ignite)
     FAdmin.Commands.AddCommand("Unignite", UnIgnite)
-
     FAdmin.Access.AddPrivilege("Ignite", 2)
 end

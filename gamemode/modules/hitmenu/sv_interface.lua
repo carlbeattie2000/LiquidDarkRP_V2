@@ -1,4 +1,4 @@
-DarkRP.PLAYER.requestHit = DarkRP.stub{
+﻿DarkRP.PLAYER.requestHit = DarkRP.stub{
     name = "requestHit",
     description = "Request a hit to a hitman.",
     parameters = {
@@ -54,8 +54,7 @@ DarkRP.PLAYER.placeHit = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
@@ -70,8 +69,7 @@ DarkRP.PLAYER.setHitTarget = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
@@ -86,8 +84,7 @@ DarkRP.PLAYER.setHitPrice = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
@@ -102,16 +99,14 @@ DarkRP.PLAYER.setHitCustomer = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
 DarkRP.PLAYER.getHitCustomer = DarkRP.stub{
     name = "getHitCustomer",
     description = "Get the customer for the current hit",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "customer",
@@ -133,26 +128,22 @@ DarkRP.PLAYER.abortHit = DarkRP.stub{
             optional = true
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
 DarkRP.PLAYER.finishHit = DarkRP.stub{
     name = "finishHit",
     description = "End a hit without a message",
-    parameters = {
-    },
-    returns = {
-    },
+    parameters = {},
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
 DarkRP.getHits = DarkRP.stub{
     name = "getHits",
     description = "Get all the active hits",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "hits",

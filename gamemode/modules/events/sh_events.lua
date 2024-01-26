@@ -1,4 +1,4 @@
-DarkRP.declareChatCommand{
+﻿DarkRP.declareChatCommand{
     command = "enablestorm",
     description = "Enable meteor storms.",
     delay = 1.5,

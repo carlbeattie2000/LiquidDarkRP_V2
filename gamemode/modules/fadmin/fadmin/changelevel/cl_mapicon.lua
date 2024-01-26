@@ -1,5 +1,4 @@
-local PANEL = {}
-
+﻿local PANEL = {}
 function PANEL:Init()
     self.BaseClass.Init(self)
     self:SetPaintBackground(true)
@@ -33,7 +32,7 @@ end
 
 function PANEL:PerformLayout()
     self.m_Image:SetPos(0, 0)
-    local w,h = self:GetSize()
+    local w, h = self:GetSize()
     h = h - 14
     self.m_Image:SetSize(w, h)
     self:SetTextInset(5, w / 2)

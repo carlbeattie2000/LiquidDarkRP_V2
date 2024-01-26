@@ -1,4 +1,4 @@
-DarkRP.declareChatCommand{
+﻿DarkRP.declareChatCommand{
     command = "give",
     description = "Give money to the player you're looking at.",
     delay = 1.5

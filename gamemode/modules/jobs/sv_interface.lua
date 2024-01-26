@@ -1,4 +1,4 @@
-DarkRP.PLAYER.changeTeam = DarkRP.stub{
+﻿DarkRP.PLAYER.changeTeam = DarkRP.stub{
     name = "changeTeam",
     description = "Change the team of a player.",
     parameters = {
@@ -42,8 +42,7 @@ DarkRP.PLAYER.updateJob = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
@@ -58,9 +57,7 @@ DarkRP.PLAYER.teamUnBan = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
@@ -81,8 +78,7 @@ DarkRP.PLAYER.teamBan = DarkRP.stub{
             optional = true
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 

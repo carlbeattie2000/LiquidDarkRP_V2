@@ -1,4 +1,4 @@
-DarkRP.declareChatCommand({
+﻿DarkRP.declareChatCommand({
     command = "sleep",
     description = "Go to sleep or wake up",
     delay = 1.5

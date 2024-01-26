@@ -1,12 +1,9 @@
-AddCSLuaFile("cl_init.lua")
+﻿AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
-
 ENT.SpawnOffset = Vector(15, 0, 15)
-
 local function PrintMore(ent)
     if not IsValid(ent) then return end
-
     ent.sparking = true
     timer.Simple(3, function()
         if not IsValid(ent) then return end
@@ -30,13 +27,8 @@ function ENT:Initialize()
     DarkRP.ValidatedPhysicsInit(self, SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
-
     local phys = self:GetPhysicsObject()
-
-    if phys:IsValid() then
-        phys:Wake()
-    end
-
+    if phys:IsValid() then phys:Wake() end
     timer.Simple(math.random(self.MinTimer, self.MaxTimer), function() PrintMore(self) end)
     self:StartSound()
     self:PostInit()
@@ -44,9 +36,7 @@ end
 
 function ENT:OnTakeDamage(dmg)
     self:TakePhysicsDamage(dmg)
-
     if self.burningup then return end
-
     self.damage = (self.damage or 100) - dmg:GetDamage()
     if self.damage <= 0 then
         local rnd = math.random(1, 10)
@@ -71,7 +61,6 @@ end
 
 function ENT:BurstIntoFlames()
     if hook.Run("moneyPrinterCatchFire", self) == true then return end
-
     if IsValid(self:Getowning_ent()) then DarkRP.notify(self:Getowning_ent(), 0, 4, DarkRP.getPhrase("money_printer_overheating")) end
     self.burningup = true
     local burntime = math.random(8, 18)
@@ -80,7 +69,11 @@ function ENT:BurstIntoFlames()
 end
 
 function ENT:Fireball()
-    if not self:IsOnFire() then self.burningup = false return end
+    if not self:IsOnFire() then
+        self.burningup = false
+        return
+    end
+
     local dist = math.random(20, 280) -- Explosion radius
     self:Destruct()
     for k, v in ipairs(ents.FindInSphere(self:GetPos(), dist)) do
@@ -91,19 +84,17 @@ function ENT:Fireball()
             v:TakeDamage(distance / dist * 100, self, self)
         end
     end
+
     self:Remove()
 end
 
 function ENT:CreateMoneybag()
     if self:IsOnFire() then return end
-
     local amount = self.MoneyCount or (GAMEMODE.Config.mprintamount ~= 0 and GAMEMODE.Config.mprintamount or 250)
     local prevent, hookAmount = hook.Run("moneyPrinterPrintMoney", self, amount)
     if prevent == true then return end
-
     local MoneyPos = self:GetPos() + self.SpawnOffset
     amount = hookAmount or amount
-
     if self.OverheatChance and self.OverheatChance > 0 then
         local overheatchance
         if self.OverheatChance <= 3 then
@@ -111,6 +102,7 @@ function ENT:CreateMoneybag()
         else
             overheatchance = self.OverheatChance or 22
         end
+
         if math.random(1, overheatchance) == 3 then self:BurstIntoFlames() end
     end
 
@@ -126,9 +118,9 @@ function ENT:Think()
         self:Remove()
         return
     end
+
     self:StartSound()
     if not self.sparking then return end
-
     local effectdata = EffectData()
     effectdata:SetOrigin(self:GetPos())
     effectdata:SetMagnitude(1)
@@ -138,7 +130,5 @@ function ENT:Think()
 end
 
 function ENT:OnRemove()
-    if self.sound then
-        self.sound:Stop()
-    end
+    if self.sound then self.sound:Stop() end
 end

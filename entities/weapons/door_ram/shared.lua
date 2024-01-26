@@ -1,5 +1,4 @@
-AddCSLuaFile()
-
+﻿AddCSLuaFile()
 if CLIENT then
     SWEP.Slot = 5
     SWEP.SlotPos = 1
@@ -9,40 +8,31 @@ end
 
 -- Variables that are used on both client and server
 DEFINE_BASECLASS("weapon_cs_base2")
-
 SWEP.PrintName = "Battering Ram"
 SWEP.Author = "DarkRP Developers"
 SWEP.Instructions = "Left click to break open doors/unfreeze props or get people out of their vehicles\nRight click to raise"
 SWEP.Contact = ""
 SWEP.Purpose = ""
 SWEP.IsDarkRPDoorRam = true
-
 SWEP.IconLetter = ""
-
 SWEP.ViewModelFOV = 62
 SWEP.ViewModelFlip = false
 SWEP.ViewModel = Model("models/weapons/c_rpg.mdl")
 SWEP.WorldModel = Model("models/weapons/w_rocket_launcher.mdl")
 SWEP.AnimPrefix = "rpg"
-
 SWEP.UseHands = true
-
 SWEP.Spawnable = true
 SWEP.AdminOnly = true
 SWEP.Category = "DarkRP (Utility)"
-
 SWEP.Sound = Sound("physics/wood/wood_box_impact_hard3.wav")
-
-SWEP.Primary.ClipSize = -1      -- Size of a clip
-SWEP.Primary.DefaultClip = 0        -- Default number of bullets in a clip
-SWEP.Primary.Automatic = false      -- Automatic/Semi Auto
+SWEP.Primary.ClipSize = -1 -- Size of a clip
+SWEP.Primary.DefaultClip = 0 -- Default number of bullets in a clip
+SWEP.Primary.Automatic = false -- Automatic/Semi Auto
 SWEP.Primary.Ammo = ""
-
-SWEP.Secondary.ClipSize = -1        -- Size of a clip
-SWEP.Secondary.DefaultClip = 0     -- Default number of bullets in a clip
-SWEP.Secondary.Automatic = false     -- Automatic/Semi Auto
+SWEP.Secondary.ClipSize = -1 -- Size of a clip
+SWEP.Secondary.DefaultClip = 0 -- Default number of bullets in a clip
+SWEP.Secondary.Automatic = false -- Automatic/Semi Auto
 SWEP.Secondary.Ammo = ""
-
 --[[---------------------------------------------------------
 Name: SWEP:Initialize()
 Desc: Called when the weapon is first loaded
@@ -54,7 +44,6 @@ end
 
 function SWEP:Holster()
     self:SetIronsights(false)
-
     return true
 end
 
@@ -66,9 +55,7 @@ end
 -- Ram action when ramming a door
 local function ramDoor(ply, trace, ent)
     if ply:EyePos():DistToSqr(trace.HitPos) > 2025 or (not GAMEMODE.Config.canforcedooropen and ent:getKeysNonOwnable()) then return false end
-
     local allowed = false
-
     -- if we need a warrant to get in
     if GAMEMODE.Config.doorwarrants and ent:isKeysOwned() and not ent:isKeysOwnedBy(ply) then
         -- if anyone who owns this door has a warrant for their arrest
@@ -100,44 +87,37 @@ local function ramDoor(ply, trace, ent)
     end
 
     if CLIENT then return allowed end
-
     -- Do we have a warrant for this player?
     if not allowed then
         DarkRP.notify(ply, 1, 5, DarkRP.getPhrase("warrant_required"))
-
         return false
     end
 
     ent:keysUnLock()
     ent:Fire("open", "", .6)
     ent:Fire("setanimation", "open", .6)
-
     return true
 end
 
 -- Ram action when ramming a vehicle
 local function ramVehicle(ply, trace, ent)
     if ply:EyePos():DistToSqr(trace.HitPos) > 10000 then return false end
-
-    if CLIENT then return false end -- Ideally this would return true after ent:GetDriver() check
+    if CLIENT then -- Ideally this would return true after ent:GetDriver() check
+        return false
+    end
 
     local driver = ent:GetDriver()
     if not IsValid(driver) or not driver.ExitVehicle then return false end
-
     driver:ExitVehicle()
     ent:keysLock()
-
     return true
 end
 
 -- Ram action when ramming a fading door
 local function ramFadingDoor(ply, trace, ent)
     if ply:EyePos():DistToSqr(trace.HitPos) > 10000 then return false end
-
     local Owner = ent:CPPIGetOwner()
-
     if CLIENT then return canRam(Owner) end
-
     if not canRam(Owner) then
         DarkRP.notify(ply, 1, 5, DarkRP.getPhrase("warrant_required"))
         return false
@@ -147,7 +127,6 @@ local function ramFadingDoor(ply, trace, ent)
         ent:fadeActivate()
         timer.Simple(5, function() if IsValid(ent) and ent.fadeActive then ent:fadeDeactivate() end end)
     end
-
     return true
 end
 
@@ -155,43 +134,27 @@ end
 local function ramProp(ply, trace, ent)
     if ply:EyePos():DistToSqr(trace.HitPos) > 10000 then return false end
     if ent:GetClass() ~= "prop_physics" then return false end
-
     local Owner = ent:CPPIGetOwner()
-
     if CLIENT then return canRam(Owner) end
-
     if not canRam(Owner) then
         DarkRP.notify(ply, 1, 5, DarkRP.getPhrase(GAMEMODE.Config.copscanunweld and "warrant_required_unweld" or "warrant_required_unfreeze"))
         return false
     end
 
-    if GAMEMODE.Config.copscanunweld then
-        constraint.RemoveConstraints(ent, "Weld")
-    end
-
-    if GAMEMODE.Config.copscanunfreeze then
-        ent:GetPhysicsObject():EnableMotion(true)
-    end
-
+    if GAMEMODE.Config.copscanunweld then constraint.RemoveConstraints(ent, "Weld") end
+    if GAMEMODE.Config.copscanunfreeze then ent:GetPhysicsObject():EnableMotion(true) end
     return true
 end
 
 -- Decides the behaviour of the ram function for the given entity
 local function getRamFunction(ply, trace)
     local ent = trace.Entity
-
     if not IsValid(ent) then return fp{fn.Id, false} end
-
     local override = hook.Call("canDoorRam", nil, ply, trace, ent)
-
-    return
-        override ~= nil     and fp{fn.Id, override}                                 or
-        ent:isDoor()        and fp{ramDoor, ply, trace, ent}                        or
-        ent:IsVehicle()     and fp{ramVehicle, ply, trace, ent}                     or
-        ent.fadeActivate    and fp{ramFadingDoor, ply, trace, ent}                  or
-        ent:GetPhysicsObject():IsValid() and not ent:GetPhysicsObject():IsMoveable()
-                                         and fp{ramProp, ply, trace, ent}           or
-        fp{fn.Id, false} -- no ramming was performed
+    return override ~= nil and fp{fn.Id, override} or ent:isDoor() and fp{ramDoor, ply, trace, ent} or ent:IsVehicle() and fp{ramVehicle, ply, trace, ent} or ent.fadeActivate and fp{ramFadingDoor, ply, trace, ent} or ent:GetPhysicsObject():IsValid() and not ent:GetPhysicsObject():IsMoveable() and fp{ramProp, ply, trace, ent} or fp{
+        fn.Id, -- no ramming was performed
+        false
+    }
 end
 
 --[[---------------------------------------------------------
@@ -200,29 +163,17 @@ Desc: +attack1 has been pressed
 ---------------------------------------------------------]]
 function SWEP:PrimaryAttack()
     if not self:GetIronsights() then return end
-
     local Owner = self:GetOwner()
-
     if not IsValid(Owner) then return end
-
     self:SetNextPrimaryFire(CurTime() + 0.1)
-
     Owner:LagCompensation(true)
     local trace = Owner:GetEyeTrace()
     Owner:LagCompensation(false)
-
     local hasRammed = getRamFunction(Owner, trace)()
-
-    if SERVER then
-        hook.Call("onDoorRamUsed", GAMEMODE, hasRammed, Owner, trace)
-    end
-
+    if SERVER then hook.Call("onDoorRamUsed", GAMEMODE, hasRammed, Owner, trace) end
     if not hasRammed then return end
-
     self:SetNextPrimaryFire(CurTime() + 2.5)
-
     self:SetTotalUsedMagCount(self:GetTotalUsedMagCount() + 1)
-
     Owner:SetAnimation(PLAYER_ATTACK1)
     Owner:EmitSound(self.Sound)
     Owner:ViewPunch(Angle(-10, math.Round(util.SharedRandom("DarkRP_DoorRam" .. self:EntIndex() .. "_" .. self:GetTotalUsedMagCount(), -5, 5)), 0))
@@ -241,17 +192,10 @@ end
 
 function SWEP:GetViewModelPosition(pos, ang)
     local Mul = 1
-
-    if self.LastIron > CurTime() - 0.25 then
-        Mul = math.Clamp((CurTime() - self.LastIron) / 0.25, 0, 1)
-    end
-
-    if self:GetIronsights() then
-        Mul = 1-Mul
-    end
-
-    ang:RotateAroundAxis(ang:Right(), - 15 * Mul)
-    return pos,ang
+    if self.LastIron > CurTime() - 0.25 then Mul = math.Clamp((CurTime() - self.LastIron) / 0.25, 0, 1) end
+    if self:GetIronsights() then Mul = 1 - Mul end
+    ang:RotateAroundAxis(ang:Right(), -15 * Mul)
+    return pos, ang
 end
 
 DarkRP.hookStub{
@@ -305,15 +249,12 @@ if SERVER then
                 type = "table"
             }
         },
-        returns = {
-
-        }
+        returns = {}
     }
 end
 
 hook.Add("SetupMove", "DarkRP_DoorRamJump", function(ply, mv)
     local wep = ply:GetActiveWeapon()
     if not wep:IsValid() or wep:GetClass() ~= "door_ram" or not wep.GetIronsights or not wep:GetIronsights() then return end
-
     mv:SetButtons(bit.band(mv:GetButtons(), bit.bnot(IN_JUMP)))
 end)

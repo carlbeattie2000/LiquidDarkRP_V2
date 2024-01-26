@@ -1,5 +1,4 @@
-local plyMeta = FindMetaTable("Player")
-
+﻿local plyMeta = FindMetaTable("Player")
 --[[---------------------------------------------------------------------------
 Interface functions
 ---------------------------------------------------------------------------]]
@@ -21,12 +20,9 @@ end
 
 plyMeta.isMayor = fn.Compose{fn.Curry(fn.GetValue, 2)("mayor"), plyMeta.getJobTable}
 plyMeta.isChief = fn.Compose{fn.Curry(fn.GetValue, 2)("chief"), plyMeta.getJobTable}
-
-
 --[[---------------------------------------------------------------------------
 Hooks
 ---------------------------------------------------------------------------]]
-
 function DarkRP.hooks:canRequestWarrant(target, actor, reason)
     if not IsValid(target) then return false, DarkRP.getPhrase("suspect_doesnt_exist") end
     if not reason or string.len(reason) == 0 then return false, DarkRP.getPhrase("vote_specify_reason") end
@@ -35,7 +31,6 @@ function DarkRP.hooks:canRequestWarrant(target, actor, reason)
     if not actor:Alive() then return false, DarkRP.getPhrase("must_be_alive_to_do_x", DarkRP.getPhrase("get_a_warrant")) end
     if target.warranted then return false, DarkRP.getPhrase("already_a_warrant") end
     if not actor:isCP() then return false, DarkRP.getPhrase("incorrect_job", DarkRP.getPhrase("get_a_warrant")) end
-
     return true
 end
 
@@ -46,7 +41,6 @@ function DarkRP.hooks:canRemoveWarrant(target, actor)
     if not target.warranted then return false, DarkRP.getPhrase("not_warranted") end
     if not actor:isCP() then return false, DarkRP.getPhrase("incorrect_job", DarkRP.getPhrase("remove_a_warrant")) end
     if actor:isArrested() then return false, DarkRP.getPhrase("unable", DarkRP.getPhrase("remove_a_warrant"), "") end
-
     return true
 end
 
@@ -60,7 +54,6 @@ function DarkRP.hooks:canWanted(target, actor, reason)
     if target:isWanted() then return false, DarkRP.getPhrase("already_wanted") end
     if not target:Alive() then return false, DarkRP.getPhrase("suspect_must_be_alive_to_do_x", DarkRP.getPhrase("make_someone_wanted")) end
     if target:isArrested() then return false, DarkRP.getPhrase("suspect_already_arrested") end
-
     return true
 end
 
@@ -71,7 +64,6 @@ function DarkRP.hooks:canUnwant(target, actor)
     if not actor:isCP() then return false, DarkRP.getPhrase("incorrect_job", DarkRP.getPhrase("remove_wanted_status")) end
     if not target:isWanted() then return false, DarkRP.getPhrase("not_wanted") end
     if not target:Alive() then return false, DarkRP.getPhrase("suspect_must_be_alive_to_do_x", DarkRP.getPhrase("remove_wanted_status")) end
-
     return true
 end
 
@@ -168,20 +160,11 @@ DarkRP.declareChatCommand{
 
 local noMayorExists = fn.Compose{fn.Null, fn.Curry(fn.Filter, 2)(plyMeta.isMayor), player.GetAll}
 local noChiefExists = fn.Compose{fn.Null, fn.Curry(fn.Filter, 2)(plyMeta.isChief), player.GetAll}
-
 DarkRP.declareChatCommand{
     command = "requestlicense",
     description = "Request a gun license.",
     delay = 1.5,
-    condition = fn.FAnd {
-        fn.FOr {
-            fn.Curry(fn.Not, 2)(noMayorExists),
-            fn.Curry(fn.Not, 2)(noChiefExists),
-            fn.Compose{fn.Not, fn.Null, fn.Curry(fn.Filter, 2)(plyMeta.isCP), player.GetAll}
-        },
-        fn.Compose{fn.Not, fn.Curry(fn.Flip(plyMeta.getDarkRPVar), 2)("HasGunlicense")},
-        fn.Compose{fn.Not, fn.Curry(fn.GetValue, 2)("LicenseRequested")}
-    }
+    condition = fn.FAnd{fn.FOr{fn.Curry(fn.Not, 2)(noMayorExists), fn.Curry(fn.Not, 2)(noChiefExists), fn.Compose{fn.Not, fn.Null, fn.Curry(fn.Filter, 2)(plyMeta.isCP), player.GetAll}}, fn.Compose{fn.Not, fn.Curry(fn.Flip(plyMeta.getDarkRPVar), 2)("HasGunlicense")}, fn.Compose{fn.Not, fn.Curry(fn.GetValue, 2)("LicenseRequested")}}
 }
 
 DarkRP.declareChatCommand{
@@ -190,8 +173,15 @@ DarkRP.declareChatCommand{
     delay = 1.5,
     condition = fn.FOr{
         plyMeta.isMayor, -- Mayors can hand out licenses
-        fn.FAnd{plyMeta.isChief, noMayorExists}, -- Chiefs can if there is no mayor
-        fn.FAnd{plyMeta.isCP, noChiefExists, noMayorExists} -- CP's can if there are no chiefs nor mayors
+        fn.FAnd{
+            plyMeta.isChief, -- Chiefs can if there is no mayor
+            noMayorExists
+        },
+        fn.FAnd{
+            plyMeta.isCP, -- CP's can if there are no chiefs nor mayors
+            noChiefExists,
+            noMayorExists
+        }
     }
 }
 

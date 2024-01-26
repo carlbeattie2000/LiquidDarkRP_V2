@@ -1,4 +1,4 @@
-DarkRP.doorToEntIndex = DarkRP.stub{
+﻿DarkRP.doorToEntIndex = DarkRP.stub{
     name = "doorToEntIndex",
     description = "Get an ENT index from a door index.",
     parameters = {
@@ -57,16 +57,14 @@ DarkRP.writeNetDoorVar = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
 DarkRP.ENTITY.doorIndex = DarkRP.stub{
     name = "doorIndex",
     description = "Get the door index of a door. Use this to store door information in the database.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "index",
@@ -80,20 +78,16 @@ DarkRP.ENTITY.doorIndex = DarkRP.stub{
 DarkRP.ENTITY.keysLock = DarkRP.stub{
     name = "keysLock",
     description = "Lock this door or vehicle.",
-    parameters = {
-    },
-    returns = {
-    },
+    parameters = {},
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
 DarkRP.ENTITY.keysUnLock = DarkRP.stub{
     name = "keysUnLock",
     description = "Unlock this door or vehicle.",
-    parameters = {
-    },
-    returns = {
-    },
+    parameters = {},
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
@@ -108,8 +102,7 @@ DarkRP.ENTITY.addKeysAllowedToOwn = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
@@ -124,8 +117,7 @@ DarkRP.ENTITY.addKeysDoorOwner = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
@@ -140,8 +132,7 @@ DarkRP.ENTITY.removeKeysDoorOwner = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
@@ -156,8 +147,7 @@ DarkRP.ENTITY.keysOwn = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
@@ -172,8 +162,7 @@ DarkRP.ENTITY.keysUnOwn = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
@@ -188,8 +177,7 @@ DarkRP.ENTITY.setKeysNonOwnable = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
@@ -204,8 +192,7 @@ DarkRP.ENTITY.setKeysTitle = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
@@ -220,8 +207,7 @@ DarkRP.ENTITY.setDoorGroup = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
@@ -236,8 +222,7 @@ DarkRP.ENTITY.addKeysDoorTeam = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
@@ -252,38 +237,31 @@ DarkRP.ENTITY.removeKeysDoorTeam = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
 DarkRP.ENTITY.removeAllKeysDoorTeams = DarkRP.stub{
     name = "removeAllKeysDoorTeams",
     description = "Disallow all teams from locking/unlocking a door.",
-    parameters = {
-    },
-    returns = {
-    },
+    parameters = {},
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
 DarkRP.ENTITY.removeAllKeysExtraOwners = DarkRP.stub{
     name = "removeAllKeysExtraOwners",
     description = "Remove all co-owners from a door.",
-    parameters = {
-    },
-    returns = {
-    },
+    parameters = {},
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
 DarkRP.ENTITY.removeAllKeysAllowedToOwn = DarkRP.stub{
     name = "removeAllKeysAllowedToOwn",
     description = "Disallow all people from owning the door.",
-    parameters = {
-    },
-    returns = {
-    },
+    parameters = {},
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
@@ -298,16 +276,14 @@ DarkRP.ENTITY.removeKeysAllowedToOwn = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.ENTITY
 }
 
 DarkRP.ENTITY.isLocked = DarkRP.stub{
     name = "isLocked",
     description = "Whether this door/vehicle is locked.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "answer",
@@ -321,40 +297,32 @@ DarkRP.ENTITY.isLocked = DarkRP.stub{
 DarkRP.PLAYER.keysUnOwnAll = DarkRP.stub{
     name = "keysUnOwnAll",
     description = "Unown every door and vehicle owned by this player.",
-    parameters = {
-    },
-    returns = {
-    },
+    parameters = {},
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
 DarkRP.PLAYER.sendDoorData = DarkRP.stub{
     name = "sendDoorData",
     description = "Internal function. Sends all door data to a player.",
-    parameters = {
-    },
-    returns = {
-    },
+    parameters = {},
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
 DarkRP.PLAYER.doPropertyTax = DarkRP.stub{
     name = "doPropertyTax",
     description = "Tax a player based on the amount of doors and vehicles they have.",
-    parameters = {
-    },
-    returns = {
-    },
+    parameters = {},
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
 DarkRP.PLAYER.initiateTax = DarkRP.stub{
     name = "initiateTax",
     description = "Internal function, starts the timer that taxes the player every once in a while.",
-    parameters = {
-    },
-    returns = {
-    },
+    parameters = {},
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
@@ -368,9 +336,7 @@ DarkRP.hookStub{
             type = "Entity"
         }
     },
-    returns = {
-
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -383,9 +349,7 @@ DarkRP.hookStub{
             type = "Entity"
         }
     },
-    returns = {
-
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -408,9 +372,7 @@ DarkRP.hookStub{
             type = "number"
         }
     },
-    returns = {
-
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -689,9 +651,7 @@ DarkRP.hookStub{
             type = "number"
         }
     },
-    returns = {
-
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -714,9 +674,7 @@ DarkRP.hookStub{
             type = "number"
         }
     },
-    returns = {
-
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -768,9 +726,7 @@ DarkRP.hookStub{
             type = "number"
         }
     },
-    returns = {
-
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -846,6 +802,5 @@ DarkRP.hookStub{
             type = "boolean"
         }
     },
-    returns = {
-    }
+    returns = {}
 }

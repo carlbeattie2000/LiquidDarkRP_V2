@@ -1,5 +1,4 @@
--- Shared part
-
+﻿-- Shared part
 function DarkRP.getAvailableVehicles()
     local vehicles = list.Get("Vehicles")
     for _, v in pairs(list.Get("SCarsList")) do
@@ -9,7 +8,6 @@ function DarkRP.getAvailableVehicles()
             Model = v.CarModel
         }
     end
-
     return vehicles
 end
 
@@ -20,33 +18,30 @@ end
 if not DarkRP.disabledDefaults["workarounds"]["os.date() Windows crash"] and system.IsWindows() then
     local osdate = os.date
     local replace = function(txt)
-        if txt == "%%" then return txt end -- Edge case, %% is allowed
+        if txt == "%%" then -- Edge case, %% is allowed
+            return txt
+        end
         return ""
     end
 
     function os.date(format, time, ...)
-        if (isstring(format) or isnumber(format)) then
+        if isstring(format) or isnumber(format) then
             format = string.gsub(format, "%%[^aAbBcdHIjmMpSUwWxXyYz]", replace)
-        elseif (format ~= nil) then
+        elseif format ~= nil then
             argError(Val, 1, "string")
         end
 
-        if (not (time == nil or isnumber(time)) and (not isstring(time) or tonumber(time) == nil)) then
-            argError(Val, 2, "number")
-        end
-
+        if not (time == nil or isnumber(time)) and (not isstring(time) or tonumber(time) == nil) then argError(Val, 2, "number") end
         return osdate(format, time, ...)
     end
 end
 
 timer.Simple(3, function()
     if DarkRP.disabledDefaults["workarounds"]["SkidCheck"] then return end
-
     -- Malicious addons that kicks players this one person doesn't like.
     if not istable(Skid) then return end
     Skid.Check = fn.Id
     hook.Remove("CheckPassword", "Skid.CheckPassword")
-
     MsgC(Color(0, 255, 0), "SkidCheck", color_white, " has been ", Color(255, 0, 0), "DISABLED\n", color_white, [[
     SkidCheck was detected on this server and has been disabled.
 
@@ -99,18 +94,13 @@ if SERVER and not DarkRP.disabledDefaults["workarounds"]["Error on edict limit"]
 
     If you do decide to send a bug report to ANY addon, please include this
     message.]]
-
     local function varArgsLen(...)
         return {...}, select("#", ...)
     end
 
     function ents.Create(name, ...)
         local res, len = varArgsLen(entsCreate(name, ...))
-
-        if res[1] == NULL and ents.GetEdictCount() >= 8176 then
-            DarkRP.error(entsCreateError, 2, {string.format("Affected entity: '%s'", name)})
-        end
-
+        if res[1] == NULL and ents.GetEdictCount() >= 8176 then DarkRP.error(entsCreateError, 2, {string.format("Affected entity: '%s'", name)}) end
         return unpack(res, 1, len)
     end
 end
@@ -122,7 +112,7 @@ hook.Add("InitPostEntity", "DarkRP_Workarounds", function()
     if CLIENT then
         if not DarkRP.disabledDefaults["workarounds"]["White flashbang flashes"] then
             -- Removes the white flashes when the server lags and the server has flashbang. Workaround because it's been there for fucking years
-            hook.Remove("HUDPaint","drawHudVital")
+            hook.Remove("HUDPaint", "drawHudVital")
         end
 
         -- Fuck up APAnti
@@ -132,25 +122,19 @@ hook.Add("InitPostEntity", "DarkRP_Workarounds", function()
         end
         return
     end
+
     local commands = concommand.GetTable()
     if not DarkRP.disabledDefaults["workarounds"]["Durgz witty sayings"] and commands["durgz_witty_sayings"] then
         game.ConsoleCommand("durgz_witty_sayings 0\n") -- Deals with the cigarettes exploit. I'm fucking tired of them. I hate having to fix other people's mods, but this mod maker is retarded and refuses to update his mod.
     end
 
     -- Remove ULX /me command. (the /me command is the only thing this hook does)
-    if not DarkRP.disabledDefaults["workarounds"]["ULX /me command"] then
-        hook.Remove("PlayerSay", "ULXMeCheck")
-    end
-
+    if not DarkRP.disabledDefaults["workarounds"]["ULX /me command"] then hook.Remove("PlayerSay", "ULXMeCheck") end
     -- why can people even save multiplayer games?
     -- Lag exploit
-    if not DarkRP.disabledDefaults["workarounds"]["gm_save"] then
-        concommand.Remove("gm_save")
-    end
-
+    if not DarkRP.disabledDefaults["workarounds"]["gm_save"] then concommand.Remove("gm_save") end
     -- Remove that weird rooftop spawn in rp_downtown_v4c_v2
-    if not DarkRP.disabledDefaults["workarounds"]["rp_downtown_v4c_v2 rooftop spawn"] and
-    game.GetMap() == "rp_downtown_v4c_v2" then
+    if not DarkRP.disabledDefaults["workarounds"]["rp_downtown_v4c_v2 rooftop spawn"] and game.GetMap() == "rp_downtown_v4c_v2" then
         for _, v in ipairs(ents.FindByClass("info_player_terrorist")) do
             v:Remove()
         end
@@ -176,9 +160,7 @@ if SERVER and not DarkRP.disabledDefaults["workarounds"]["Wire field generator e
             if IsValid(ent) and ent:GetClass() == "gmod_wire_field_device" then
                 local TriggerInput = ent.TriggerInput
                 function ent:TriggerInput(iname, value)
-                    if iname == "Distance" and isnumber(value) then
-                        value = math.min(value, 400)
-                    end
+                    if iname == "Distance" and isnumber(value) then value = math.min(value, 400) end
                     TriggerInput(self, iname, value)
                 end
             end
@@ -196,7 +178,6 @@ if not DarkRP.disabledDefaults["workarounds"]["Door tool class fix"] then
         if isfunction(oldFunc) then
             function makedoor(ply, trace, ang, model, open, close, autoclose, closetime, class, hardware, ...)
                 if class ~= "prop_dynamic" and class ~= "prop_door_rotating" then return end
-
                 oldFunc(ply, trace, ang, model, open, close, autoclose, closetime, class, hardware, ...)
             end
         end
@@ -210,58 +191,114 @@ if not DarkRP.disabledDefaults["workarounds"]["Door tool class fix"] then
 
     hook.Add("CanTool", "DoorExploit", function(ply, trace, tool)
         if not IsValid(ply) or not ply:IsPlayer() or not IsValid(ply:GetActiveWeapon()) or not ply:GetActiveWeapon().GetToolObject or not ply:GetActiveWeapon():GetToolObject() then return end
-
         tool = ply:GetActiveWeapon():GetToolObject()
-        if not allowedDoors[string.lower(tool:GetClientInfo("door_class") or "")] then
-            return false
-        end
+        if not allowedDoors[string.lower(tool:GetClientInfo("door_class") or "")] then return false end
     end)
 end
+
 --[[---------------------------------------------------------------------------
 Anti crash exploit
 ---------------------------------------------------------------------------]]
-if SERVER and not DarkRP.disabledDefaults["workarounds"]["Constraint crash exploit fix"] then
-    hook.Add("PropBreak", "drp_AntiExploit", function(attacker, ent)
-        if IsValid(ent) and ent:GetPhysicsObject():IsValid() then
-            constraint.RemoveAll(ent)
-        end
-    end)
-end
-
+if SERVER and not DarkRP.disabledDefaults["workarounds"]["Constraint crash exploit fix"] then hook.Add("PropBreak", "drp_AntiExploit", function(attacker, ent) if IsValid(ent) and ent:GetPhysicsObject():IsValid() then constraint.RemoveAll(ent) end end) end
 --[[---------------------------------------------------------------------------
 Actively deprecate commands
 ---------------------------------------------------------------------------]]
 if SERVER and not DarkRP.disabledDefaults["workarounds"]["Deprecated console commands"] then
     local deprecated = {
-        {command = "rp_removeletters",      alternative = "removeletters"},
-        {command = "rp_setname",            alternative = "forcerpname"},
-        {command = "rp_unlock",             alternative = "forceunlock"},
-        {command = "rp_lock",               alternative = "forcelock"},
-        {command = "rp_removeowner",        alternative = "forceremoveowner"},
-        {command = "rp_addowner",           alternative = "forceown"},
-        {command = "rp_unownall",           alternative = "forceunownall"},
-        {command = "rp_unown",              alternative = "forceunown"},
-        {command = "rp_own",                alternative = "forceown"},
-        {command = "rp_tellall",            alternative = "admintellall"},
-        {command = "rp_tell",               alternative = "admintell"},
-        {command = "rp_teamunban",          alternative = "teamunban"},
-        {command = "rp_teamban",            alternative = "teamban"},
-        {command = "rp_setsalary",          alternative = "setmoney"},
-        {command = "rp_setmoney",           alternative = "setmoney"},
-        {command = "rp_revokelicense",      alternative = "unsetlicense"},
-        {command = "rp_givelicense",        alternative = "setlicense"},
-        {command = "rp_unlockdown",         alternative = "unlockdown"},
-        {command = "rp_lockdown",           alternative = "lockdown"},
-        {command = "rp_unarrest",           alternative = "unarrest"},
-        {command = "rp_arrest",             alternative = "arrest"},
-        {command = "rp_cancelvote",         alternative = "forcecancelvote"},
+        {
+            command = "rp_removeletters",
+            alternative = "removeletters"
+        },
+        {
+            command = "rp_setname",
+            alternative = "forcerpname"
+        },
+        {
+            command = "rp_unlock",
+            alternative = "forceunlock"
+        },
+        {
+            command = "rp_lock",
+            alternative = "forcelock"
+        },
+        {
+            command = "rp_removeowner",
+            alternative = "forceremoveowner"
+        },
+        {
+            command = "rp_addowner",
+            alternative = "forceown"
+        },
+        {
+            command = "rp_unownall",
+            alternative = "forceunownall"
+        },
+        {
+            command = "rp_unown",
+            alternative = "forceunown"
+        },
+        {
+            command = "rp_own",
+            alternative = "forceown"
+        },
+        {
+            command = "rp_tellall",
+            alternative = "admintellall"
+        },
+        {
+            command = "rp_tell",
+            alternative = "admintell"
+        },
+        {
+            command = "rp_teamunban",
+            alternative = "teamunban"
+        },
+        {
+            command = "rp_teamban",
+            alternative = "teamban"
+        },
+        {
+            command = "rp_setsalary",
+            alternative = "setmoney"
+        },
+        {
+            command = "rp_setmoney",
+            alternative = "setmoney"
+        },
+        {
+            command = "rp_revokelicense",
+            alternative = "unsetlicense"
+        },
+        {
+            command = "rp_givelicense",
+            alternative = "setlicense"
+        },
+        {
+            command = "rp_unlockdown",
+            alternative = "unlockdown"
+        },
+        {
+            command = "rp_lockdown",
+            alternative = "lockdown"
+        },
+        {
+            command = "rp_unarrest",
+            alternative = "unarrest"
+        },
+        {
+            command = "rp_arrest",
+            alternative = "arrest"
+        },
+        {
+            command = "rp_cancelvote",
+            alternative = "forcecancelvote"
+        },
     }
 
     local lastDeprecated = 0
     local function msgDeprecated(cmd, ply)
         if CurTime() - lastDeprecated < 0.5 then return end
         lastDeprecated = CurTime()
-
         DarkRP.notify(ply, 1, 4, ("This command has been deprecated. Please use 'DarkRP %s' or '/%s' instead."):format(cmd.alternative, cmd.alternative))
     end
 
@@ -269,7 +306,6 @@ if SERVER and not DarkRP.disabledDefaults["workarounds"]["Deprecated console com
         concommand.Add(cmd.command, fp{msgDeprecated, cmd})
     end
 end
-
 
 --[[-------------------------------------------------------------------------
 CAC tends to kick innocent people when they use the x86_64 branch. Since the
@@ -293,37 +329,32 @@ Head to the section about disabled workarounds and make sure the following line 
 if SERVER and not DarkRP.disabledDefaults["workarounds"]["disable CAC"] then
     timer.Create("disable CAC", 2, 1, function()
         if not CAC then return end
-
         --remove CAC's hooks
-        hook.Remove("CheckPassword"      , "CAC.CheckPassword")
-        hook.Remove("Initialize"         , "CAC.LuaWhitelistController.261b4998")
-        hook.Remove("OnNPCKilled"        , "CAC.Aimbotdetector")
-        hook.Remove("PlayerDeath"        , "CAC.AimbotDetector")
-        hook.Remove("PlayerInitialSpawn" , "CAC.PlayerMonitor.PlayerConnected")
-        hook.Remove("PlayerSay"          , "CAC.ChatCommands")
-        hook.Remove("SetupMove"          , "CAC.MoveHandler")
-        hook.Remove("ShutDown"           , "CAC")
-        hook.Remove("Think"              , "CAC.DelayedCalls")
-        hook.Remove("Tick"               , "CAC.PlayerMonitor.ProcessQueue")
-        hook.Remove("player_disconnect"  , "CAC.PlayerMonitor.PlayerDisconnected")
-
+        hook.Remove("CheckPassword", "CAC.CheckPassword")
+        hook.Remove("Initialize", "CAC.LuaWhitelistController.261b4998")
+        hook.Remove("OnNPCKilled", "CAC.Aimbotdetector")
+        hook.Remove("PlayerDeath", "CAC.AimbotDetector")
+        hook.Remove("PlayerInitialSpawn", "CAC.PlayerMonitor.PlayerConnected")
+        hook.Remove("PlayerSay", "CAC.ChatCommands")
+        hook.Remove("SetupMove", "CAC.MoveHandler")
+        hook.Remove("ShutDown", "CAC")
+        hook.Remove("Think", "CAC.DelayedCalls")
+        hook.Remove("Tick", "CAC.PlayerMonitor.ProcessQueue")
+        hook.Remove("player_disconnect", "CAC.PlayerMonitor.PlayerDisconnected")
         --remove CAC's timers
         timer.Remove("CAC.AdminUIBootstrapper")
         timer.Remove("CAC.DataUpdater")
         timer.Remove("CAC.IncidentController")
         timer.Remove("CAC.LivePlayerSessionController")
         timer.Remove("CAC.SettingsSaver")
-
         --remove CAC's net receivers
         net.Receivers[CAC.Identifiers.MultiplexedDataChannelName] = nil
         net.Receivers[CAC.Identifiers.AdminChannelName] = nil
-
-        for k,v in pairs(CAC) do
+        for k, v in pairs(CAC) do
             if istable(CAC[k]) and CAC[k].dtor then CAC[k]:dtor() end
         end
 
         CAC = nil
-
         MsgC(Color(0, 255, 0), "Cake Anticheat (CAC)", color_white, " has been ", Color(255, 0, 0), "DISABLED\n", Color(253, 151, 31), disableCacMsg)
     end)
 end

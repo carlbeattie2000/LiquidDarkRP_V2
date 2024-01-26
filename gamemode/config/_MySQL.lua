@@ -1,4 +1,4 @@
-RP_MySQLConfig = {}
+﻿RP_MySQLConfig = {}
 RP_MySQLConfig.EnableMySQL = false
 RP_MySQLConfig.Host = "127.0.0.1"
 RP_MySQLConfig.Username = "user"

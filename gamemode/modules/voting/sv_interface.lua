@@ -1,4 +1,4 @@
-DarkRP.createQuestion = DarkRP.stub{
+﻿DarkRP.createQuestion = DarkRP.stub{
     name = "createQuestion",
     description = "Ask someone a question.",
     parameters = {
@@ -51,8 +51,7 @@ DarkRP.createQuestion = DarkRP.stub{
             optional = true
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -67,8 +66,7 @@ DarkRP.destroyQuestion = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -83,8 +81,7 @@ DarkRP.destroyQuestionsWithEnt = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -162,16 +159,14 @@ DarkRP.destroyVotesWithEnt = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
 DarkRP.destroyLastVote = DarkRP.stub{
     name = "destroyLastVote",
     description = "Destroy the last created vote.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "destroyed",
@@ -250,6 +245,5 @@ DarkRP.hookStub{
             type = "table"
         }
     },
-    returns = {
-    }
+    returns = {}
 }

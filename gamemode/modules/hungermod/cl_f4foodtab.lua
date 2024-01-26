@@ -1,13 +1,9 @@
-local PANEL = {}
-
+﻿local PANEL = {}
 local function canBuyFood(food)
     local ply = LocalPlayer()
-
     if (food.requiresCook == nil or food.requiresCook == true) and not ply:isCook() then return false, true end
     if food.customCheck and not food.customCheck(LocalPlayer()) then return false, false end
-
     if not ply:canAfford(food.price) then return false, false end
-
     return true
 end
 
@@ -33,13 +29,9 @@ function PANEL:PerformLayout()
         local canBuy, important = canBuyFood(v.DarkRPItem)
         v:SetDisabled(not canBuy, important)
     end
+
     self.BaseClass.PerformLayout(self)
 end
 
 derma.DefineControl("F4MenuFood", "DarkRP F4 Food Tab", PANEL, "F4MenuEntitiesBase")
-
-hook.Add("F4MenuTabs", "HungerMod_F4Tabs", function()
-    if not table.IsEmpty(FoodItems) then
-        DarkRP.addF4MenuTab(DarkRP.getPhrase("Food"), vgui.Create("F4MenuFood"))
-    end
-end)
+hook.Add("F4MenuTabs", "HungerMod_F4Tabs", function() if not table.IsEmpty(FoodItems) then DarkRP.addF4MenuTab(DarkRP.getPhrase("Food"), vgui.Create("F4MenuFood")) end end)

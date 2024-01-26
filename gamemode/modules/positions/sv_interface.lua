@@ -1,4 +1,4 @@
-DarkRP.storeJailPos = DarkRP.stub{
+﻿DarkRP.storeJailPos = DarkRP.stub{
     name = "storeJailPos",
     description = "Store a jailposition from a player's location.",
     parameters = {
@@ -15,8 +15,7 @@ DarkRP.storeJailPos = DarkRP.stub{
             optional = true
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -31,8 +30,7 @@ DarkRP.setJailPos = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -47,8 +45,7 @@ DarkRP.addJailPos = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -76,8 +73,7 @@ DarkRP.retrieveJailPos = DarkRP.stub{
 DarkRP.jailPosCount = DarkRP.stub{
     name = "jailPosCount",
     description = "The amount of jail positions in the current map.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "count",
@@ -105,9 +101,7 @@ DarkRP.storeTeamSpawnPos = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -128,9 +122,7 @@ DarkRP.addTeamSpawnPos = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -151,8 +143,7 @@ DarkRP.removeTeamSpawnPos = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 

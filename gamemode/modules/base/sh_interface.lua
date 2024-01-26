@@ -1,4 +1,4 @@
-DarkRP.registerDarkRPVar = DarkRP.stub{
+﻿DarkRP.registerDarkRPVar = DarkRP.stub{
     name = "registerDarkRPVar",
     description = "Register a DarkRPVar by name. You should definitely register DarkRPVars. Registering DarkRPVars will make networking much more efficient.",
     parameters = {
@@ -21,8 +21,7 @@ DarkRP.registerDarkRPVar = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -43,8 +42,7 @@ DarkRP.writeNetDarkRPVar = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -59,16 +57,14 @@ DarkRP.writeNetDarkRPVarRemoval = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
 DarkRP.readNetDarkRPVar = DarkRP.stub{
     name = "readNetDarkRPVar",
     description = "Internal function. You probably shouldn't need this. DarkRP calls this function when reading DarkRPVar net messages. This function reads the net data for a specific DarkRPVar.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "name",
@@ -87,8 +83,7 @@ DarkRP.readNetDarkRPVar = DarkRP.stub{
 DarkRP.readNetDarkRPVarRemoval = DarkRP.stub{
     name = "readNetDarkRPVarRemoval",
     description = "Internal function. You probably shouldn't need this. DarkRP calls this function when reading DarkRPVar net messages. This function the removal of a DarkRPVar.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "name",
@@ -175,7 +170,6 @@ DarkRP.explodeArg = DarkRP.stub{
     },
     metatable = DarkRP
 }
-
 
 DarkRP.formatMoney = DarkRP.stub{
     name = "formatMoney",
@@ -285,7 +279,6 @@ DarkRP.error = DarkRP.stub{
             type = "number",
             optional = true
         },
-
     },
     returns = {
         {
@@ -336,7 +329,6 @@ DarkRP.errorNoHalt = DarkRP.stub{
             type = "number",
             optional = true
         },
-
     },
     returns = {
         {
@@ -357,9 +349,7 @@ DarkRP.errorNoHalt = DarkRP.stub{
 DarkRP.stub{
     name = "SteamName",
     description = "Retrieve a player's real (steam) name.",
-    parameters = {
-
-    },
+    parameters = {},
     returns = {
         {
             name = "name",
@@ -373,8 +363,7 @@ DarkRP.stub{
 DarkRP.PLAYER.getJobTable = DarkRP.stub{
     name = "getJobTable",
     description = "Get the job table of a player.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "job",
@@ -416,8 +405,7 @@ DarkRP.PLAYER.getAgenda = DarkRP.stub{
     name = "getAgenda",
     description = "Get the agenda a player manages.",
     deprecated = "Use ply:getAgendaTable() instead.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "agenda",
@@ -431,8 +419,7 @@ DarkRP.PLAYER.getAgenda = DarkRP.stub{
 DarkRP.PLAYER.getAgendaTable = DarkRP.stub{
     name = "getAgendaTable",
     description = "Get the agenda a player can see. Note: when a player is not the manager of an agenda, it returns the agenda of the manager.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "agenda",
@@ -545,8 +532,7 @@ DarkRP.hookStub{
             type = "Player"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 --[[---------------------------------------------------------------------------
@@ -578,8 +564,8 @@ DarkRP.createJob = DarkRP.stub{
     },
     metatable = DarkRP
 }
-AddExtraTeam = DarkRP.createJob
 
+AddExtraTeam = DarkRP.createJob
 DarkRP.removeJob = DarkRP.stub{
     name = "removeJob",
     description = "Remove a job from DarkRP.",
@@ -591,8 +577,7 @@ DarkRP.removeJob = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -607,8 +592,7 @@ DarkRP.removeShipment = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -623,8 +607,7 @@ DarkRP.removeVehicle = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -639,8 +622,7 @@ DarkRP.removeEntity = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -655,8 +637,7 @@ DarkRP.removeGroupChat = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -671,8 +652,7 @@ DarkRP.removeAmmoType = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -687,8 +667,7 @@ DarkRP.removeEntityGroup = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -703,8 +682,7 @@ DarkRP.removeAgenda = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -719,8 +697,7 @@ DarkRP.removeDemoteGroup = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -741,12 +718,11 @@ DarkRP.createEntityGroup = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
-AddDoorGroup = DarkRP.createEntityGroup
 
+AddDoorGroup = DarkRP.createEntityGroup
 DarkRP.createShipment = DarkRP.stub{
     name = "createShipment",
     description = "Create a shipment for DarkRP.",
@@ -764,12 +740,11 @@ DarkRP.createShipment = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
-AddCustomShipment = DarkRP.createShipment
 
+AddCustomShipment = DarkRP.createShipment
 DarkRP.createVehicle = DarkRP.stub{
     name = "createVehicle",
     description = "Create a vehicle for DarkRP.",
@@ -787,12 +762,11 @@ DarkRP.createVehicle = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
-AddCustomVehicle = DarkRP.createVehicle
 
+AddCustomVehicle = DarkRP.createVehicle
 DarkRP.createEntity = DarkRP.stub{
     name = "createEntity",
     description = "Create a entity for DarkRP.",
@@ -810,12 +784,11 @@ DarkRP.createEntity = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
-AddCustomVehicle = DarkRP.createEntity
 
+AddCustomVehicle = DarkRP.createEntity
 DarkRP.createAgenda = DarkRP.stub{
     name = "createAgenda",
     description = "Create an agenda for groups of jobs to communicate.",
@@ -839,18 +812,15 @@ DarkRP.createAgenda = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
-AddAgenda = DarkRP.createAgenda
 
+AddAgenda = DarkRP.createAgenda
 DarkRP.getAgendas = DarkRP.stub{
     name = "getAgendas",
     description = "Get all agendas. Note: teams that share an agenda use the exact same agenda table. E.g. when you change the agenda of the CP, the agenda of the Chief will automatically be updated as well. Make sure this property is maintained when modifying the agenda table. Not maintaining that property will lead to players not seeing the right agenda text.",
-    parameters = {
-
-    },
+    parameters = {},
     returns = {
         {
             name = "agendas",
@@ -878,12 +848,11 @@ DarkRP.createGroupChat = DarkRP.stub{
             optional = true
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
-GM.AddGroupChat = DarkRP.createGroupChat
 
+GM.AddGroupChat = DarkRP.createGroupChat
 DarkRP.createAmmoType = DarkRP.stub{
     name = "createAmmoType",
     description = "Create an ammo type.",
@@ -901,8 +870,7 @@ DarkRP.createAmmoType = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -923,8 +891,7 @@ DarkRP.createDemoteGroup = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -952,9 +919,7 @@ DarkRP.getDemoteGroup = DarkRP.stub{
 DarkRP.getGroupChats = DarkRP.stub{
     name = "getGroupChats",
     description = "Get all group chats.",
-    parameters = {
-
-    },
+    parameters = {},
     returns = {
         {
             name = "set",
@@ -968,9 +933,7 @@ DarkRP.getGroupChats = DarkRP.stub{
 DarkRP.getDemoteGroups = DarkRP.stub{
     name = "getDemoteGroups",
     description = "Get all demote groups Every team in the same group will return the same object.",
-    parameters = {
-
-    },
+    parameters = {},
     returns = {
         {
             name = "set",
@@ -992,8 +955,7 @@ DarkRP.createCategory = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -1020,8 +982,7 @@ DarkRP.addToCategory = DarkRP.stub{
             optional = true
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -1042,16 +1003,14 @@ DarkRP.removeFromCategory = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
 DarkRP.getCategories = DarkRP.stub{
     name = "getCategories",
     description = "Get all categories for all F4 menu tabs.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "tbl",
@@ -1120,8 +1079,7 @@ DarkRP.hookStub{
             type = "any"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -1334,8 +1292,7 @@ DarkRP.hookStub{
             type = "table"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -1353,8 +1310,7 @@ DarkRP.hookStub{
             type = "table"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -1372,8 +1328,7 @@ DarkRP.hookStub{
             type = "table"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -1391,8 +1346,7 @@ DarkRP.hookStub{
             type = "table"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -1410,8 +1364,7 @@ DarkRP.hookStub{
             type = "table"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -1429,8 +1382,7 @@ DarkRP.hookStub{
             type = "table"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -1448,8 +1400,7 @@ DarkRP.hookStub{
             type = "table"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -1467,8 +1418,7 @@ DarkRP.hookStub{
             type = "table"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
@@ -1486,42 +1436,33 @@ DarkRP.hookStub{
             type = "table"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{
     name = "loadCustomDarkRPItems",
     description = "Runs right after the scripts from the DarkRPMod are run. You can add custom jobs, entities, shipments and whatever in this hook.",
-    parameters = {
-    },
-    returns = {
-    }
+    parameters = {},
+    returns = {}
 }
 
 DarkRP.hookStub{
     name = "postLoadCustomDarkRPItems",
     description = "Runs right after loadCustomDarkRPItems. All custom DarkRP content will be loaded by this time.",
-    parameters = {
-    },
-    returns = {
-    }
+    parameters = {},
+    returns = {}
 }
 
 DarkRP.hookStub{
     name = "DarkRPStartedLoading",
     description = "Runs at the very start of loading DarkRP. Not even sandbox has loaded here yet.",
-    parameters = {
-    },
-    returns = {
-    }
+    parameters = {},
+    returns = {}
 }
 
 DarkRP.hookStub{
     name = "DarkRPFinishedLoading",
     description = "Runs right after DarkRP itself has loaded. All DarkRPMod stuff (except for disabled_defaults) is loaded during this hook. NOTE! NO CUSTOM STUFF WILL BE AVAILABLE DURING THIS HOOK. USE `loadCustomDarkRPItems` INSTEAD IF YOU WANT THAT!",
-    parameters = {
-    },
-    returns = {
-    }
+    parameters = {},
+    returns = {}
 }

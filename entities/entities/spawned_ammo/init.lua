@@ -1,7 +1,5 @@
-AddCSLuaFile("shared.lua")
-
+﻿AddCSLuaFile("shared.lua")
 include("shared.lua")
-
 function ENT:Initialize()
     DarkRP.ValidatedPhysicsInit(self, SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
@@ -19,7 +17,6 @@ function ENT:Use(activator, caller)
     end
 
     hook.Call("playerPickedUpAmmo", nil, activator, self.amountGiven, self.ammoType, self)
-
     activator:GiveAmmo(self.amountGiven, self.ammoType)
     self:Remove()
 end
@@ -30,17 +27,12 @@ end
 
 function ENT:StartTouch(ent)
     -- the .USED var is also used in other mods for the same purpose
-    if ent.IsSpawnedAmmo ~= true or
-        self.ammoType ~= ent.ammoType or
-        self.hasMerged or ent.hasMerged then return end
-
+    if ent.IsSpawnedAmmo ~= true or self.ammoType ~= ent.ammoType or self.hasMerged or ent.hasMerged then return end
     ent.hasMerged = true
     ent.USED = true
-
     local selfAmount, entAmount = self.amountGiven, ent.amountGiven
     local totalAmount = selfAmount + entAmount
     self.amountGiven = totalAmount
-
     ent:Remove()
 end
 
@@ -69,6 +61,5 @@ DarkRP.hookStub{
             type = "Entity"
         }
     },
-    returns = {
-    },
+    returns = {},
 }

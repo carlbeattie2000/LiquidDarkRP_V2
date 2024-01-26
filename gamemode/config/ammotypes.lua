@@ -1,4 +1,4 @@
-DarkRP.createAmmoType("pistol", {
+﻿DarkRP.createAmmoType("pistol", {
     name = "Pistol ammo",
     model = "models/Items/BoxSRounds.mdl",
     price = 30,

@@ -1,4 +1,4 @@
-DarkRP.hookStub{
+﻿DarkRP.hookStub{
     name = "playerAFKDemoted",
     description = "When a player is demoted for being AFK.",
     parameters = {
@@ -47,8 +47,7 @@ DarkRP.hookStub{
             type = "boolean"
         }
     },
-    returns = {
-    }
+    returns = {}
 }
 
 DarkRP.hookStub{

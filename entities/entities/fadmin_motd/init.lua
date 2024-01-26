@@ -1,20 +1,13 @@
-AddCSLuaFile("cl_init.lua")
+﻿AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
-
 include("shared.lua")
-
 function ENT:Initialize()
     self:SetModel("models/props_wasteland/interior_fence002d.mdl")
     DarkRP.ValidatedPhysicsInit(self, SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
-
     local phys = self:GetPhysicsObject()
-
-    if phys:IsValid() then
-        phys:EnableMotion(false)
-    end
-
+    if phys:IsValid() then phys:EnableMotion(false) end
     self.SolidPos = self:GetPos()
     self.SolidAng = self:GetAngles()
     self:SetMaterial("models/props_lab/warp_sheet")
@@ -23,7 +16,6 @@ end
 function ENT:OnRemove()
     if not self.CanRemove and IsValid(self.target) then
         local Replace = ents.Create("fadmin_motd")
-
         Replace:SetPos(self.SolidPos)
         Replace:SetAngles(self.SolidAng)
         Replace:Spawn()
@@ -42,13 +34,11 @@ function ENT:SpawnFunction(ply, tr)
         v:Remove() --There can only be one motd per level
     end
 
-    local SpawnPos = tr.HitPos + tr.HitNormal * 16 + Vector(0,0,50)
-
+    local SpawnPos = tr.HitPos + tr.HitNormal * 16 + Vector(0, 0, 50)
     local ent = ents.Create("fadmin_motd")
     ent:SetPos(SpawnPos)
     local Ang = ply:EyeAngles()
-    ent:SetAngles(Angle(0, Ang.y-180, Ang.r))
-
+    ent:SetAngles(Angle(0, Ang.y - 180, Ang.r))
     ent:Spawn()
     ent:Activate()
 end

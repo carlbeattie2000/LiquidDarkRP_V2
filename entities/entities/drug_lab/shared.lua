@@ -1,6 +1,5 @@
-ENT.Base = "lab_base"
+﻿ENT.Base = "lab_base"
 ENT.PrintName = "Drug Lab"
-
 function ENT:initVars()
     self.model = "models/props_lab/crematorcase.mdl"
     self.initialPrice = GAMEMODE.Config.druglabdrugcost

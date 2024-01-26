@@ -1,4 +1,4 @@
-DarkRP.PLAYER.addMoney = DarkRP.stub{
+﻿DarkRP.PLAYER.addMoney = DarkRP.stub{
     name = "addMoney",
     description = "Give money to a player.",
     parameters = {
@@ -9,21 +9,17 @@ DarkRP.PLAYER.addMoney = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP.PLAYER
 }
 
 DarkRP.PLAYER.payDay = DarkRP.stub{
     name = "payDay",
     description = "Give a player their salary.",
-    parameters = {
-    },
-    returns = {
-    },
+    parameters = {},
+    returns = {},
     metatable = DarkRP.PLAYER
 }
-
 
 DarkRP.payPlayer = DarkRP.stub{
     name = "payPlayer",
@@ -48,8 +44,7 @@ DarkRP.payPlayer = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 

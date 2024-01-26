@@ -1,4 +1,4 @@
-DarkRP.createShipment("Desert eagle", {
+﻿DarkRP.createShipment("Desert eagle", {
     model = "models/weapons/w_pist_deagle.mdl",
     entity = "weapon_deagle2",
     price = 215,

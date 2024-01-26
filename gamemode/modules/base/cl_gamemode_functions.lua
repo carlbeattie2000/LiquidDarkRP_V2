@@ -1,31 +1,23 @@
-local GUIToggled = false
+﻿local GUIToggled = false
 local mouseX, mouseY = ScrW() / 2, ScrH() / 2
 function GM:ShowSpare1()
     local jobTable = LocalPlayer():getJobTable()
-
     -- We need to check for the existance of jobTable here, because in very rare edge cases, the player's team isn't set, when the getJobTable-function is called here.
-    if jobTable and jobTable.ShowSpare1 then
-        return jobTable.ShowSpare1(LocalPlayer())
-    end
-
+    if jobTable and jobTable.ShowSpare1 then return jobTable.ShowSpare1(LocalPlayer()) end
     GUIToggled = not GUIToggled
-
     if GUIToggled then
         gui.SetMousePos(mouseX, mouseY)
     else
         mouseX, mouseY = gui.MousePos()
     end
+
     gui.EnableScreenClicker(GUIToggled)
 end
 
 function GM:ShowSpare2()
     local jobTable = LocalPlayer():getJobTable()
-
     -- We need to check for the existance of jobTable here, because in very rare edge cases, the player's team isn't set, when the getJobTable-function is called here.
-    if jobTable and jobTable.ShowSpare2 then
-        return jobTable.ShowSpare2(LocalPlayer())
-    end
-
+    if jobTable and jobTable.ShowSpare2 then return jobTable.ShowSpare2(LocalPlayer()) end
     DarkRP.toggleF4Menu()
 end
 
@@ -34,6 +26,7 @@ function GM:PlayerStartVoice(ply)
         ply.DRPIsTalking = true
         return -- Not the original rectangle for yourself! ugh!
     end
+
     self.Sandbox.PlayerStartVoice(self, ply)
 end
 
@@ -58,12 +51,8 @@ local FKeyBinds = {
 
 function GM:PlayerBindPress(ply, bind, pressed)
     self.Sandbox.PlayerBindPress(self, ply, bind, pressed)
-
     local bnd = string.match(string.lower(bind), "gm_[a-z]+[12]?")
-    if bnd and FKeyBinds[bnd] then
-        hook.Call(FKeyBinds[bnd], GAMEMODE)
-    end
-
+    if bnd and FKeyBinds[bnd] then hook.Call(FKeyBinds[bnd], GAMEMODE) end
     if not self.Config.deadvoice and not ply:Alive() and string.find(string.lower(bind), "voicerecord") then return true end
 end
 
@@ -79,6 +68,6 @@ local function OnChangedTeam(um)
     hook.Call("teamChanged", GAMEMODE, oldTeam, newTeam) -- backwards compatibility
     hook.Call("OnPlayerChangedTeam", GAMEMODE, LocalPlayer(), oldTeam, newTeam)
 end
-usermessage.Hook("OnChangedTeam", OnChangedTeam)
 
+usermessage.Hook("OnChangedTeam", OnChangedTeam)
 timer.Simple(0, function() GAMEMODE.ShowTeam = DarkRP.openKeysMenu end)

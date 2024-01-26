@@ -1,4 +1,4 @@
-local function drawIndicator(ply)
+﻿local function drawIndicator(ply)
     if not ply:IsTyping() then
         if ply.indicator then
             ply.indicator:Remove()
@@ -9,16 +9,18 @@ local function drawIndicator(ply)
 
     local chatIndicator = hook.Call("DrawChatIndicator", nil, ply)
     if chatIndicator == true then return end
-
     local indicator = ply.indicator
     if not IsValid(indicator) then
         indicator = ClientsideModel("models/extras/info_speech.mdl", RENDERGROUP_OPAQUE)
-        if not IsValid(indicator) then return end -- In case the non networked entity limit is hit (still prints a red error message, but doesn't spam client console with lua errors)
+        if not IsValid(indicator) then -- In case the non networked entity limit is hit (still prints a red error message, but doesn't spam client console with lua errors)
+            return
+        end
+
         ply.indicator = indicator
     end
+
     indicator:SetNoDraw(true)
     indicator:SetModelScale(0.6)
-
     local ragdoll = ply:GetRagdollEntity()
     if IsValid(ragdoll) then
         local maxs = ragdoll:OBBMaxs()
@@ -32,7 +34,6 @@ local function drawIndicator(ply)
     angle.y = (angle.y + (360 * (curTime - (indicator.lastDraw or 0)))) % 360
     indicator:SetAngles(angle)
     indicator.lastDraw = curTime
-
     indicator:SetupBones()
     indicator:DrawModel()
 end
@@ -40,13 +41,9 @@ end
 hook.Add("PostPlayerDraw", "DarkRP_ChatIndicator", drawIndicator)
 hook.Add("CreateClientsideRagdoll", "DarkRP_ChatIndicator", function(ent, ragdoll)
     if not ent:IsPlayer() then return end
-
     local oldRenderOverride = ragdoll.RenderOverride -- Just in case - best be safe
     ragdoll.RenderOverride = function(self)
-        if ent:IsValid() then
-            drawIndicator(ent)
-        end
-
+        if ent:IsValid() then drawIndicator(ent) end
         if oldRenderOverride then
             oldRenderOverride(self)
         else
@@ -60,8 +57,9 @@ end)
 gameevent.Listen("player_disconnect")
 hook.Add("player_disconnect", "DarkRP_ChatIndicator", function(data)
     local ply = Player(data.userid)
-
-    if not IsValid(ply) then return end -- disconnected while joining
+    if not IsValid(ply) then -- disconnected while joining
+        return
+    end
 
     if ply.indicator then
         ply.indicator:Remove()

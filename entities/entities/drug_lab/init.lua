@@ -1,12 +1,8 @@
-AddCSLuaFile("shared.lua")
-
+﻿AddCSLuaFile("shared.lua")
 include("shared.lua")
-
 DEFINE_BASECLASS("lab_base")
-
 ENT.SeizeReward = 350
 ENT.SpawnOffset = Vector(0, 0, 35)
-
 function ENT:Initialize()
     BaseClass.Initialize(self)
     self.SID = self:Getowning_ent().SID
@@ -33,8 +29,6 @@ function ENT:createItem(activator)
     drug.nodupe = true
     drug:Setprice(self:Getprice() or self.initialPrice)
     drug:Spawn()
-    if not activator.maxDrugs then
-        activator.maxDrugs = 0
-    end
+    if not activator.maxDrugs then activator.maxDrugs = 0 end
     activator.maxDrugs = activator.maxDrugs + 1
 end

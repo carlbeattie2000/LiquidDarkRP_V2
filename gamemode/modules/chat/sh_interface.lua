@@ -1,4 +1,4 @@
-DarkRP.declareChatCommand = DarkRP.stub{
+﻿DarkRP.declareChatCommand = DarkRP.stub{
     name = "declareChatCommand",
     description = "Declare a chat command (describe it)",
     parameters = {
@@ -9,8 +9,7 @@ DarkRP.declareChatCommand = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -25,8 +24,7 @@ DarkRP.removeChatCommand = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -47,8 +45,7 @@ DarkRP.chatCommandAlias = DarkRP.stub{
             optional = false
         }
     },
-    returns = {
-    },
+    returns = {},
     metatable = DarkRP
 }
 
@@ -76,9 +73,7 @@ DarkRP.getChatCommand = DarkRP.stub{
 DarkRP.getChatCommands = DarkRP.stub{
     name = "getChatCommands",
     description = "Get every chat command.",
-    parameters = {
-
-    },
+    parameters = {},
     returns = {
         {
             name = "commands",
@@ -92,9 +87,7 @@ DarkRP.getChatCommands = DarkRP.stub{
 DarkRP.getSortedChatCommands = DarkRP.stub{
     name = "getSortedChatCommands",
     description = "Get every chat command, sorted by their name.",
-    parameters = {
-
-    },
+    parameters = {},
     returns = {
         {
             name = "commands",
@@ -108,8 +101,7 @@ DarkRP.getSortedChatCommands = DarkRP.stub{
 DarkRP.getIncompleteChatCommands = DarkRP.stub{
     name = "getIncompleteChatCommands",
     description = "chat commands that have been defined, but not declared. Information about these chat commands is missing.",
-    parameters = {
-    },
+    parameters = {},
     returns = {
         {
             name = "commands",

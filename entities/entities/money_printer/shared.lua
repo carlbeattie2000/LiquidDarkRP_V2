@@ -1,4 +1,4 @@
---Static Vars
+﻿--Static Vars
 ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
 ENT.PrintName = "Money Printer"
@@ -6,7 +6,6 @@ ENT.Author = "DarkRP Developers"
 ENT.Spawnable = false
 ENT.sparking = false
 ENT.IsMoneyPrinter = true
-
 function ENT:initVars()
     self.MoneyCount = GAMEMODE.Config.mprintamount
     self.OverheatChance = GAMEMODE.Config.printeroverheatchance
@@ -88,7 +87,6 @@ DarkRP.hookStub{
             type = "Entity"
         }
     },
-    returns = {
-    },
+    returns = {},
     realm = "Server"
 }
