@@ -80,10 +80,9 @@ function meta:drawOwnableInfo()
         end
     end
 
-    local x, y = ScrW() / 2, ScrH() / 2
     local text = table.concat(doorInfo, "\n")
-    draw.DrawNonParsedText(text, "Roboto20", x , y + 1 , black, 1)
-    draw.DrawNonParsedText(text, "Roboto20", x, y, (blocked or owned) and white or red, 1)
+
+    GUI_COMPONENTS.DrawTextBox(0, 0, ScrW() * 0.3, 40, true, true, text, 4, Color(100, 100, 100, 150), "Roboto20", false, true, false, true)
 end
 
 

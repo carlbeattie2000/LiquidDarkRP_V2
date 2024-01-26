@@ -1,5 +1,9 @@
 local components = {}
 
+local function safeText(text)
+    return string.match(text, "^#([a-zA-Z_]+)$") and text .. " " or text
+end
+
 local function centerXYToScreen(x, y, w, h, center_screen_x, center_screen_y)
   local center_x = IMGUI.CenterElement(0, ScrW(), w)
   local center_y = IMGUI.CenterElementY(0, ScrH(), h)
@@ -27,6 +31,16 @@ local function centerXYToScreen(x, y, w, h, center_screen_x, center_screen_y)
   }
 end
 
+local function GetMaxMultiLineTextWidth(text, font)
+  local textWidth, textHeight = 0, 0
+  for line in string.gmatch(text, "\n") do
+    local lineWidth, lineHeight = IMGUI.GetTextSize(line, font)
+    textWidth = math.max(textWidth, lineWidth)
+    textHeight = math.max(textHeight, lineHeight)
+  end
+  return textWidth, textHeight
+end
+
 function components.DrawCenteredShrinkableProgressBar(x,y,w,h,center_screen_x,center_screen_y,barXDecrease,barYDecrease,percentage,text,borderRadiusOuter,borderRadiusInner,foreground,background,font, color)
   color = color or Color(255, 255, 255, 255)
 
@@ -49,12 +63,13 @@ function components.DrawCenteredShrinkableProgressBar(x,y,w,h,center_screen_x,ce
   draw.SimpleText(text, font, textX, textY, color)
 end
 
-function components.DrawTextBox(x,y,w,h,center_screen_x,center_screen_y,text,borderRadius,background,font,color,fitText,growLeft)
+function components.DrawTextBox(x,y,w,h,center_screen_x,center_screen_y,text,borderRadius,background,font,color,fitText,growLeft,nonParsed)
   color = color or Color(255, 255, 255, 255)
   fitText = fitText or false
   growLeft = growLeft or false
+  nonParsed = nonParsed or false
 
-  local textWidth, textHeight = IMGUI.GetTextSize(text, font)
+  local textWidth, textHeight = GetMaxMultiLineTextWidth(text, font)
 
   if fitText then
     if w < textWidth then
@@ -74,7 +89,12 @@ function components.DrawTextBox(x,y,w,h,center_screen_x,center_screen_y,text,bor
   local textY = IMGUI.CenterElementY(y, h, textHeight)
 
   draw.RoundedBox(borderRadius, x, y, w, h, background)
-  draw.SimpleText(text, font, textX, textY, color)
+
+  if (nonParsed) then
+    draw.DrawNonParsedText(text, font, textX, textY, color, 1)
+  else
+    draw.SimpleText(text, font, textX, textY, color)
+ end
 end
 
 return components

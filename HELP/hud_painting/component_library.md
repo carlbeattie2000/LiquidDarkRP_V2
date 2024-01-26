@@ -15,7 +15,7 @@ The library is avaliable globaly client side by accessing GUI_COMPONENTS
 #### GUI_COMPONENTS.DrawTextBox()
 | Function||
 |----|----|
-| Function name      | ```GUI_COMPONENTS.DrawTextBox(number x, number y, number w, number h, boolean center_screen_x, boolean, center_screen_y, string text, number borderRadius, Color background, FontName font, Color color, boolean fitText, boolean growLeft)``` |
+| Function name      | ```GUI_COMPONENTS.DrawTextBox(number x, number y, number w, number h, boolean center_screen_x, boolean, center_screen_y, string text, number borderRadius, Color background, FontName font, Color color, boolean fitText, boolean growLeft, boolean nonParsed)``` |
 | Description   | Creates a resizable text box |
 | Returns | nil |
 | Part of Library: | LiquidDRP |
