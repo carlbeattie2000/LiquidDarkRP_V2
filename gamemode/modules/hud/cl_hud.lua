@@ -36,6 +36,7 @@ colors.red = Color(255, 0, 0, 255)
 colors.redTransparent = Color(200, 30, 30, 150)
 colors.white = color_white
 colors.white1 = Color(255, 255, 255, 200)
+colors.green = Color(9, 235, 62, 255)
 local function ReloadConVars()
     ConVars = {
         background = {86, 73, 61, 200},
@@ -86,16 +87,37 @@ local function DrawHealth()
     GUI_COMPONENTS.DrawCenteredShrinkableProgressBar(0, RelativeY + 45, HUDWidth * 0.7, 12, true, false, 4, 4, armor / 100, armorText, 6, 10, colors.blue, ConVars.Healthbackground, "Roboto12")
 end
 
+local walletInfoColor = colors.blue
 local function DrawInfo()
     local walletText = DarkRP.formatMoney(localplayer:getDarkRPVar("money"), "")
     local salaryText = string.format("+%s", DarkRP.formatMoney(localplayer:getDarkRPVar("salary"), ""))
     local jobText = localplayer:getDarkRPVar("job") or ""
     local rpName = localplayer:getDarkRPVar("rpname") or ""
-    GUI_COMPONENTS.DrawTextBox(RelativeX + HUDWidth - 20, RelativeY + 5, 30, 20, false, false, walletText, 5, colors.blue, "Roboto22Bold", false, true, true)
+    GUI_COMPONENTS.DrawTextBox(RelativeX + HUDWidth - 20, RelativeY + 5, 30, 20, false, false, walletText, 5, walletInfoColor, "Roboto22Bold", false, true, true)
     GUI_COMPONENTS.DrawTextBox(RelativeX + HUDWidth - 20, RelativeY + HUDHeight - 20, 30, 15, false, false, salaryText, 5, colors.blue, "Roboto16Bold", false, true, true)
     GUI_COMPONENTS.DrawTextBox(RelativeX + 50, RelativeY + HUDHeight - 20, 30, 15, false, false, jobText, 5, colors.gray1, "Roboto16Bold", false, true)
     GUI_COMPONENTS.DrawTextBox(RelativeX + 50, RelativeY + 5, 30, 20, false, false, rpName, 5, colors.gray1, "Roboto22Bold", false, true)
 end
+
+local function resetWalletInfoColor()
+  walletInfoColor = colors.blue
+end
+
+local function playerWalletInfoChanged(_, var, oldValue, newValue)
+  if var == "money" and newValue ~= nil and oldValue ~= nil and newValue > oldValue then
+    walletInfoColor = colors.green
+  elseif var == "money" then
+    walletInfoColor = colors.redTransparent
+  end
+
+  if timer.Exists("WalletColorReset") then
+    timer.Start("WalletColorReset")
+    return
+  end
+
+  timer.Create("WalletColorReset", 1.5, 1, resetWalletInfoColor)
+end
+hook.Add("DarkRPVarChanged", "LiquidRP_WalletHudInfoChanged", playerWalletInfoChanged)
 
 local CamPos = Vector(15, 4, 60)
 local LookAt = Vector(0, 0, 60)
