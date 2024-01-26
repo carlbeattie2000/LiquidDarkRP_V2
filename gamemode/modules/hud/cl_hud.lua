@@ -106,8 +106,36 @@ local function DrawInfo()
     GUI_COMPONENTS.DrawTextBox(RelativeX + HUDWidth - 20, RelativeY + 5, 30, 20, false, false, walletText, 5, colors.blue, "Roboto22Bold", false, true, true)
     GUI_COMPONENTS.DrawTextBox(RelativeX + HUDWidth - 20, RelativeY + HUDHeight - 20, 30, 15, false, false, salaryText, 5, colors.blue, "Roboto16Bold", false, true, true)
 
-    GUI_COMPONENTS.DrawTextBox(RelativeX + 20, RelativeY + HUDHeight - 20, 30, 15, false, false, jobText, 5, colors.gray1, "Roboto16Bold", false, true)
-    GUI_COMPONENTS.DrawTextBox(RelativeX + 20, RelativeY + 6, 30, 15, false, false, rpName, 5, colors.gray1, "Roboto20", false, true)
+    GUI_COMPONENTS.DrawTextBox(RelativeX + 50, RelativeY + HUDHeight - 20, 30, 15, false, false, jobText, 5, colors.gray1, "Roboto16Bold", false, true)
+    GUI_COMPONENTS.DrawTextBox(RelativeX + 50, RelativeY + 5, 30, 20, false, false, rpName, 5, colors.gray1, "Roboto22Bold", false, true)
+end
+
+local CamPos = Vector(15, 4, 60)
+local LookAt = Vector(0, 0, 60)
+local PlayerModelPanel = nil
+
+local function UpdatePlayerModelPanel()
+  PlayerModelPanel = vgui.Create("DModelPanel")
+
+  function PlayerModelPanel:LayoutEntity(Entity) return end
+
+  PlayerModelPanel:SetModel(localplayer:GetModel())
+  PlayerModelPanel:SetPos(RelativeX - 8, RelativeY + 30)
+  PlayerModelPanel:SetSize(60, 60)
+  PlayerModelPanel:ParentToHUD()
+  PlayerModelPanel.Entity:SetPos(PlayerModelPanel.Entity:GetPos() - Vector(0, 0, 4))
+  PlayerModelPanel:SetCamPos(CamPos)
+  PlayerModelPanel:SetLookAt(LookAt)
+end
+
+local function DrawPlayerHead()
+  if not PlayerModelPanel or localplayer:GetModel() ~= PlayerModelPanel.Entity:GetModel() then
+    if PlayerModelPanel ~= nil then
+      PlayerModelPanel:Remove()
+    end
+
+    UpdatePlayerModelPanel()
+  end
 end
 
 local Page = Material("icon16/page_white_text.png")
@@ -247,6 +275,7 @@ local function DrawHUD(gamemodeTable)
         draw.RoundedBox(6, hudX, hudY, HUDWidth, HUDHeight, ConVars.background);
 
         DrawHealth()
+        DrawPlayerHead()
         DrawInfo()
         GunLicense()
     end
