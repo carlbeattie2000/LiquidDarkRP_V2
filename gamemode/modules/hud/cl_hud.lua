@@ -33,6 +33,7 @@ colors.darkblack = Color(0, 0, 0, 200)
 colors.gray1 = Color(50, 50, 50, 150)
 colors.gray2 = Color(51, 58, 51, 100)
 colors.red = Color(255, 0, 0, 255)
+colors.redTransparent = Color(200, 30, 30, 150)
 colors.white = color_white
 colors.white1 = Color(255, 255, 255, 200)
 local function ReloadConVars()
@@ -242,6 +243,25 @@ local function DrawHUD(gamemodeTable)
     AdminTell()
 end
 
+local function DrawWantedHUD(gamemodeTable)
+    local shouldDraw = hook.Call("HUDShouldDraw", gamemodeTable, "DarkRP_HUD")
+    local isWanted = localplayer:getDarkRPVar("wanted") or false
+    Scrw, Scrh = ScrW(), ScrH()
+    if not shouldDraw or not isWanted then return end
+    local wantedHUDHeight = 40
+    local wantedHudX = IMGUI.CenterElement(0, Scrw, HUDWidth)
+    local wantedHudY = Scrh - HUDHeight - wantedHUDHeight - 5
+    shouldDraw = hook.Call("HUDShouldDraw", gamemodeTable, "LiquidRP_LocalWantedHUD")
+    shouldDraw = shouldDraw ~= false
+    if shouldDraw then
+        draw.RoundedBox(6, wantedHudX, wantedHudY, HUDWidth, wantedHUDHeight, colors.redTransparent)
+        local wantedText = "You are wanted for your offenses"
+        local wantedTextWidth, wantedTextHeight = IMGUI.GetTextSize(wantedText, "Roboto22Bold")
+        local textX, textY = IMGUI.CenterElement(wantedHudX, HUDWidth, wantedTextWidth), IMGUI.CenterElementY(wantedHudY, wantedHUDHeight, wantedTextHeight)
+        draw.SimpleText(wantedText, "Roboto22Bold", textX, textY)
+    end
+end
+
 --[[---------------------------------------------------------------------------
 Entity HUDPaint things
 ---------------------------------------------------------------------------]]
@@ -388,6 +408,7 @@ Actual HUDPaint hook
 function GM:HUDPaint()
     localplayer = localplayer or LocalPlayer()
     DrawHUD(self)
+    DrawWantedHUD(self)
     DrawEntityDisplay(self)
     self.Sandbox.HUDPaint(self)
 end
