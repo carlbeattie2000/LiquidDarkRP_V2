@@ -47,6 +47,7 @@ function components.DrawTextBox(x, y, w, h, center_screen_x, center_screen_y, te
     extraOptions = extraOptions or components.extraOptionsDefault()
     local textWidth, textHeight = IMGUI.GetMultiLineTextSize(text, font)
     if fitText and w < textWidth then w = textWidth end
+    if fitText and h < textHeight then h = textHeight end
     if growLeft then x = x - w end
     local updatedPos = centerXYToScreen(x, y, w, h, center_screen_x, center_screen_y)
     x = updatedPos[1]
