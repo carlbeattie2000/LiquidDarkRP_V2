@@ -49,17 +49,21 @@ function components.DrawCenteredShrinkableProgressBar(x,y,w,h,center_screen_x,ce
   draw.SimpleText(text, font, textX, textY, color)
 end
 
-function components.DrawTextBox(x,y,w,h,center_screen_x,center_screen_y,text,borderRadius,background,font,color,fitText)
+function components.DrawTextBox(x,y,w,h,center_screen_x,center_screen_y,text,borderRadius,background,font,color,fitText,growLeft)
   color = color or Color(255, 255, 255, 255)
   fitText = fitText or false
+  growLeft = growLeft or false
 
   local textWidth, textHeight = IMGUI.GetTextSize(text, font)
 
   if fitText then
     if w < textWidth then
       w = textWidth
-      x = x - textWidth / 1.2
     end
+  end
+
+  if growLeft then
+    x = x - w
   end
 
   local updatedPos = centerXYToScreen(x,y,w,h,center_screen_x,center_screen_y)

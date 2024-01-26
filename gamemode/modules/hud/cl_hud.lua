@@ -28,11 +28,11 @@ local plyMeta = FindMetaTable("Player")
 
 local colors = {}
 colors.black = color_black
-colors.blue = Color(17, 196, 251, 255)
+colors.blue = Color(0, 150, 255, 255)
 colors.brightred = Color(200, 30, 30, 255)
 colors.darkred = Color(0, 0, 70, 100)
 colors.darkblack = Color(0, 0, 0, 200)
-colors.gray1 = Color(0, 0, 0, 155)
+colors.gray1 = Color(50, 50, 50, 150)
 colors.gray2 = Color(51, 58, 51,100)
 colors.red = Color(255, 0, 0, 255)
 colors.white = color_white
@@ -40,7 +40,7 @@ colors.white1 = Color(255, 255, 255, 200)
 
 local function ReloadConVars()
     ConVars = {
-        background = {86, 73, 61, 100},
+        background = {86, 73, 61, 200},
         Healthbackground = {0,0,0,150},
         Healthforeground = {202,45,20,180},
         HealthText = {255,255,255,200},
@@ -99,16 +99,15 @@ end
 
 local function DrawInfo()
     local walletText = DarkRP.formatMoney(localplayer:getDarkRPVar("money"), "")
-    local salaryText = string.format("+%s", DarkRP.formatMoney(localplayer:getDarkRPVar("salary", "")))
-    local jobText = localplayer:getDarkRPVar("job")
-    local rpName = localplayer:getDarkRPVar("rpname")
+    local salaryText = string.format("+%s", DarkRP.formatMoney(localplayer:getDarkRPVar("salary"), ""))
+    local jobText = localplayer:getDarkRPVar("job") or ""
+    local rpName = localplayer:getDarkRPVar("rpname") or ""
 
-    -- TODO: Either create a new function to handle fiting a text box, inside a parent, or just handle it here or format the wallet further eg. 10Mil
-    -- Ok yes this is top priorty, should stick to x no matter the width, so maybe a boolean of left, or right, as right can be left as is.
-    GUI_COMPONENTS.DrawTextBox(RelativeX + HUDWidth - 40, RelativeY + 5, 30, 20, false, false, walletText, 5, Color(0, 150, 255, 255), "Roboto22Bold", false, true)
-    GUI_COMPONENTS.DrawTextBox(RelativeX + HUDWidth - 40, RelativeY + HUDHeight - 20, 30, 15, false, false, salaryText, 5, Color(0, 150, 255, 255), "Roboto16Bold", false, true)
-    GUI_COMPONENTS.DrawTextBox(RelativeX + 50, RelativeY + HUDHeight - 20, 30, 15, false, false, jobText, 5, Color(111, 140, 144, 255), "Roboto16Bold", false, true)
-    GUI_COMPONENTS.DrawTextBox(RelativeX + 72, RelativeY + 6, 30, 15, false, false, rpName, 5, Color(0, 0, 0, 0), "Roboto20", false, true)
+    GUI_COMPONENTS.DrawTextBox(RelativeX + HUDWidth - 20, RelativeY + 5, 30, 20, false, false, walletText, 5, colors.blue, "Roboto22Bold", false, true, true)
+    GUI_COMPONENTS.DrawTextBox(RelativeX + HUDWidth - 20, RelativeY + HUDHeight - 20, 30, 15, false, false, salaryText, 5, colors.blue, "Roboto16Bold", false, true, true)
+
+    GUI_COMPONENTS.DrawTextBox(RelativeX + 20, RelativeY + HUDHeight - 20, 30, 15, false, false, jobText, 5, colors.gray1, "Roboto16Bold", false, true)
+    GUI_COMPONENTS.DrawTextBox(RelativeX + 20, RelativeY + 6, 30, 15, false, false, rpName, 5, colors.gray1, "Roboto20", false, true)
 end
 
 local Page = Material("icon16/page_white_text.png")
