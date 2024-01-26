@@ -29,6 +29,42 @@ local function loadFonts()
         extended = true,
     })
 
+    surface.CreateFont("Roboto22Bold", {
+        size = 22,
+        weight = 800,
+        antialias = true,
+        shadow = false,
+        font = "Roboto",
+        extended = true,
+    })
+
+    surface.CreateFont("Roboto16Bold", {
+        size = 16,
+        weight = 800,
+        antialias = true,
+        shadow = false,
+        font = "Roboto",
+        extended = true,
+    })
+
+    surface.CreateFont("Roboto14", {
+        size = 14,
+        weight = 600,
+        antialias = true,
+        shadow = false,
+        font = "Roboto",
+        extended = true,
+    })
+
+    surface.CreateFont("Roboto12", {
+        size = 12,
+        weight = 600,
+        antialias = true,
+        shadow = false,
+        font = "Roboto",
+        extended = true,
+    })
+
     surface.CreateFont("Trebuchet18", {
         size = 18,
         weight = 500,

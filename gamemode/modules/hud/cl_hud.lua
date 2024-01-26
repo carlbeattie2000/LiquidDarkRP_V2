@@ -28,7 +28,7 @@ local plyMeta = FindMetaTable("Player")
 
 local colors = {}
 colors.black = color_black
-colors.blue = Color(0, 0, 255, 255)
+colors.blue = Color(17, 196, 251, 255)
 colors.brightred = Color(200, 30, 30, 255)
 colors.darkred = Color(0, 0, 70, 100)
 colors.darkblack = Color(0, 0, 0, 200)
@@ -40,9 +40,9 @@ colors.white1 = Color(255, 255, 255, 200)
 
 local function ReloadConVars()
     ConVars = {
-        background = {0,0,0,100},
-        Healthbackground = {0,0,0,200},
-        Healthforeground = {140,0,0,180},
+        background = {86, 73, 61, 100},
+        Healthbackground = {0,0,0,150},
+        Healthforeground = {202,45,20,180},
         HealthText = {255,255,255,200},
         Job1 = {0,0,150,200},
         Job2 = {0,0,0,255},
@@ -53,7 +53,7 @@ local function ReloadConVars()
     for name, Colour in pairs(ConVars) do
         ConVars[name] = {}
         for num, rgb in SortedPairs(Colour) do
-            local CVar = GetConVar(name .. num) or CreateClientConVar(name .. num, rgb, true, false)
+            local CVar = GetConVar(name .. num) or CreateClientConVar(name .. num, rgb, false, false)
             table.insert(ConVars[name], CVar:GetInt())
 
             if not cvars.GetConVarCallbacks(name .. num, false) then
@@ -66,8 +66,8 @@ local function ReloadConVars()
     end
 
 
-    HUDWidth =  (GetConVar("HudW") or CreateClientConVar("HudW", 240, true, false)):GetInt()
-    HUDHeight = (GetConVar("HudH") or CreateClientConVar("HudH", 115, true, false)):GetInt()
+    HUDWidth =  (GetConVar("HudW") or CreateClientConVar("HudW", ScrW() * 0.3, false, false)):GetInt()
+    HUDHeight = (GetConVar("HudH") or CreateClientConVar("HudH", 90, false, false)):GetInt()
 
     if not cvars.GetConVarCallbacks("HudW", false) and not cvars.GetConVarCallbacks("HudH", false) then
         cvars.AddChangeCallback("HudW", function() timer.Simple(0,ReloadConVars) end)
@@ -85,39 +85,30 @@ local function DrawHealth()
     local maxHealth = localplayer:GetMaxHealth()
     local myHealth = localplayer:Health()
     Health = math.min(maxHealth, (Health == myHealth and Health) or Lerp(0.1, Health, myHealth))
-
     local healthRatio = math.Min(Health / maxHealth, 1)
-    local rounded = math.Round(3 * healthRatio)
-    local Border = math.Min(6, rounded * rounded)
-    draw.RoundedBox(Border, RelativeX + 4, RelativeY - 30, HUDWidth - 8, 20, ConVars.Healthbackground)
-    draw.RoundedBox(Border, RelativeX + 5, RelativeY - 29, (HUDWidth - 9) * healthRatio, 18, ConVars.Healthforeground)
+    local healthText = math.Max(0, math.Round(myHealth))
 
-    draw.DrawNonParsedText(math.Max(0, math.Round(myHealth)), "DarkRPHUD2", RelativeX + 4 + (HUDWidth - 8) / 2, RelativeY - 32, ConVars.HealthText, 1)
+    GUI_COMPONENTS.DrawCenteredShrinkableProgressBar(0, RelativeY + 30, HUDWidth * 0.75, 14, true, false, 4, 4, healthRatio, healthText.." HP", 6, 10, ConVars.Healthforeground, ConVars.Healthbackground, "Roboto12")
 
     -- Armor
-    local armor = math.Clamp(localplayer:Armor(), 0, 100)
-    if armor ~= 0 then
-        draw.RoundedBox(2, RelativeX + 4, RelativeY - 15, (HUDWidth - 8) * armor / 100, 5, colors.blue)
-    end
+    local armor = math.Clamp(localplayer:Armor(), 0, 100) or 0
+    local armorText = (math.Clamp(localplayer:Armor(), 0, 100) or 0) .. " Armor"
+
+    GUI_COMPONENTS.DrawCenteredShrinkableProgressBar(0, RelativeY + 45, HUDWidth * 0.7, 12, true, false, 4, 4, armor / 100, armorText, 6, 10, colors.blue, ConVars.Healthbackground, "Roboto12")
 end
 
-local salaryText, JobWalletText
 local function DrawInfo()
-    salaryText = salaryText or DarkRP.getPhrase("salary", DarkRP.formatMoney(localplayer:getDarkRPVar("salary")), "")
+    local walletText = DarkRP.formatMoney(localplayer:getDarkRPVar("money"), "")
+    local salaryText = string.format("+%s", DarkRP.formatMoney(localplayer:getDarkRPVar("salary", "")))
+    local jobText = localplayer:getDarkRPVar("job")
+    local rpName = localplayer:getDarkRPVar("rpname")
 
-    JobWalletText = JobWalletText or string.format("%s\n%s",
-        DarkRP.getPhrase("job", localplayer:getDarkRPVar("job") or ""),
-        DarkRP.getPhrase("wallet", DarkRP.formatMoney(localplayer:getDarkRPVar("money")), "")
-    )
-
-    draw.DrawNonParsedText(salaryText, "DarkRPHUD2", RelativeX + 5, RelativeY - HUDHeight + 6, ConVars.salary1, 0)
-    draw.DrawNonParsedText(salaryText, "DarkRPHUD2", RelativeX + 4, RelativeY - HUDHeight + 5, ConVars.salary2, 0)
-
-    surface.SetFont("DarkRPHUD2")
-    local _, h = surface.GetTextSize(salaryText)
-
-    draw.DrawNonParsedText(JobWalletText, "DarkRPHUD2", RelativeX + 5, RelativeY - HUDHeight + h + 6, ConVars.Job1, 0)
-    draw.DrawNonParsedText(JobWalletText, "DarkRPHUD2", RelativeX + 4, RelativeY - HUDHeight + h + 5, ConVars.Job2, 0)
+    -- TODO: Either create a new function to handle fiting a text box, inside a parent, or just handle it here or format the wallet further eg. 10Mil
+    -- Ok yes this is top priorty, should stick to x no matter the width, so maybe a boolean of left, or right, as right can be left as is.
+    GUI_COMPONENTS.DrawTextBox(RelativeX + HUDWidth - 40, RelativeY + 5, 30, 20, false, false, walletText, 5, Color(0, 150, 255, 255), "Roboto22Bold", false, true)
+    GUI_COMPONENTS.DrawTextBox(RelativeX + HUDWidth - 40, RelativeY + HUDHeight - 20, 30, 15, false, false, salaryText, 5, Color(0, 150, 255, 255), "Roboto16Bold", false, true)
+    GUI_COMPONENTS.DrawTextBox(RelativeX + 50, RelativeY + HUDHeight - 20, 30, 15, false, false, jobText, 5, Color(111, 140, 144, 255), "Roboto16Bold", false, true)
+    GUI_COMPONENTS.DrawTextBox(RelativeX + 72, RelativeY + 6, 30, 15, false, false, rpName, 5, Color(0, 0, 0, 0), "Roboto20", false, true)
 end
 
 local Page = Material("icon16/page_white_text.png")
@@ -237,18 +228,25 @@ end)
 --[[---------------------------------------------------------------------------
 Drawing the HUD elements such as Health etc.
 ---------------------------------------------------------------------------]]
+local function centerX(maxX, width)
+  return (maxX / 2) - (width / 2)
+end
+
 local function DrawHUD(gamemodeTable)
     local shouldDraw = hook.Call("HUDShouldDraw", gamemodeTable, "DarkRP_HUD")
     if shouldDraw == false then return end
 
     Scrw, Scrh = ScrW(), ScrH()
-    RelativeX, RelativeY = 0, Scrh
+    local hudX = IMGUI.CenterElement(0, Scrw, HUDWidth)
+    local hudY = Scrh - HUDHeight
+    RelativeX, RelativeY = hudX, hudY
 
     shouldDraw = hook.Call("HUDShouldDraw", gamemodeTable, "DarkRP_LocalPlayerHUD")
     shouldDraw = shouldDraw ~= false
     if shouldDraw then
         --Background
-        draw.RoundedBox(6, 0, Scrh - HUDHeight, HUDWidth, HUDHeight, ConVars.background)
+        draw.RoundedBox(6, hudX, hudY, HUDWidth, HUDHeight, ConVars.background);
+
         DrawHealth()
         DrawInfo()
         GunLicense()

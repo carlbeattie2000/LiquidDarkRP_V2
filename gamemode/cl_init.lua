@@ -2,7 +2,7 @@ hook.Run("DarkRPStartedLoading")
 
 GM.Version = "2.7.0"
 GM.Name = "DarkRP"
-GM.Author = "By FPtje Falco et al."
+GM.Author = "By FPtje Falco et al, Jackool, Deadman123 & CarlBeattie2000"
 
 DeriveGamemode("sandbox")
 DEFINE_BASECLASS("gamemode_sandbox")
@@ -30,6 +30,8 @@ end
 
 GM.Config = {} -- config table
 GM.NoLicense = GM.NoLicense or {}
+IMGUI = include("libraries/imgui.lua")
+GUI_COMPONENTS = include("libraries/gui_components.lua");
 
 include("config/config.lua")
 include("libraries/sh_cami.lua")

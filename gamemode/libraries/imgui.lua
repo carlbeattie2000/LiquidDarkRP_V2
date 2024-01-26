@@ -474,5 +474,28 @@ function imgui.xTextButton(text, font, x, y, w, h, borderWidth, color, hoverClr,
 	return clicked
 end
 
+function imgui.CenterElement(parentX, parentWidth, childWidth)
+  return parentX + (parentWidth - childWidth) / 2
+end
+
+function imgui.CenterElementY(parentY, parentHeight, childHeight)
+  return parentY + (parentHeight - childHeight) / 2;
+end
+
+function imgui.GetTextWidth(text, font)
+  surface.SetFont(font)
+  return select(1, surface.GetTextSize(text))
+end
+
+function imgui.GetTextHeight(text, font)
+  surface.SetFont(font)
+  return select(2, surface.GetTextSize(text))
+end
+
+function imgui.GetTextSize(text, font)
+  surface.SetFont(font)
+  return surface.GetTextSize(text)
+end
+
 return imgui
 
