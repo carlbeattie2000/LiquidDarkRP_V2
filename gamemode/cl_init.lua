@@ -25,7 +25,7 @@ end
 GM.Config = {} -- config table
 GM.NoLicense = GM.NoLicense or {}
 IMGUI = include("libraries/imgui.lua")
-GUI_COMPONENTS = include("libraries/gui_components.lua")
+GUI_COMPONENTS = include("libraries/hud_components.lua")
 include("config/config.lua")
 include("libraries/sh_cami.lua")
 include("libraries/simplerr.lua")

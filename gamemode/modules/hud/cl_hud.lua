@@ -331,6 +331,9 @@ plyMeta.drawWantedInfo = plyMeta.drawWantedInfo or function(self)
     if not pos:isInSight({localplayer, self}) then return end
     pos.z = pos.z + 10
     pos = pos:ToScreen()
+
+    draw.RoundedBox(6, pos.x + 1, pos.y + 1, 100, 70, colors.black)
+
     if GAMEMODE.Config.showname then
         local nick, plyTeam = self:Nick(), self:Team()
         draw.DrawNonParsedText(nick, "DarkRPHUD2", pos.x + 1, pos.y + 1, colors.black, 1)

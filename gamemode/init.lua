@@ -5,7 +5,7 @@ GM.Author = "By FPtje Falco et al."
 DeriveGamemode("sandbox")
 DEFINE_BASECLASS("gamemode_sandbox")
 GM.Sandbox = BaseClass
-AddCSLuaFile("libraries/gui_components.lua")
+AddCSLuaFile("libraries/hud_components.lua")
 AddCSLuaFile("libraries/imgui.lua")
 AddCSLuaFile("libraries/sh_cami.lua")
 AddCSLuaFile("libraries/simplerr.lua")
