@@ -64,4 +64,68 @@ function components.DrawTextBox(x, y, w, h, center_screen_x, center_screen_y, te
         draw.SimpleText(text, font, textX, textY, color, extraOptions.textOptions.xAlign)
     end
 end
+
+-- Grid System
+components.grids = {}
+
+components.grids.CreateGrid = function (self, x, y, w, h, rows, columns,  gap, resize, col_w)
+  if self and self.init then return end
+  local grid_table = {}
+
+  grid_table.init = true
+  grid_table.x = x;
+  grid_table.y = y;
+  grid_table.w = w;
+  grid_table.h = h;
+  grid_table.rows = rows or 0;
+  grid_table.columns = columns or 0;
+  grid_table.gap = gap or 2;
+  grid_table.resize = resize or false;
+  grid_table.col_w = col_w or 0
+  grid_table.grid_items = {};
+  grid_table.items = 0;
+
+  setmetatable(grid_table, {__index = components.grids})
+
+  return grid_table
+end
+
+components.grids.addChild = function (self, w, h, row, column)
+  row = row or false;
+  column = column or false;
+
+  if w > self.w and not self.resize then
+    print("Warning! Your grid content will be wider than the grid.")
+  end
+
+  if h > self.h and not self.resize then
+    print("Warning! Your grid content will be taller than the grid.")
+  end
+  if self.rows == 0 and self.columns == 0 then
+    local row_item = self:addRow(w, h, row)
+    return row_item;
+  end
+end
+
+components.grids.addRow = function (self, w, h, row)
+  row = row or false
+  local lastY = 0
+  if self.items == 0 then
+    lastY = self.y + self.gap
+  else
+    for _, v in ipairs(self.grid_items) do
+      lastY = v.y + v.h + self.gap;
+    end
+  end
+  local row_item = {}
+  row_item.x = self.x;
+  row_item.y = lastY;
+  row_item.w = w;
+  row_item.h = h;
+  table.insert(self.grid_items, row_item)
+  self.items = self.items + 1;
+  return row_item;
+end
+
+
 return components

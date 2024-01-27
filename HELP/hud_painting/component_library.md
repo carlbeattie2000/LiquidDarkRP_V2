@@ -20,3 +20,12 @@ The library is avaliable globaly client side by accessing GUI_COMPONENTS
 | Returns | nil |
 | Part of Library: | LiquidDRP |
 | Realm |<div style="width: 50px; height: 50px; background-color: #dea909; border-radius: 10px;"></div> |
+
+#### GUI_COMPONENTS.grids:CreateGrid()
+| Function||
+|----|----|
+| Function name      | ```GUI_COMPONENTS.grids:CreateGrid(number x, number y, number w, number h, number rows, number columns, number gap, boolean resize, number col_w)``` |
+| Description   | Creates a grid system (Warning WIP) |
+| Returns | grid table |
+| Part of Library: | LiquidDRP |
+| Realm |<div style="width: 50px; height: 50px; background-color: #dea909; border-radius: 10px;"></div> |
