@@ -80,11 +80,11 @@ local function DrawHealth()
     Health = math.min(maxHealth, (Health == myHealth and Health) or Lerp(0.1, Health, myHealth))
     local healthRatio = math.Min(Health / maxHealth, 1)
     local healthText = math.Max(0, math.Round(myHealth))
-    GUI_COMPONENTS.DrawCenteredShrinkableProgressBar(0, RelativeY + 30, HUDWidth * 0.75, 14, true, false, 4, 4, healthRatio, healthText .. " HP", 6, 10, ConVars.Healthforeground, ConVars.Healthbackground, "Roboto12")
+    HUD_COMPONENTS.DrawCenteredShrinkableProgressBar(0, RelativeY + 30, HUDWidth * 0.75, 14, true, false, 4, 4, healthRatio, healthText .. " HP", 6, 10, ConVars.Healthforeground, ConVars.Healthbackground, "Roboto12")
     -- Armor
     local armor = math.Clamp(localplayer:Armor(), 0, 100) or 0
     local armorText = (math.Clamp(localplayer:Armor(), 0, 100) or 0) .. " Armor"
-    GUI_COMPONENTS.DrawCenteredShrinkableProgressBar(0, RelativeY + 45, HUDWidth * 0.7, 12, true, false, 4, 4, armor / 100, armorText, 6, 10, colors.blue, ConVars.Healthbackground, "Roboto12")
+    HUD_COMPONENTS.DrawCenteredShrinkableProgressBar(0, RelativeY + 45, HUDWidth * 0.7, 12, true, false, 4, 4, armor / 100, armorText, 6, 10, colors.blue, ConVars.Healthbackground, "Roboto12")
 end
 
 local walletInfoColor = colors.blue
@@ -93,10 +93,10 @@ local function DrawInfo()
     local salaryText = string.format("+%s", DarkRP.formatMoney(localplayer:getDarkRPVar("salary"), ""))
     local jobText = localplayer:getDarkRPVar("job") or ""
     local rpName = localplayer:getDarkRPVar("rpname") or ""
-    GUI_COMPONENTS.DrawTextBox(RelativeX + HUDWidth - 20, RelativeY + 5, 30, 20, false, false, walletText, 5, walletInfoColor, "Roboto22Bold", false, true, true)
-    GUI_COMPONENTS.DrawTextBox(RelativeX + HUDWidth - 20, RelativeY + HUDHeight - 20, 30, 15, false, false, salaryText, 5, colors.blue, "Roboto16Bold", false, true, true)
-    GUI_COMPONENTS.DrawTextBox(RelativeX + 50, RelativeY + HUDHeight - 20, 30, 15, false, false, jobText, 5, colors.gray1, "Roboto16Bold", false, true)
-    GUI_COMPONENTS.DrawTextBox(RelativeX + 50, RelativeY + 5, 30, 20, false, false, rpName, 5, colors.gray1, "Roboto22Bold", false, true)
+    HUD_COMPONENTS.DrawTextBox(RelativeX + HUDWidth - 20, RelativeY + 5, 30, 20, false, false, walletText, 5, walletInfoColor, "Roboto22Bold", false, true, true)
+    HUD_COMPONENTS.DrawTextBox(RelativeX + HUDWidth - 20, RelativeY + HUDHeight - 20, 30, 15, false, false, salaryText, 5, colors.blue, "Roboto16Bold", false, true, true)
+    HUD_COMPONENTS.DrawTextBox(RelativeX + 50, RelativeY + HUDHeight - 20, 30, 15, false, false, jobText, 5, colors.gray1, "Roboto16Bold", false, true)
+    HUD_COMPONENTS.DrawTextBox(RelativeX + 50, RelativeY + 5, 30, 20, false, false, rpName, 5, colors.gray1, "Roboto22Bold", false, true)
 end
 
 local function resetWalletInfoColor()

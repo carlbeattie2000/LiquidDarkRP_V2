@@ -62,10 +62,10 @@ function meta:drawOwnableInfo()
     end
 
     local text = table.concat(doorInfo, "\n")
-    local textBoxOptions = GUI_COMPONENTS.extraOptionsDefault()
+    local textBoxOptions = HUD_COMPONENTS.extraOptionsDefault()
     textBoxOptions.textOptions.nonParsed = true
     textBoxOptions.textOptions.xAlign = TEXT_ALIGN_CENTER
-    GUI_COMPONENTS.DrawTextBox(0, 0, ScrW() * 0.3, 40, true, true, text, 4, Color(100, 100, 100, 150), "Roboto20", false, true, false, textBoxOptions)
+    HUD_COMPONENTS.DrawTextBox(0, 0, ScrW() * 0.3, 40, true, true, text, 4, Color(100, 100, 100, 150), "Roboto20", false, true, false, textBoxOptions)
 end
 
 --[[---------------------------------------------------------------------------
