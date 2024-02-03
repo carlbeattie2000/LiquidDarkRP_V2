@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>LiquidRP Blog</title>
+        <link>https://your-docusaurus-site.example.com/blog</link>
+        <description>LiquidRP Blog</description>
+        <lastBuildDate>Sat, 03 Feb 2024 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <language>en</language>
+        <item>
+            <title><![CDATA[Welcome]]></title>
+            <link>https://your-docusaurus-site.example.com/blog/welcome</link>
+            <guid>https://your-docusaurus-site.example.com/blog/welcome</guid>
+            <pubDate>Sat, 03 Feb 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[This documentation serves as a comprehensive resource for tracking my progress and developments. Additionally, it provides an open invitation for others to clone the project, make modifications, or contribute enhancements. It's a platform for fostering collaboration, sharing knowledge, and collectively improving the project.]]></description>
+            <content:encoded><![CDATA[<p>This documentation serves as a comprehensive resource for tracking my progress and developments. Additionally, it provides an open invitation for others to clone the project, make modifications, or contribute enhancements. It's a platform for fostering collaboration, sharing knowledge, and collectively improving the project.</p>]]></content:encoded>
+        </item>
+    </channel>
+</rss>
