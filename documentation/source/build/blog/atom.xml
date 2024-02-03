@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://your-docusaurus-site.example.com/blog</id>
+    <id>https://your-docusaurus-site.example.com/LiquidDarkRP_V2/blog</id>
     <title>LiquidRP Blog</title>
     <updated>2024-02-03T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://your-docusaurus-site.example.com/blog"/>
+    <link rel="alternate" href="https://your-docusaurus-site.example.com/LiquidDarkRP_V2/blog"/>
     <subtitle>LiquidRP Blog</subtitle>
-    <icon>https://your-docusaurus-site.example.com/img/favicon.ico</icon>
+    <icon>https://your-docusaurus-site.example.com/LiquidDarkRP_V2/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Welcome]]></title>
-        <id>https://your-docusaurus-site.example.com/blog/welcome</id>
-        <link href="https://your-docusaurus-site.example.com/blog/welcome"/>
+        <id>https://your-docusaurus-site.example.com/LiquidDarkRP_V2/blog/welcome</id>
+        <link href="https://your-docusaurus-site.example.com/LiquidDarkRP_V2/blog/welcome"/>
         <updated>2024-02-03T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[This documentation serves as a comprehensive resource for tracking my progress and developments. Additionally, it provides an open invitation for others to clone the project, make modifications, or contribute enhancements. It's a platform for fostering collaboration, sharing knowledge, and collectively improving the project.]]></summary>
         <content type="html"><![CDATA[<p>This documentation serves as a comprehensive resource for tracking my progress and developments. Additionally, it provides an open invitation for others to clone the project, make modifications, or contribute enhancements. It's a platform for fostering collaboration, sharing knowledge, and collectively improving the project.</p>]]></content>
