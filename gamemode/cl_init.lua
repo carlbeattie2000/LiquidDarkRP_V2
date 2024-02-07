@@ -26,6 +26,7 @@ GM.Config = {} -- config table
 GM.NoLicense = GM.NoLicense or {}
 IMGUI = include("libraries/imgui.lua")
 HUD_COMPONENTS = include("libraries/hud_components.lua")
+CSSHUD = include('libraries/css_to_lua/export.lua')
 include("config/config.lua")
 include("libraries/sh_cami.lua")
 include("libraries/simplerr.lua")

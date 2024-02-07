@@ -22,6 +22,7 @@ AddCSLuaFile("config/licenseweapons.lua")
 AddCSLuaFile("cl_init.lua")
 GM.Config = GM.Config or {}
 GM.NoLicense = GM.NoLicense or {}
+include('libraries/css_to_lua/sv_loader.lua')
 include("libraries/interfaceloader.lua")
 include("config/_MySQL.lua")
 include("config/config.lua")

@@ -29,6 +29,7 @@ const sidebars = {
               label: 'CSS to Lua',
               items: [
                 'API/V2/css_to_lua/css_to_lua_intro',
+                'API/V2/css_to_lua/base/nodes',
                 'API/V2/css_to_lua/base/box_model'
               ]
             }

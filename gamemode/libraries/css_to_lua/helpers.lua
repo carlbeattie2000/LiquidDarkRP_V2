@@ -1,6 +1,6 @@
 function Multi_Assert(expectedArgumentType, ...)
   local assertErrorMessage = string.format('Incorrect Argument, Expected %q', expectedArgumentType)
-  for _, arg in pairs(...) do
+  for _, arg in pairs{...} do
     assert(arg, assertErrorMessage)
   end
 end
